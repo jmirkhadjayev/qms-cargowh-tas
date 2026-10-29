@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 80" width="260" height="80" fill="none">
+  <!-- Text: TASHKENT (Golden Ochre) -->
+  <text x="52" y="36" fill="#C49A2B" font-family="'Montserrat', system-ui, -apple-system, sans-serif" font-size="24" font-weight="800" letter-spacing="1.5">TASHKENT</text>
+  
+  <!-- Text: Airport (Aviation Slate Blue) -->
+  <text x="5" y="68" fill="#435B98" font-family="'Montserrat', system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" letter-spacing="-0.5">Airport</text>
+  
+  <!-- Emblem on Right (Golden Medallion with Uzbek Girih Pattern & Airplane) -->
+  <g transform="translate(216, 40)">
+    <!-- Medallion Center Background Circle -->
+    <circle cx="0" cy="0" r="32" stroke="#C49A2B" stroke-width="2.2" fill="none"/>
+    <circle cx="0" cy="0" r="23" stroke="#C49A2B" stroke-width="1.8" fill="none"/>
+    
+    <!-- 8 Interconnected Ornamental Petals -->
+    <path d="M0 -32 C 12 -26, 20 -15, 23 0 C 20 15, 12 26, 0 32 C -12 26, -20 15, -23 0 C -20 -15, -12 -26, 0 -32" stroke="#C49A2B" stroke-width="2" fill="none"/>
+    <path d="M-32 0 C -26 12, -15 20, 0 23 C 15 20, 26 12, 32 0 C 26 -12, 15 -20, 0 -23 C -15 -20, -26 -12, -32 0" stroke="#C49A2B" stroke-width="2" fill="none"/>
+    <path d="M-22.6 -22.6 C -8 -26, 5 -20, 16.3 -16.3 C 20 -5, 26 8, 22.6 22.6 C 8 26, -5 20, -16.3 16.3 C -20 5, -26 -8, -22.6 -22.6" stroke="#C49A2B" stroke-width="1.8" fill="none"/>
+    <path d="M22.6 -22.6 C 26 -8, 20 5, 16.3 16.3 C 5 20, -8 26, -22.6 22.6 C -26 8, -20 -5, -16.3 -16.3 C -5 -20, 8 -26, 22.6 -22.6" stroke="#C49A2B" stroke-width="1.8" fill="none"/>
+
+    <!-- Central Airplane Silhouette flying diagonally up-right (45 deg) -->
+    <g transform="rotate(45)">
+      <!-- Fuselage -->
+      <path d="M0 -15 C 2 -15, 3.5 -10, 3.5 -2 L 3.5 6 L 1.8 14 L -1.8 14 L -3.5 6 L -3.5 -2 C -3.5 -10, -2 -15, 0 -15 Z" fill="#C49A2B"/>
+      <!-- Main Wings -->
+      <path d="M-3 -1 L -15 7 L -15 10 L -3 5 L 3 5 L 15 10 L 15 7 L 3 -1 Z" fill="#C49A2B"/>
+      <!-- Tail Stabilizers -->
+      <path d="M-1.8 10 L -7 14.5 L -7 16 L -1.5 14 L 1.5 14 L 7 16 L 7 14.5 L 1.8 10 Z" fill="#C49A2B"/>
+    </g>
+  </g>
+</svg>

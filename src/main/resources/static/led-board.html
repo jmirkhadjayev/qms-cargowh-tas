@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED Tablo Monitor | TAS Cargo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            overflow: hidden;
+            height: 100vh;
+        }
+        .board-header {
+            background: #ffffff;
+            border-bottom: 2px solid var(--primary);
+            padding: 0.85rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+        }
+        .board-container {
+            display: grid;
+            grid-template-columns: 2.2fr 1fr;
+            height: calc(100vh - 135px);
+            padding: 1.25rem 2rem;
+            gap: 1.5rem;
+        }
+        .docks-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1rem;
+            height: 100%;
+        }
+        .dock-cell {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.1rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: var(--shadow-card);
+            transition: all 0.2s ease;
+        }
+        .dock-cell.called {
+            border: 2px solid #f59e0b;
+            background: #fffbeb;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
+            animation: borderFlash 1.5s infinite;
+        }
+        @keyframes borderFlash {
+            0%, 100% { border-color: #f59e0b; }
+            50% { border-color: #fbbf24; box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
+        }
+        .dock-cell-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .dock-cell-number {
+            font-size: 2.6rem;
+            font-weight: 900;
+            font-family: var(--font-mono);
+            color: var(--primary);
+            line-height: 1;
+            text-align: center;
+            margin: 0.4rem 0;
+            letter-spacing: -0.02em;
+        }
+        .dock-cell.called .dock-cell-number {
+            color: #d97706;
+        }
+        .dock-cell-plate {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.45rem;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 1.05rem;
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: 0.06em;
+        }
+        .dock-cell.called .dock-cell-plate {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #fcd34d;
+        }
+        .waiting-sidebar {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-card);
+        }
+        .waiting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        .bottom-ticker {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: var(--primary);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            overflow: hidden;
+            box-shadow: 0 -2px 10px rgba(37, 99, 235, 0.15);
+        }
+        .ticker-content {
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="board-header">
+        <div style="display: flex; align-items: center; gap: 1.25rem;">
+            <div class="brand-logo-badge" style="width: 48px; height: 48px; font-size: 1.25rem;">TAS</div>
+            <div>
+                <h1 style="font-size: 1.35rem; font-weight: 800; letter-spacing: -0.015em; color: var(--text-primary);">
+                    TOSHKENT XALQARO AEROPORTI · YUK TERMINALI
+                </h1>
+                <div style="color: var(--primary); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.04em;">
+                    ELEKTRON NAVBAT VA CHAQIRUV TABLOSI · CARGO DELIVERY QUEUE
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="btn btn-secondary" onclick="toggleAudio()" id="btnAudioToggle" style="padding: 0.4rem 0.85rem; font-size: 0.78rem;">
+                Ovoz: Yoqilgan
+            </button>
+            <button class="btn btn-secondary" onclick="document.documentElement.requestFullscreen()" style="padding: 0.4rem 0.85rem; font-size: 0.78rem;">
+                To'liq Ekran
+            </button>
+            <div style="font-family: var(--font-mono); font-size: 1.35rem; font-weight: 800; color: var(--primary);" id="boardClock">
+                16:40:00
+            </div>
+        </div>
+    </header>
+
+    <div class="board-container">
+        <!-- Main: 6 Docks Grid -->
+        <div class="docks-grid" id="docksGrid">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Sidebar: Next Waiting Queue -->
+        <div class="waiting-sidebar">
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 1rem; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+                ⏳ NAVBATDAGILAR (ОЧЕРЕДЬ)
+            </h3>
+            <div id="waitingListContainer" style="flex: 1; overflow-y: hidden;">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Running Ticker -->
+    <div class="bottom-ticker">
+        <div class="ticker-content">
+            DIQQAT! TALONINGIZ CHAQIRILGANDA TEGISHLI DOK RAQAMIGA YAQINLASHING · ВНИМАНИЕ! ПРИ ВЫЗОВЕ ВАШЕГО ТАЛОНА ПОДОЙДИТЕ К УКАЗАННОМУ ДОКУ · CHIQISHDA CHEKNI KPP XODIMIGA TAQDIM ETING · СТАВЬТЕ АВТОМОБИЛЬ СТРОГО НАЗНАЧЕННОМУ DOCK · TAS CARGO 24/7
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let audioEnabled = true;
+        let lastAnnouncedTicket = null;
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            document.getElementById('btnAudioToggle').textContent = audioEnabled ? 'Ovoz: Yoqilgan' : 'Ovoz: O‘chirilgan';
+            if (audioEnabled) {
+                showToast("Ovozli e'lon yoqildi", "success");
+            }
+        }
+
+        function updateBoardClock() {
+            const now = new Date();
+            document.getElementById('boardClock').textContent = now.toLocaleTimeString('uz-UZ', { hour12: false });
+        }
+        setInterval(updateBoardClock, 1000);
+        updateBoardClock();
+
+        async function fetchBoardData() {
+            try {
+                const [docksRes, queueRes] = await Promise.all([
+                    fetch('/api/docks'),
+                    fetch('/api/queue/active')
+                ]);
+
+                if (docksRes.ok && queueRes.ok) {
+                    const docks = await docksRes.json();
+                    const tickets = await queueRes.json();
+
+                    renderDocks(docks, tickets);
+                    renderWaiting(tickets);
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+
+        function renderDocks(docks, tickets) {
+            const container = document.getElementById('docksGrid');
+            container.innerHTML = docks.slice(0, 6).map(dock => {
+                // Find ticket on this dock
+                let t = null;
+                if (dock.currentTicketId) {
+                    t = tickets.find(item => item.id === dock.currentTicketId);
+                }
+                if (!t) {
+                    t = tickets.find(item => item.assignedDockNumber === dock.dockNumber && (item.status === 'CALLED' || item.status === 'ARRIVED' || item.status === 'ISSUING'));
+                }
+
+                const isCalled = t && t.status === 'CALLED';
+
+                // Audio announcement check
+                if (isCalled && audioEnabled && t.ticketNumber !== lastAnnouncedTicket) {
+                    lastAnnouncedTicket = t.ticketNumber;
+                    playVoiceCall(t.ticketNumber, dock.dockNumber);
+                }
+
+                return `
+                    <div class="dock-cell ${isCalled ? 'called' : ''}">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="dock-cell-title">DOCK #${dock.dockNumber}</div>
+                            <span class="badge ${t ? 'badge-called' : 'badge-registered'}" style="font-size: 0.7rem;">
+                                ${t ? (isCalled ? 'CHAQIRILDI' : 'BAND') : 'BO‘SH'}
+                            </span>
+                        </div>
+                        <div class="dock-cell-number">
+                            ${t ? t.ticketNumber : '— — —'}
+                        </div>
+                        <div class="dock-cell-plate">
+                            ${t && t.vehiclePlate ? t.vehiclePlate : (t ? 'PIYODA' : 'KUTILMOQDA')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderWaiting(tickets) {
+            const container = document.getElementById('waitingListContainer');
+            const waiting = tickets.filter(t => t.status === 'PREPARATION_PENDING' || t.status === 'REGISTERED' || t.status === 'PREPARING');
+
+            if (waiting.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 2rem;">Navbatda kutilayotganlar yo‘q</div>';
+                return;
+            }
+
+            container.innerHTML = waiting.slice(0, 7).map((t, idx) => `
+                <div class="waiting-row">
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">#${idx + 1}</span>
+                    <strong style="color: ${t.isPriority ? '#fbbf24' : '#38bdf8'}; font-size: 1.3rem;">${t.ticketNumber}</strong>
+                    <span style="font-size: 0.9rem; color: #94a3b8;">${t.vehiclePlate || 'Piyoda'}</span>
+                    <span class="badge ${t.status === 'PREPARING' ? 'badge-preparing' : 'badge-registered'}" style="font-size: 0.7rem;">
+                        ${t.status === 'PREPARING' ? 'YIG‘ILMOQDA' : 'KUTISHDA'}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        fetchBoardData();
+        setInterval(fetchBoardData, 3000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS & IDE ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+.idea
+*.iws
+*.iml
+*.ipr
+.vscode/
+
+### Database & runtime files ###
+data/
+*.mv.db
+*.trace.db
+
+### Logs & OS ###
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini

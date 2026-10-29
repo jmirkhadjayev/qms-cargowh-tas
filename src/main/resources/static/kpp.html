@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPP Nazorat Punkti | TAS Cargo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .kpp-scan-box {
+            background: linear-gradient(145deg, rgba(16, 24, 39, 0.95), rgba(15, 23, 42, 0.9));
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .scan-result-card {
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: left;
+            display: none;
+        }
+        .scan-approved {
+            background: rgba(16, 185, 129, 0.12);
+            border: 2px solid #10b981;
+        }
+        .scan-blocked {
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid #ef4444;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <a href="index.html" class="brand-wrapper">
+            <div class="brand-logo-badge">TAS</div>
+            <div>
+                <h1 class="brand-title">KPP Qo'riqlash Punkti (Nazorat-o'tkazish)</h1>
+                <div class="brand-subtitle">4-bosqich · Darvoza chiqishi va QR-kod skaneri</div>
+            </div>
+        </a>
+        <div class="header-status">
+            <div class="live-clock" id="liveClock">16:40:00 (Toshkent)</div>
+            <a href="index.html" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Bosh menyu</a>
+        </div>
+    </header>
+
+    <main class="main-content" style="max-width: 1000px;">
+        <div class="kpp-scan-box">
+            <div style="margin-bottom: 1rem;"><svg class="icon-svg" style="width:48px;height:48px;color:var(--primary);" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+            <h2 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Talon QR-kodini Skanerlang yoki Raqamni Kiriting</h2>
+            <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 1.75rem auto;">
+                Yuk terminali hududidan chiqib ketayotgan transport vositasining taloni yoki chekidagi QR-kodni skanerga tuting.
+            </p>
+
+            <div style="max-width: 500px; margin: 0 auto; display: flex; gap: 0.5rem;">
+                <input type="text" id="kppInput" class="form-control" placeholder="Talon raqami (masalan: A-014)" autofocus
+                       style="font-family: var(--font-mono); font-size: 1.25rem; text-align: center;"
+                       onkeydown="if(event.key === 'Enter') handleKppScan()">
+                <button class="btn btn-primary" onclick="handleKppScan()">
+                    Tekshirish
+                </button>
+            </div>
+
+            <!-- Scan Verification Result Box -->
+            <div id="scanResultBox" class="scan-result-card">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+
+        <!-- History of Exits Today -->
+        <div class="glass-card">
+            <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Bugun KPP orqali Chiqib Ketgan Transport Vositalari</h3>
+            <div class="table-responsive">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Talon #</th>
+                            <th>AWB</th>
+                            <th>Yuk egasi</th>
+                            <th>Avtomobil raqami (UZB / Xalqaro)</th>
+                            <th>Joy / Vazn</th>
+                            <th>Chiqish vaqti</th>
+                            <th>Holati</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kppHistoryTable">
+                        <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Yuklanmoqda...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        let currentScannedTicket = null;
+
+        async function handleKppScan() {
+            const token = document.getElementById('kppInput').value.trim();
+            if (!token) return;
+
+            const resBox = document.getElementById('scanResultBox');
+            resBox.style.display = 'block';
+            resBox.innerHTML = '<div style="text-align:center; color: var(--text-muted);">Tekshirilmoqda...</div>';
+
+            try {
+                const res = await fetch(`/api/kpp/scan?token=${encodeURIComponent(token)}`);
+                const data = await res.json();
+
+                if (!data.success) {
+                    resBox.className = 'scan-result-card scan-blocked';
+                    resBox.innerHTML = `
+                        <div style="font-size: 1.4rem; font-weight: 800; color: #ef4444; margin-bottom: 0.5rem;">
+                            [RAD ETILDI] Bunday talon topilmadi!
+                        </div>
+                        <p style="color: var(--text-secondary);">${data.error || 'Raqamni qayta tekshiring.'}</p>
+                    `;
+                    return;
+                }
+
+                const t = data.ticket;
+                currentScannedTicket = t;
+
+                if (data.canExit) {
+                    resBox.className = 'scan-result-card scan-approved';
+                    resBox.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                            <div>
+                                <span class="badge badge-prepared" style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                    <svg class="icon-svg" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> CHIQISHGA RUXSAT BERILADI (APPROVED)
+                                </span>
+                                <div style="font-size: 2.5rem; font-weight: 900; font-family: var(--font-mono); color: #34d399;">
+                                    ${t.ticketNumber}
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 1.4rem; font-weight: 800; color: #fbbf24; font-family: var(--font-mono);">
+                                    ${t.vehiclePlate || 'Piyoda'}
+                                </div>
+                                <div style="font-size: 0.85rem; color: var(--text-muted);">Dok #${t.assignedDockNumber || '-'} dan berilgan</div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 10px;">
+                            <div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">AWB RAQAMI</div>
+                                <div style="font-weight: 700; font-family: var(--font-mono);">${t.awbNumber}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">YUK EGASI</div>
+                                <div style="font-weight: 600;">${t.consigneeName}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">BERILGAN JOY</div>
+                                <div style="font-weight: 700; color: #34d399;">${t.issuedPieces} / ${t.totalPieces} dona</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">BOJXONA RELIZI</div>
+                                <div style="font-weight: 600; color: #34d399;">Tasdiqlangan (${t.releasePermitNumber || 'OK'})</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="btn btn-success" style="flex: 1; padding: 1rem; font-size: 1.1rem;" onclick="confirmExitAction()">
+                                <svg class="icon-svg" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Avtomobil Chiqishini Tasdiqlash (Shlagbaum Ochildi)
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    resBox.className = 'scan-result-card scan-blocked';
+                    resBox.innerHTML = `
+                        <div style="font-size: 1.4rem; font-weight: 800; color: #ef4444; margin-bottom: 0.5rem;">
+                            [TAQIQLANADI] Ushbu yuk hali dokdan berilmagan!
+                        </div>
+                        <div style="font-size: 1.1rem; margin-bottom: 1rem;">
+                            Talon: <strong>${t.ticketNumber}</strong> | Hozirgi holati: <strong>${t.status}</strong>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                            TZ talabi bo'yicha, dokda berish jarayoni yakunlanmagan transport vositalarini KPP dan chiqarish qat'iyan man etiladi.
+                        </p>
+                        <div style="color: #f87171; font-size: 0.85rem;">
+                            <svg class="icon-svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Ushbu hodisa audit jurnaliga qayd etildi.
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                showToast("Server bilan ulanishda xatolik", "error");
+            }
+        }
+
+        async function confirmExitAction() {
+            if (!currentScannedTicket) return;
+            try {
+                const res = await fetch('/api/kpp/confirm-exit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        barcodeOrTicket: currentScannedTicket.ticketNumber,
+                        officerName: "KPP_Post_1",
+                        remarks: "Hujjatlar va AWB tekshirildi"
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Talon ${currentScannedTicket.ticketNumber} chiqishi tasdiqlandi va yopildi!`, "success");
+                    document.getElementById('scanResultBox').style.display = 'none';
+                    document.getElementById('kppInput').value = '';
+                    loadKppHistory();
+                } else {
+                    showToast(data.error || "Xatolik", "error");
+                }
+            } catch (e) {
+                showToast("Xatolik yuz berdi", "error");
+            }
+        }
+
+        async function loadKppHistory() {
+            try {
+                const res = await fetch('/api/queue/recent');
+                if (res.ok) {
+                    const list = await res.json();
+                    const closedList = list.filter(t => t.status === 'CLOSED');
+                    const tbody = document.getElementById('kppHistoryTable');
+
+                    if (closedList.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Hozircha KPP dan yopilgan talonlar yo‘q</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = closedList.map(t => `
+                        <tr>
+                            <td><strong style="color: #34d399; font-family: var(--font-mono);">${t.ticketNumber}</strong></td>
+                            <td style="font-family: var(--font-mono);">${t.awbNumber}</td>
+                            <td>${t.consigneeName}</td>
+                            <td style="font-family: var(--font-mono); color: #fbbf24;">${t.vehiclePlate || 'Piyoda'}</td>
+                            <td>${t.issuedPieces} / ${t.totalPieces} dona</td>
+                            <td>${t.closedAt ? new Date(t.closedAt).toLocaleTimeString('uz-UZ') : '-'}</td>
+                            <td><span class="badge badge-closed">Chiqib ketdi</span></td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.warn(err);
+            }
+        }
+
+        loadKppHistory();
+        setInterval(loadKppHistory, 5000);
+    </script>
+</body>
+</html>
