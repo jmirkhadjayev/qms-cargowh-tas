@@ -74,3 +74,4 @@ This skill defines the visual language, design tokens, and engineering principle
 - [ ] **Responsive Breakpoints**: Test at 1440px (Desktop), 1024px (Tablet/Dock Kiosk), and 768px (Mobile/Handheld scanner).
 - [ ] **Touch Target Size**: On warehouse and dock screens, buttons and touch elements must be at least 42x42px.
 - [ ] **Internationalization**: Support Uzbek and Russian terminology cleanly without truncation.
+

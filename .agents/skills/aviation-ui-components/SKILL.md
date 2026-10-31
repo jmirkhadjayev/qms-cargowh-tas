@@ -79,3 +79,4 @@ This skill provides modular component blueprints for TAS Cargo QMS.
 - High contrast black-on-white layout.
 - QR Code generated at 200x200px.
 - Legible at thermal 80mm POS receipt printers.
+
