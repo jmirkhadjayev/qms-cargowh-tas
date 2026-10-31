@@ -45,3 +45,4 @@ public class AuthController {
                 .orElseGet(() -> ResponseEntity.status(404).body("Foydalanuvchi topilmadi"));
     }
 }
+

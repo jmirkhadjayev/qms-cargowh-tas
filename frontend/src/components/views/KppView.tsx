@@ -217,3 +217,4 @@ export const KppView: React.FC<KppViewProps> = ({ tickets, onRefresh }) => {
     </div>
   );
 };
+

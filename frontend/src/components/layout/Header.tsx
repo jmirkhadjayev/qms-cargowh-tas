@@ -48,8 +48,12 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="flex h-16 items-center justify-between px-4 sm:px-8 max-w-7xl mx-auto">
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-extrabold tracking-wider text-base shadow-sm">
-            TAS
+          <div className="flex items-center justify-center p-1 bg-white border border-slate-200 rounded-xl shadow-xs">
+            <img
+              src="/images/tashkent-airport-emblem.svg"
+              alt="TAS"
+              className="w-9 h-9 object-contain"
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">

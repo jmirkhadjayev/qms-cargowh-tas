@@ -22,3 +22,4 @@ export interface LoginApiResponse {
   readonly message?: string;
   readonly user?: AuthUser;
 }
+

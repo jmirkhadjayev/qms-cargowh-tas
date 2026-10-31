@@ -124,3 +124,4 @@ export const WarehouseView: React.FC<WarehouseViewProps> = ({ tickets, onRefresh
     </div>
   );
 };
+

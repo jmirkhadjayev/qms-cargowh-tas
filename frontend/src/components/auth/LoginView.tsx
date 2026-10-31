@@ -86,9 +86,13 @@ export const LoginView: React.FC<LoginViewProps> = ({
     <div className="min-h-screen bg-slate-100/70 flex flex-col justify-center items-center p-4 sm:p-6 font-sans">
       <div className="w-full max-w-md space-y-4">
         {/* Brand Header */}
-        <div className="text-center space-y-1.5">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-primary text-white font-extrabold text-xl shadow-md mb-1">
-            TAS
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center justify-center bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm mb-1">
+            <img
+              src="/images/tashkent-airport-logo.svg"
+              alt="Tashkent International Airport"
+              className="h-9 w-auto object-contain"
+            />
           </div>
           <h1 className="text-xl font-extrabold tracking-tight text-slate-900">
             Toshkent Xalqaro Aeroporti
@@ -205,3 +209,4 @@ export const LoginView: React.FC<LoginViewProps> = ({
     </div>
   );
 };
+
