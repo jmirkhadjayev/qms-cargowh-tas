@@ -9,10 +9,10 @@ import uz.airport.cargo.repository.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
+@SuppressWarnings("null")
 public class QueueService {
 
     private final TicketRepository ticketRepository;
@@ -58,7 +58,7 @@ public class QueueService {
 
         // 1. Check Awery release permit
         Optional<AweryAwb> aweryOpt = aweryService.findAwb(cleanAwb);
-        boolean permitGranted = aweryOpt.map(AweryAwb::getReleasePermitGranted).orElse(false);
+        boolean permitGranted = aweryOpt.isPresent() && Boolean.TRUE.equals(aweryOpt.get().getReleasePermitGranted());
 
         if (!permitGranted) {
             String errorReason = aweryOpt.isEmpty() ?
@@ -173,9 +173,12 @@ public class QueueService {
     }
 
     public Dock findDockByIdOrNumber(Long dockIdOrNumber) {
+        if (dockIdOrNumber == null) {
+            throw new IllegalArgumentException("Dok ID yoki raqami kiritilmagan");
+        }
         return dockRepository.findById(dockIdOrNumber)
                 .or(() -> dockRepository.findAll().stream()
-                        .filter(d -> d.getDockNumber().longValue() == dockIdOrNumber)
+                        .filter(d -> d.getDockNumber() != null && d.getDockNumber().longValue() == dockIdOrNumber)
                         .findFirst())
                 .orElseThrow(() -> new IllegalArgumentException("Dok topilmadi: " + dockIdOrNumber));
     }
@@ -194,10 +197,14 @@ public class QueueService {
             return true;
         }
 
-        List<String> supported = Arrays.stream(dock.getSupportedCategories().split(","))
-                .map(String::trim)
-                .map(String::toUpperCase)
-                .toList();
+        List<String> supported = new ArrayList<>();
+        if (dock.getSupportedCategories() != null) {
+            for (String catStr : dock.getSupportedCategories().split(",")) {
+                if (catStr != null) {
+                    supported.add(catStr.trim().toUpperCase());
+                }
+            }
+        }
 
         String cat = ticket.getCategory() != null ? ticket.getCategory().name() : "GENERAL";
         return supported.contains(cat) || supported.contains("ALL");
@@ -210,13 +217,17 @@ public class QueueService {
 
         return allPrepared.stream()
                 .filter(t -> isTicketEligibleForDock(t, dock))
-                .sorted(Comparator.comparing(
-                        (Ticket t) -> Boolean.TRUE.equals(t.getIsPriority()),
-                        Comparator.reverseOrder()
-                ).thenComparing(
-                        Ticket::getRegisteredAt,
-                        Comparator.nullsLast(Comparator.naturalOrder())
-                ))
+                .sorted((t1, t2) -> {
+                    boolean p1 = Boolean.TRUE.equals(t1.getIsPriority());
+                    boolean p2 = Boolean.TRUE.equals(t2.getIsPriority());
+                    if (p1 != p2) return p1 ? -1 : 1;
+                    LocalDateTime d1 = t1.getRegisteredAt();
+                    LocalDateTime d2 = t2.getRegisteredAt();
+                    if (d1 == null && d2 == null) return 0;
+                    if (d1 == null) return 1;
+                    if (d2 == null) return -1;
+                    return d1.compareTo(d2);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -238,8 +249,9 @@ public class QueueService {
         }
 
         // 2. Dock occupancy check
-        if (dock.getStatus() == DockStatus.OCCUPIED && dock.getCurrentTicketId() != null) {
-            Optional<Ticket> curOpt = ticketRepository.findById(dock.getCurrentTicketId());
+        Long curTicketId = dock.getCurrentTicketId();
+        if (dock.getStatus() == DockStatus.OCCUPIED && curTicketId != null) {
+            Optional<Ticket> curOpt = ticketRepository.findById(curTicketId);
             if (curOpt.isPresent()) {
                 Ticket cur = curOpt.get();
                 if (cur.getStatus() == TicketStatus.CALLED || cur.getStatus() == TicketStatus.ARRIVED || cur.getStatus() == TicketStatus.ISSUING) {
@@ -402,8 +414,9 @@ public class QueueService {
         }
 
         // Free the dock
-        if (ticket.getAssignedDockId() != null) {
-            dockRepository.findById(ticket.getAssignedDockId()).ifPresent(dock -> {
+        Long assignedDockId = ticket.getAssignedDockId();
+        if (assignedDockId != null) {
+            dockRepository.findById(assignedDockId).ifPresent(dock -> {
                 dock.setStatus(DockStatus.FREE);
                 dock.setCurrentTicketId(null);
                 dock.setCurrentTicketNumber(null);
@@ -451,13 +464,15 @@ public class QueueService {
         discrepancyReportRepository.save(report);
 
         // Free dock
-        if (ticket.getAssignedDockId() != null) {
-            dockRepository.findById(ticket.getAssignedDockId()).ifPresent(dock -> {
+        Long assignedDockId = ticket.getAssignedDockId();
+        if (assignedDockId != null) {
+            dockRepository.findById(assignedDockId).ifPresent(dock -> {
                 dock.setStatus(DockStatus.FREE);
                 dock.setCurrentTicketId(null);
                 dock.setCurrentTicketNumber(null);
                 dock.setCurrentVehiclePlate(null);
                 dockRepository.save(dock);
+                notificationService.broadcastDockStatus(dock);
             });
         }
 
@@ -522,8 +537,9 @@ public class QueueService {
         ticket.setStatus(TicketStatus.SUSPENDED);
         ticket.setRemarks(reason);
 
-        if (ticket.getAssignedDockId() != null) {
-            dockRepository.findById(ticket.getAssignedDockId()).ifPresent(dock -> {
+        Long assignedDockId = ticket.getAssignedDockId();
+        if (assignedDockId != null) {
+            dockRepository.findById(assignedDockId).ifPresent(dock -> {
                 if (ticket.getId().equals(dock.getCurrentTicketId())) {
                     dock.setStatus(DockStatus.FREE);
                     dock.setCurrentTicketId(null);
@@ -549,8 +565,9 @@ public class QueueService {
         ticket.setStatus(TicketStatus.CANCELLED);
         ticket.setRemarks(reason);
 
-        if (ticket.getAssignedDockId() != null) {
-            dockRepository.findById(ticket.getAssignedDockId()).ifPresent(dock -> {
+        Long assignedDockId = ticket.getAssignedDockId();
+        if (assignedDockId != null) {
+            dockRepository.findById(assignedDockId).ifPresent(dock -> {
                 if (ticket.getId().equals(dock.getCurrentTicketId())) {
                     dock.setStatus(DockStatus.FREE);
                     dock.setCurrentTicketId(null);
@@ -619,6 +636,9 @@ public class QueueService {
     }
 
     public Ticket getTicket(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Talon ID kiritilmagan");
+        }
         return ticketRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Talon topilmadi: " + id));
     }

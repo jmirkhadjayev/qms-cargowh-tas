@@ -1,5 +1,6 @@
 package uz.airport.cargo.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -13,13 +14,14 @@ import uz.airport.cargo.repository.AweryAwbRepository;
 import javax.net.ssl.*;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@SuppressWarnings("null")
 public class AweryIntegrationService {
 
     private static final Logger log = LoggerFactory.getLogger(AweryIntegrationService.class);
@@ -68,7 +70,7 @@ public class AweryIntegrationService {
 
     @Transactional
     public AweryAwb saveOrUpdate(AweryAwb awb) {
-        return aweryAwbRepository.save(awb);
+        return aweryAwbRepository.save(Objects.requireNonNull(awb));
     }
 
     /**
@@ -90,7 +92,7 @@ public class AweryIntegrationService {
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
             HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
 
-            URL url = new URL(CARGO_UZ_API);
+            URL url = URI.create(CARGO_UZ_API).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -191,7 +193,7 @@ public class AweryIntegrationService {
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
             HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
 
-            URL url = new URL(CARGO_UZ_API);
+            URL url = URI.create(CARGO_UZ_API).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -207,7 +209,7 @@ public class AweryIntegrationService {
             }
 
             if (conn.getResponseCode() == 200) {
-                return objectMapper.readValue(conn.getInputStream(), Map.class);
+                return objectMapper.readValue(conn.getInputStream(), new TypeReference<Map<String, Object>>() {});
             }
         } catch (Exception e) {
             log.warn("getLiveTrackingRaw error: {}", e.getMessage());

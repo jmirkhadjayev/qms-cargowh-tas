@@ -2,13 +2,16 @@ package uz.airport.cargo.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
+@SuppressWarnings("null")
 public class NotificationService {
 
     private static final Logger log = LoggerFactory.getLogger(NotificationService.class);
@@ -18,9 +21,9 @@ public class NotificationService {
         this.messagingTemplate = messagingTemplate;
     }
 
-    public void broadcastQueueUpdate(Object payload) {
+    public void broadcastQueueUpdate(@NonNull Object payload) {
         try {
-            messagingTemplate.convertAndSend("/topic/queue-updates", payload);
+            messagingTemplate.convertAndSend("/topic/queue-updates", Objects.requireNonNull(payload));
         } catch (Exception e) {
             log.warn("WebSocket broadcast queue-updates failed: {}", e.getMessage());
         }
@@ -43,9 +46,9 @@ public class NotificationService {
         }
     }
 
-    public void broadcastDockStatus(Object payload) {
+    public void broadcastDockStatus(@NonNull Object payload) {
         try {
-            messagingTemplate.convertAndSend("/topic/dock-updates", payload);
+            messagingTemplate.convertAndSend("/topic/dock-updates", Objects.requireNonNull(payload));
         } catch (Exception e) {
             log.warn("WebSocket broadcast dock-updates failed: {}", e.getMessage());
         }

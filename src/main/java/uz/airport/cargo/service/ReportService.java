@@ -4,8 +4,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import uz.airport.cargo.model.Ticket;
-import uz.airport.cargo.model.TicketStatus;
-import uz.airport.cargo.repository.DiscrepancyReportRepository;
 import uz.airport.cargo.repository.TicketRepository;
 
 import java.io.ByteArrayOutputStream;
@@ -19,11 +17,9 @@ import java.util.List;
 public class ReportService {
 
     private final TicketRepository ticketRepository;
-    private final DiscrepancyReportRepository discrepancyReportRepository;
 
-    public ReportService(TicketRepository ticketRepository, DiscrepancyReportRepository discrepancyReportRepository) {
+    public ReportService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
-        this.discrepancyReportRepository = discrepancyReportRepository;
     }
 
     public byte[] generateExcelShiftReport(LocalDateTime start, LocalDateTime end) throws IOException {
