@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Plane, Clock, RefreshCw, BarChart3, ExternalLink } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 
 interface HeaderProps {
   onRefresh?: () => void;
@@ -62,17 +62,16 @@ export const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing }) => {
             Yangilash
           </Button>
 
-          <Button
-            size="sm"
-            asChild
-            className="text-xs gap-1.5"
+          <a
+            href="http://localhost:8085/dispatcher.html"
+            target="_blank"
+            rel="noreferrer"
+            className={buttonVariants({ size: "sm", className: "text-xs gap-1.5" })}
           >
-            <a href="http://localhost:8085/dispatcher.html" target="_blank" rel="noreferrer">
-              <BarChart3 className="w-3.5 h-3.5" />
-              Dispetcher Paneli
-              <ExternalLink className="w-3 h-3 opacity-70" />
-            </a>
-          </Button>
+            <BarChart3 className="w-3.5 h-3.5" />
+            Dispetcher Paneli
+            <ExternalLink className="w-3 h-3 opacity-70" />
+          </a>
         </div>
       </div>
     </header>

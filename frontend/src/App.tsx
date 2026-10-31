@@ -4,7 +4,7 @@ import { StatCard } from "./components/StatCard";
 import { DockMatrix, DockDto } from "./components/DockMatrix";
 import { Card, CardHeader, CardTitle, CardContent } from "./components/ui/card";
 import { Badge } from "./components/ui/badge";
-import { Button } from "./components/ui/button";
+import { Button, buttonVariants } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import {
   Dialog,
@@ -285,11 +285,14 @@ export function App() {
               </DialogContent>
             </Dialog>
 
-            <Button asChild variant="outline" size="sm" className="text-xs">
-              <a href="http://localhost:8085/dock.html" target="_blank" rel="noreferrer">
-                Dok Operatori &rarr;
-              </a>
-            </Button>
+            <a
+              href="http://localhost:8085/dock.html"
+              target="_blank"
+              rel="noreferrer"
+              className={buttonVariants({ variant: "outline", size: "sm", className: "text-xs" })}
+            >
+              Dok Operatori &rarr;
+            </a>
           </div>
         </div>
 

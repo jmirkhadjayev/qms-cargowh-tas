@@ -1,5 +1,4 @@
 import { Client } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
 
 export type WebSocketCallback = (message: any) => void;
 
@@ -14,14 +13,15 @@ class WebSocketService {
   ) {
     if (this.client && this.isConnected) return;
 
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const brokerURL = `${protocol}//${window.location.host}/ws-queue-raw`;
+
     this.client = new Client({
-      webSocketFactory: () => new SockJS("/ws-queue") as any,
+      brokerURL: brokerURL,
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
-      debug: (str) => {
-        // debug logging can be muted
-      },
+      debug: () => {},
     });
 
     this.client.onConnect = () => {
@@ -62,12 +62,18 @@ class WebSocketService {
       this.isConnected = false;
     };
 
-    this.client.activate();
+    try {
+      this.client.activate();
+    } catch (err) {
+      console.warn("WebSocket activate warning:", err);
+    }
   }
 
   public disconnect() {
     if (this.client) {
-      this.client.deactivate();
+      try {
+        this.client.deactivate();
+      } catch (err) {}
       this.client = null;
       this.isConnected = false;
     }
