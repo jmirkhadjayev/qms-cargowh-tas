@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 2: TailAdmin Corporate | TAS Cargo QMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --success: #059669;
+            --success-light: #ecfdf5;
+            --warning: #d97706;
+            --warning-light: #fffbeb;
+            --font-sans: 'Montserrat', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-sans); }
+        body { background: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-bottom: 50px; font-size: 0.84rem; }
+
+        /* Persistent Theme Switcher Bar */
+        .theme-switcher-bar {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-bottom: 1px solid #1e293b;
+        }
+        .theme-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+        .theme-pill {
+            padding: 4px 9px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 0.72rem;
+            transition: all 0.15s;
+        }
+        .theme-pill:hover { color: #ffffff; background: #1e293b; }
+        .theme-pill.active { background: #2563eb; color: #ffffff; font-weight: 700; }
+        .theme-pill.hub-btn { background: #3b82f6; color: #fff; font-weight: 700; }
+
+        .container { max-width: 1360px; margin: 0 auto; padding: 24px; }
+
+        /* TailAdmin Header */
+        .tail-header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+            margin-bottom: 24px;
+        }
+        .brand-badge {
+            background: var(--primary);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+        .tail-title { font-size: 1.25rem; font-weight: 800; color: var(--text-main); }
+        .tail-desc { font-size: 0.8rem; color: var(--text-sub); }
+
+        /* KPI Cards with TailAdmin Soft Circles */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .kpi-icon-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .kpi-icon-wrap.green { background: var(--success-light); color: var(--success); }
+        .kpi-icon-wrap.amber { background: var(--warning-light); color: var(--warning); }
+        .kpi-val { font-size: 1.7rem; font-weight: 800; color: var(--text-main); font-family: var(--font-mono); line-height: 1.1; }
+        .kpi-lbl { font-size: 0.74rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; margin-top: 3px; }
+
+        /* 6 Universal Docks */
+        .section-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .section-title { font-size: 1.05rem; font-weight: 800; color: var(--text-main); }
+        .docks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 16px;
+            margin-bottom: 26px;
+        }
+        .dock-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+            border-top: 4px solid var(--primary);
+        }
+        .dock-card.busy { border-top-color: var(--warning); }
+        .dock-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .dock-pill {
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .dock-pill.free { background: var(--success-light); color: var(--success); }
+        .dock-pill.busy { background: var(--warning-light); color: var(--warning); }
+        .dock-tnum { font-size: 1.3rem; font-weight: 800; font-family: var(--font-mono); color: var(--primary); }
+        .dock-sub { font-size: 0.75rem; color: var(--text-sub); }
+
+        /* Table */
+        .table-wrap {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+            margin-bottom: 24px;
+        }
+        .table-head-bar {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 11px 16px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid var(--border);
+        }
+        td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; font-size: 0.82rem; }
+        tr:hover td { background: #f8fafc; }
+        .ticket-num { font-family: var(--font-mono); font-weight: 800; color: #1d4ed8; font-size: 0.95rem; }
+        .ticket-num.prio { color: #d97706; }
+
+        /* Action Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.16s ease;
+            border: none;
+        }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-secondary { background: #ffffff; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-secondary:hover { background: #f1f5f9; }
+
+        .quick-nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Theme Switcher Bar -->
+    <div class="theme-switcher-bar">
+        <span>🎨 DIZAYN VARIANTLARI:</span>
+        <div class="theme-pills">
+            <a href="design-shadcn.html" class="theme-pill">1. shadcn/ui</a>
+            <a href="design-tailadmin.html" class="theme-pill active">2. TailAdmin</a>
+            <a href="design-tabler.html" class="theme-pill">3. Tabler</a>
+            <a href="design-tremor.html" class="theme-pill">4. Tremor</a>
+            <a href="design-antdesign.html" class="theme-pill">5. Ant Design</a>
+            <a href="design-mantine.html" class="theme-pill">6. Mantine</a>
+            <a href="design-horizon.html" class="theme-pill">7. Horizon</a>
+            <a href="design-coreui.html" class="theme-pill">8. CoreUI</a>
+            <a href="designs.html" class="theme-pill hub-btn">📋 Barcha Variantlar</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="tail-header">
+            <div style="display:flex; align-items:center; gap:14px;">
+                <span class="brand-badge">TAS CARGO</span>
+                <div>
+                    <h1 class="tail-title">Toshkent Aeroporti Yuk Markazi (TailAdmin Corporate)</h1>
+                    <p class="tail-desc">Klassik Skandinavcha korporativ logistika dizayni, Slate moviy kartochkalar</p>
+                </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button class="btn btn-secondary" onclick="loadData()">Yangilash</button>
+                <a href="registration.html" class="btn btn-primary">+ Ariza Qabul Qilish</a>
+            </div>
+        </header>
+
+        <!-- KPI Grid -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon-wrap">📋</div>
+                <div>
+                    <div class="kpi-val" id="kpiTotal">0</div>
+                    <div class="kpi-lbl">Bugungi Jami Arizalar</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon-wrap amber">⏳</div>
+                <div>
+                    <div class="kpi-val" id="kpiWaiting">0</div>
+                    <div class="kpi-lbl">Kutish Zalidagi Navbat</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon-wrap">🚛</div>
+                <div>
+                    <div class="kpi-val" id="kpiAtDock">0</div>
+                    <div class="kpi-lbl">Dokda Berilayotganlar</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon-wrap green">🏁</div>
+                <div>
+                    <div class="kpi-val" id="kpiCompleted">0</div>
+                    <div class="kpi-lbl">KPP Chiqish (Yopilgan)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6 Universal Docks -->
+        <div class="section-bar">
+            <h2 class="section-title">6 ta Universal Dok Holati (Barcha toifalar uchun universal)</h2>
+            <span style="font-size:0.75rem; color:var(--text-sub); font-weight:600;">DOKLAR 1-6 UNIVERSAL</span>
+        </div>
+        <div class="docks-grid" id="docksGrid"></div>
+
+        <!-- Queue Table -->
+        <div class="table-wrap">
+            <div class="table-head-bar">
+                <h3 style="font-size:0.95rem; font-weight:800;">Elektron Navbat Ro'yxati (FIFO + Priority Tartibi)</h3>
+                <span style="font-size:0.75rem; color:var(--text-sub);">Qat'iy navbat tartibi</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Talon</th>
+                        <th>AWB Raqami</th>
+                        <th>Yuk Egasi (Consignee)</th>
+                        <th>Joy / Vazn</th>
+                        <th>Toifa</th>
+                        <th>Avtomobil Raqami (UZB / Xalqaro)</th>
+                        <th>Holati</th>
+                    </tr>
+                </thead>
+                <tbody id="queueTableBody">
+                    <tr><td colspan="7" style="text-align:center; padding:20px; color:var(--text-sub);">Yuklanmoqda...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Quick Nav -->
+        <div style="font-size:0.76rem; font-weight:700; color:var(--text-sub); margin-bottom:6px; text-transform:uppercase;">Tizim Bo'limlari:</div>
+        <div class="quick-nav">
+            <a href="registration.html" class="btn btn-secondary">Registratsiya</a>
+            <a href="warehouse.html" class="btn btn-secondary">Ombor (Sklad)</a>
+            <a href="dock.html" class="btn btn-secondary">Dok Agenti (Rampa)</a>
+            <a href="dispatcher.html" class="btn btn-secondary">Dispetcher</a>
+            <a href="kpp.html" class="btn btn-secondary">KPP Nazorati</a>
+            <a href="led-board.html" class="btn btn-secondary">Katta Tablo</a>
+        </div>
+    </div>
+
+    <script>
+        async function loadData() {
+            try {
+                // Summary
+                const sumRes = await fetch('/api/queue/summary');
+                if (sumRes.ok) {
+                    const s = await sumRes.json();
+                    document.getElementById('kpiTotal').textContent = s.totalToday || '0';
+                    document.getElementById('kpiWaiting').textContent = (s.waitingCount || 0) + (s.preparingCount || 0);
+                    document.getElementById('kpiAtDock').textContent = (s.calledCount || 0) + (s.atDockCount || 0);
+                    document.getElementById('kpiCompleted').textContent = s.completedToday || '0';
+                }
+
+                // Docks
+                const dockRes = await fetch('/api/docks');
+                if (dockRes.ok) {
+                    const docks = await dockRes.json();
+                    const container = document.getElementById('docksGrid');
+                    container.innerHTML = docks.map(d => {
+                        const isOccupied = d.status === 'OCCUPIED';
+                        return `
+                            <div class="dock-card ${isOccupied ? 'busy' : ''}">
+                                <div class="dock-top">
+                                    <strong style="font-size:0.95rem;">Dock ${d.dockNumber}</strong>
+                                    <span class="dock-pill ${isOccupied ? 'busy' : 'free'}">
+                                        ${isOccupied ? 'BAND' : 'BO‘SH'}
+                                    </span>
+                                </div>
+                                <div style="min-height:46px;">
+                                    ${isOccupied ? `
+                                        <div class="dock-tnum">${d.currentTicketNumber || '-'}</div>
+                                        <div class="dock-sub" style="font-family:var(--font-mono); font-weight:700; color:#b45309;">${d.currentVehiclePlate || 'Piyoda'}</div>
+                                    ` : `
+                                        <div class="dock-sub" style="padding-top:6px;">Yuk kutilmoqda</div>
+                                    `}
+                                </div>
+                                <div style="margin-top:8px; font-size:0.7rem; color:var(--text-sub); border-top:1px dashed var(--border); padding-top:6px;">
+                                    Universal · Barcha toifalar
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // Queue
+                const queueRes = await fetch('/api/queue/active');
+                if (queueRes.ok) {
+                    const list = await queueRes.json();
+                    const tbody = document.getElementById('queueTableBody');
+                    if (list.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:var(--text-sub);">Hozircha navbat yo‘q</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = list.map(t => `
+                        <tr>
+                            <td>
+                                <span class="ticket-num ${t.isPriority ? 'prio' : ''}">${t.ticketNumber}</span>
+                                ${t.isPriority ? '<div style="font-size:0.62rem; color:#d97706; font-weight:800;">PRIORITY</div>' : ''}
+                            </td>
+                            <td style="font-family:var(--font-mono); font-weight:700; color:#0f172a;">${t.awbNumber}</td>
+                            <td style="font-weight:600;">${t.consigneeName}</td>
+                            <td>${t.totalPieces} dona · ${t.totalWeightKg} kg</td>
+                            <td><span style="background:#eff6ff; color:#2563eb; padding:2px 7px; border-radius:4px; font-weight:700; font-size:0.7rem;">${t.category}</span></td>
+                            <td style="font-family:var(--font-mono); font-weight:700; color:#0f172a;">${t.vehiclePlate || '-'}</td>
+                            <td><span style="background:#fffbeb; color:#d97706; padding:2px 7px; border-radius:4px; font-weight:700; font-size:0.7rem;">${t.status}</span></td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+        loadData();
+        setInterval(loadData, 5000);
+    </script>
+</body>
+</html>

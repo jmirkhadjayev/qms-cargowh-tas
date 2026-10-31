@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 8: CoreUI Bootstrap 5 | TAS Cargo QMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cui-bg: #ebedef;
+            --cui-card: #ffffff;
+            --cui-border: #d8dbe0;
+            --cui-primary: #321fdb;
+            --cui-success: #2eb85a;
+            --cui-warning: #f9b115;
+            --cui-info: #39f;
+            --cui-text: #3c4b64;
+            --cui-muted: #768192;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
+        body { background: var(--cui-bg); color: var(--cui-text); min-height: 100vh; padding-bottom: 50px; font-size: 0.875rem; }
+
+        /* Persistent Theme Switcher Bar */
+        .theme-switcher-bar {
+            background: #2f353a;
+            color: #ffffff;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .theme-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+        .theme-pill {
+            padding: 4px 9px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #c2c6dc;
+            font-size: 0.72rem;
+            transition: all 0.15s;
+        }
+        .theme-pill:hover { color: #ffffff; background: rgba(255, 255, 255, 0.15); }
+        .theme-pill.active { background: #321fdb; color: #ffffff; font-weight: 700; }
+        .theme-pill.hub-btn { background: #2eb85a; color: #fff; font-weight: 700; }
+
+        .container { max-width: 1360px; margin: 0 auto; padding: 20px; }
+
+        /* Header Card */
+        .cui-card {
+            background: var(--cui-card);
+            border: 1px solid var(--cui-border);
+            border-radius: 4px;
+            box-shadow: 0 1px 1px 0 rgba(60,75,100,.14);
+            margin-bottom: 20px;
+        }
+        .cui-card-header {
+            padding: 12px 18px;
+            background: #f0f3f5;
+            border-bottom: 1px solid var(--cui-border);
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cui-card-body { padding: 18px; }
+
+        /* KPI Boxes */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .cui-stat-box {
+            background: var(--cui-card);
+            border: 1px solid var(--cui-border);
+            border-radius: 4px;
+            padding: 16px;
+            border-top: 3px solid var(--cui-primary);
+        }
+        .cui-stat-box.success { border-top-color: var(--cui-success); }
+        .cui-stat-box.warning { border-top-color: var(--cui-warning); }
+        .cui-stat-val { font-size: 1.8rem; font-weight: 700; font-family: var(--font-mono); color: var(--cui-text); }
+        .cui-stat-lbl { font-size: 0.72rem; color: var(--cui-muted); font-weight: 700; text-transform: uppercase; margin-top: 2px; }
+
+        /* 6 Docks Grid */
+        .docks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .cui-dock-card {
+            background: var(--cui-card);
+            border: 1px solid var(--cui-border);
+            border-radius: 4px;
+            padding: 14px;
+        }
+        .cui-badge {
+            display: inline-block;
+            padding: 2px 7px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        .bg-success { background: #d4edda; color: #155724; }
+        .bg-warning { background: #fff3cd; color: #856404; }
+        .bg-primary { background: #cce5ff; color: #004085; }
+
+        /* Table */
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th {
+            background: #f0f3f5;
+            color: var(--cui-text);
+            padding: 10px 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--cui-border);
+        }
+        td { padding: 11px 14px; border-bottom: 1px solid var(--cui-border); font-size: 0.84rem; }
+        tr:hover td { background: #f9f9f9; }
+        .cui-mono-t { font-family: var(--font-mono); font-weight: 700; color: var(--cui-primary); }
+        .cui-mono-t.prio { color: #b45309; }
+
+        /* Buttons */
+        .btn-cui {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid transparent;
+        }
+        .btn-cui-primary { background: var(--cui-primary); color: #fff; }
+        .btn-cui-primary:hover { background: #2819af; }
+        .btn-cui-secondary { background: #ffffff; border-color: var(--cui-border); color: var(--cui-text); }
+        .btn-cui-secondary:hover { background: #f0f3f5; }
+
+        .cui-nav-bar {
+            background: var(--cui-card);
+            border: 1px solid var(--cui-border);
+            border-radius: 4px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Theme Switcher Bar -->
+    <div class="theme-switcher-bar">
+        <span>🎨 DIZAYN VARIANTLARI:</span>
+        <div class="theme-pills">
+            <a href="design-shadcn.html" class="theme-pill">1. shadcn/ui</a>
+            <a href="design-tailadmin.html" class="theme-pill">2. TailAdmin</a>
+            <a href="design-tabler.html" class="theme-pill">3. Tabler</a>
+            <a href="design-tremor.html" class="theme-pill">4. Tremor</a>
+            <a href="design-antdesign.html" class="theme-pill">5. Ant Design</a>
+            <a href="design-mantine.html" class="theme-pill">6. Mantine</a>
+            <a href="design-horizon.html" class="theme-pill">7. Horizon</a>
+            <a href="design-coreui.html" class="theme-pill active">8. CoreUI</a>
+            <a href="designs.html" class="theme-pill hub-btn">📋 Barcha Variantlar</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="cui-card">
+            <div class="cui-card-header">
+                <div>
+                    <span style="font-size:1.15rem;">TAS Cargo Markaziy Boshqaruv Paneli (CoreUI Bootstrap 5)</span>
+                    <div style="font-size:0.75rem; color:var(--cui-muted); font-weight:normal; margin-top:2px;">
+                        Klassik Bootstrap 5 andozasi, 100% barqaror, barcha qurilmalarda tez ishlaydi
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-cui btn-cui-secondary" onclick="loadData()">Yangilash</button>
+                    <a href="registration.html" class="btn-cui btn-cui-primary">+ Yangi Talon</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="stats-grid">
+            <div class="cui-stat-box">
+                <div class="cui-stat-lbl">Bugungi Jami Arizalar</div>
+                <div class="cui-stat-val" id="kpiTotal">0</div>
+            </div>
+            <div class="cui-stat-box warning">
+                <div class="cui-stat-lbl">Kutishdagi Navbat</div>
+                <div class="cui-stat-val" id="kpiWaiting" style="color:#b45309;">0</div>
+            </div>
+            <div class="cui-stat-box">
+                <div class="cui-stat-lbl">Dokda Xizmatda</div>
+                <div class="cui-stat-val" id="kpiAtDock" style="color:var(--cui-primary);">0</div>
+            </div>
+            <div class="cui-stat-box success">
+                <div class="cui-stat-lbl">KPP Chiqish (Yopilgan)</div>
+                <div class="cui-stat-val" id="kpiCompleted" style="color:var(--cui-success);">0</div>
+            </div>
+        </div>
+
+        <!-- 6 Docks Grid -->
+        <div class="cui-card">
+            <div class="cui-card-header">
+                <span>6 ta Universal Dok Holati (Rampalar 1-6)</span>
+                <span class="cui-badge bg-primary">Universal Doklar</span>
+            </div>
+            <div class="cui-card-body">
+                <div class="docks-grid" id="docksGrid"></div>
+            </div>
+        </div>
+
+        <!-- Queue Table -->
+        <div class="cui-card">
+            <div class="cui-card-header">
+                <span>Elektron Navbat Ro'yxati</span>
+                <span style="font-size:0.75rem; color:var(--cui-muted); font-weight:normal;">Strict Priority + FIFO Order</span>
+            </div>
+            <div class="cui-card-body" style="padding:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Talon</th>
+                            <th>AWB Raqami</th>
+                            <th>Yuk Egasi (Consignee)</th>
+                            <th>Joy / Vazn</th>
+                            <th>Toifa</th>
+                            <th>Avtomobil Raqami (UZB / Xalqaro)</th>
+                            <th>Holati</th>
+                        </tr>
+                    </thead>
+                    <tbody id="queueTableBody">
+                        <tr><td colspan="7" style="text-align:center; padding:20px; color:var(--cui-muted);">Yuklanmoqda...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Nav -->
+        <div class="cui-nav-bar">
+            <a href="registration.html" class="btn-cui btn-cui-secondary">1. Registratsiya</a>
+            <a href="warehouse.html" class="btn-cui btn-cui-secondary">2. Omborchi</a>
+            <a href="dock.html" class="btn-cui btn-cui-secondary">3. Dok Agenti</a>
+            <a href="dispatcher.html" class="btn-cui btn-cui-secondary">4. Dispetcherlik</a>
+            <a href="kpp.html" class="btn-cui btn-cui-secondary">5. KPP Chiqish</a>
+            <a href="led-board.html" class="btn-cui btn-cui-secondary">6. LED Tablo</a>
+        </div>
+    </div>
+
+    <script>
+        async function loadData() {
+            try {
+                // Summary
+                const sumRes = await fetch('/api/queue/summary');
+                if (sumRes.ok) {
+                    const s = await sumRes.json();
+                    document.getElementById('kpiTotal').textContent = s.totalToday || '0';
+                    document.getElementById('kpiWaiting').textContent = (s.waitingCount || 0) + (s.preparingCount || 0);
+                    document.getElementById('kpiAtDock').textContent = (s.calledCount || 0) + (s.atDockCount || 0);
+                    document.getElementById('kpiCompleted').textContent = s.completedToday || '0';
+                }
+
+                // Docks
+                const dockRes = await fetch('/api/docks');
+                if (dockRes.ok) {
+                    const docks = await dockRes.json();
+                    const container = document.getElementById('docksGrid');
+                    container.innerHTML = docks.map(d => {
+                        const isOccupied = d.status === 'OCCUPIED';
+                        return `
+                            <div class="cui-dock-card">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                    <strong>Dock ${d.dockNumber}</strong>
+                                    <span class="cui-badge ${isOccupied ? 'bg-warning' : 'bg-success'}">
+                                        ${isOccupied ? 'Band' : 'Bo‘sh'}
+                                    </span>
+                                </div>
+                                <div style="min-height:40px;">
+                                    ${isOccupied ? `
+                                        <div style="font-family:var(--font-mono); font-size:1.15rem; font-weight:700; color:var(--cui-primary);">${d.currentTicketNumber || '-'}</div>
+                                        <div style="font-family:var(--font-mono); font-size:0.75rem; color:#856404;">${d.currentVehiclePlate || 'Piyoda'}</div>
+                                    ` : `
+                                        <div style="font-size:0.75rem; color:var(--cui-muted); padding-top:4px;">Yuk kutilmoqda</div>
+                                    `}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // Queue
+                const queueRes = await fetch('/api/queue/active');
+                if (queueRes.ok) {
+                    const list = await queueRes.json();
+                    const tbody = document.getElementById('queueTableBody');
+                    if (list.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:var(--cui-muted);">Navbat yo‘q</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = list.map(t => `
+                        <tr>
+                            <td>
+                                <span class="cui-mono-t ${t.isPriority ? 'prio' : ''}">${t.ticketNumber}</span>
+                                ${t.isPriority ? '<div style="font-size:0.6rem; color:#856404; font-weight:700;">PRIORITY</div>' : ''}
+                            </td>
+                            <td style="font-family:var(--font-mono); font-weight:700;">${t.awbNumber}</td>
+                            <td>${t.consigneeName}</td>
+                            <td>${t.totalPieces} dona · ${t.totalWeightKg} kg</td>
+                            <td><span class="cui-badge bg-primary">${t.category}</span></td>
+                            <td style="font-family:var(--font-mono); font-weight:700;">${t.vehiclePlate || '-'}</td>
+                            <td><span class="cui-badge bg-warning">${t.status}</span></td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+        loadData();
+        setInterval(loadData, 5000);
+    </script>
+</body>
+</html>

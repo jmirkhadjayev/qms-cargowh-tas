@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dizayn Variantlari Ko'rgazmasi | TAS Cargo QMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+        body { background: #f8fafc; color: #0f172a; min-height: 100vh; padding: 24px; }
+        
+        .header-section {
+            max-width: 1300px;
+            margin: 0 auto 30px auto;
+            text-align: center;
+        }
+        .badge-airport {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        .header-title {
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .header-subtitle {
+            font-size: 0.95rem;
+            color: #64748b;
+            max-width: 750px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        /* Stats strip */
+        .live-status-bar {
+            max-width: 1300px;
+            margin: 0 auto 28px auto;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        }
+        .live-stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .live-stat-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .live-stat-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #0f172a;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .live-stat-label {
+            font-size: 0.72rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Grid of 8 Designs */
+        .designs-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 22px;
+        }
+        .design-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05);
+            transition: all 0.22s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .design-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.1);
+            border-color: #3b82f6;
+        }
+        .card-preview-banner {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .card-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .card-style-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+        .card-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+        .card-desc {
+            font-size: 0.82rem;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .feature-list {
+            list-style: none;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+        .feature-item {
+            font-size: 0.78rem;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .feature-bullet {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #2563eb;
+            flex-shrink: 0;
+        }
+        
+        .mockup-bar {
+            height: 38px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 6px;
+            margin-bottom: 16px;
+            font-size: 0.72rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+        }
+
+        .btn-open-design {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.16s ease;
+        }
+
+        /* Distinct theme preview accents */
+        /* 1. shadcn */
+        .theme-shadcn .card-style-tag { background: #18181b; color: #fff; }
+        .theme-shadcn .mockup-bar { background: #18181b; color: #fafafa; }
+        .theme-shadcn .btn-open-design { background: #18181b; color: #ffffff; }
+        .theme-shadcn .btn-open-design:hover { background: #27272a; }
+
+        /* 2. TailAdmin */
+        .theme-tailadmin .card-style-tag { background: #eff6ff; color: #2563eb; }
+        .theme-tailadmin .mockup-bar { background: #0f172a; color: #38bdf8; border: 1px solid #1e293b; }
+        .theme-tailadmin .btn-open-design { background: #2563eb; color: #ffffff; }
+        .theme-tailadmin .btn-open-design:hover { background: #1d4ed8; }
+
+        /* 3. Tabler */
+        .theme-tabler .card-style-tag { background: #e0f2fe; color: #0284c7; }
+        .theme-tabler .mockup-bar { background: #f8fafc; color: #0284c7; border: 1px solid #cbd5e1; border-left: 4px solid #0284c7; }
+        .theme-tabler .btn-open-design { background: #0284c7; color: #ffffff; }
+        .theme-tabler .btn-open-design:hover { background: #0369a1; }
+
+        /* 4. Tremor */
+        .theme-tremor .card-style-tag { background: #ecfdf5; color: #059669; }
+        .theme-tremor .mockup-bar { background: #ffffff; color: #059669; border: 1px solid #a7f3d0; }
+        .theme-tremor .btn-open-design { background: #059669; color: #ffffff; }
+        .theme-tremor .btn-open-design:hover { background: #047857; }
+
+        /* 5. Ant Design */
+        .theme-antdesign .card-style-tag { background: #e6f4ff; color: #1677ff; }
+        .theme-antdesign .mockup-bar { background: #f0f5ff; color: #1677ff; border: 1px solid #adc6ff; }
+        .theme-antdesign .btn-open-design { background: #1677ff; color: #ffffff; }
+        .theme-antdesign .btn-open-design:hover { background: #0958d9; }
+
+        /* 6. Mantine */
+        .theme-mantine .card-style-tag { background: #f3e8ff; color: #7e22ce; }
+        .theme-mantine .mockup-bar { background: #faf5ff; color: #7e22ce; border: 1px solid #d8b4fe; border-radius: 12px; }
+        .theme-mantine .btn-open-design { background: #7e22ce; color: #ffffff; border-radius: 12px; }
+        .theme-mantine .btn-open-design:hover { background: #6b21a8; }
+
+        /* 7. Horizon */
+        .theme-horizon .card-style-tag { background: #fef3c7; color: #b45309; }
+        .theme-horizon .mockup-bar { background: #4318ff; color: #ffffff; border-radius: 12px; }
+        .theme-horizon .btn-open-design { background: #4318ff; color: #ffffff; border-radius: 12px; }
+        .theme-horizon .btn-open-design:hover { background: #3311db; }
+
+        /* 8. CoreUI */
+        .theme-coreui .card-style-tag { background: #f1f5f9; color: #334155; }
+        .theme-coreui .mockup-bar { background: #321fdb; color: #ffffff; }
+        .theme-coreui .btn-open-design { background: #321fdb; color: #ffffff; }
+        .theme-coreui .btn-open-design:hover { background: #2819af; }
+
+        .back-nav-bar {
+            max-width: 1300px;
+            margin: 32px auto 0 auto;
+            text-align: center;
+        }
+        .btn-back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #334155;
+            text-decoration: none;
+        }
+        .btn-back-home:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-section">
+        <div class="badge-airport">✈️ Toshkent Xalqaro Aeroporti | TAS Cargo QMS</div>
+        <h1 class="header-title">8 Xil Zamonaviy Dizayn Konsepsiyasi</h1>
+        <p class="header-subtitle">
+            Har bir dizayn bizning real yuk terminali bazamiz (AWB, talonlar, 6 ta universal dok va navbatlar) bilan 100% integratsiya qilingan. Istalgan variantni ochib sinab ko'ring va o'zingizga ma'qulini tanlang.
+        </p>
+    </header>
+
+    <!-- Real-time Database Snapshot -->
+    <div class="live-status-bar">
+        <div class="live-stat-item">
+            <div class="live-stat-icon">📦</div>
+            <div>
+                <div class="live-stat-value" id="kpiTotal">...</div>
+                <div class="live-stat-label">Bugungi Jami Yuklar</div>
+            </div>
+        </div>
+        <div class="live-stat-item">
+            <div class="live-stat-icon">⏳</div>
+            <div>
+                <div class="live-stat-value" id="kpiWaiting" style="color: #d97706;">...</div>
+                <div class="live-stat-label">Kutishdagi Talonlar</div>
+            </div>
+        </div>
+        <div class="live-stat-item">
+            <div class="live-stat-icon">🚛</div>
+            <div>
+                <div class="live-stat-value" id="kpiDocks" style="color: #2563eb;">6 ta Dok</div>
+                <div class="live-stat-label">Universal Doklar (Barcha toifalar)</div>
+            </div>
+        </div>
+        <div class="live-stat-item">
+            <div class="live-stat-icon">✅</div>
+            <div>
+                <div class="live-stat-value" id="kpiCompleted" style="color: #059669;">...</div>
+                <div class="live-stat-label">Bugun Chiqib Ketgan</div>
+            </div>
+        </div>
+        <div class="live-stat-item">
+            <a href="index.html" class="btn-back-home">Bosh Boshqaruv Markazi &rarr;</a>
+        </div>
+    </div>
+
+    <!-- 8 Design Variants Grid -->
+    <div class="designs-grid">
+
+        <!-- Variant 1: shadcn/ui -->
+        <div class="design-card theme-shadcn">
+            <div class="card-preview-banner">
+                <span class="card-num">VARIANT 01</span>
+                <span class="card-style-tag">Minimalist Modern</span>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">shadcn/ui Minimalist</h3>
+                <p class="card-desc">Bugungi kunda jahon IT sanoatida eng ommabop monoxrom, nozik 1px chiziqli va ultra-toza dizayn.</p>
+                <div class="mockup-bar">
+                    <span>⚡ A-014</span>
+                    <span style="opacity:0.6;">·</span>
+                    <span>250-51253053</span>
+                    <span style="opacity:0.6;">·</span>
+                    <span style="color:#4ade80;">READY</span>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item"><span class="feature-bullet"></span> Ortiqcha soyasiz, toza oq-kulrang 1px chegaralar</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Inter va JetBrains Mono shriftlari kontrasti</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Kassa va registratsiya agentlari uchun eng yengil</li>
+                </ul>
+                <a href="design-shadcn.html" class="btn-open-design">
+                    Jonli Sahifani Ochish (shadcn/ui) &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Variant 2: TailAdmin -->
+        <div class="design-card theme-tailadmin">
+            <div class="card-preview-banner">
+                <span class="card-num">VARIANT 02</span>
+                <span class="card-style-tag">Slate Blue Logistics</span>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">TailAdmin Corporate</h3>
+                <p class="card-desc">Klassik Skandinavcha korporativ logistika uslubi. Moviy-to'q kulrang ohanglar va aniq jadval satrlari.</p>
+                <div class="mockup-bar">
+                    <span>🔹 P-002</span>
+                    <span style="opacity:0.6;">·</span>
+                    <span>34 TR 8901 (XALQARO)</span>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item"><span class="feature-bullet"></span> Shifrlangan AWB va avtoraqamlar uchun qulay</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Yumshoq Slate ko'k fonlar, ko'zni toliqtirmaydi</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Aviatsiya va kargo terminallari klassik standarti</li>
+                </ul>
+                <a href="design-tailadmin.html" class="btn-open-design">
+                    Jonli Sahifani Ochish (TailAdmin) &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Variant 3: Tabler UI -->
+        <div class="design-card theme-tabler">
+            <div class="card-preview-banner">
+                <span class="card-num">VARIANT 03</span>
+                <span class="card-style-tag">European WMS</span>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">Tabler UI Industrial</h3>
+                <p class="card-desc">Yevropaning yirik omborlari (WMS) va bojxona portallarida qabul qilingan ixcham va to'g'ri burchakli tartib.</p>
+                <div class="mockup-bar">
+                    <span>[Dok #1] ● BO'SH · ALL CATEGORIES</span>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item"><span class="feature-bullet"></span> Ixcham shriftlar va bir ekranda ko'p ma'lumot</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Rangli yon chiziqli (ribbon) kartochkalar</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Ombor yacheykalari va yuk topshiriqlari uchun a'lo</li>
+                </ul>
+                <a href="design-tabler.html" class="btn-open-design">
+                    Jonli Sahifani Ochish (Tabler) &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Variant 4: Tremor -->
+        <div class="design-card theme-tremor">
+            <div class="card-preview-banner">
+                <span class="card-num">VARIANT 04</span>
+                <span class="card-style-tag">Data-Dense Metrics</span>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">Tremor Data Metrics</h3>
+                <p class="card-desc">Nol darajadagi vizual shovqin. Faqat operatsion raqamlar, kutish vaqti va mikro-ko'rsatkichlarga urg'u beradi.</p>
+                <div class="mockup-bar">
+                    <span>AVG WAIT: 12.4 MIN · EFFICIENCY 98.2%</span>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item"><span class="feature-bullet"></span> Katta aniq raqamlar va progress chiziqlari</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Dispetcherlik va Rahbariyat nazorati uchun qulay</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Qisqa, aniq status tugmalari</li>
+                </ul>
+                <a href="design-tremor.html" class="btn-open-design">
+                    Jonli Sahifani Ochish (Tremor) &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Variant 5: Ant Design -->
+        <div class="design-card theme-antdesign">
+            <div class="card-preview-banner">
+                <span class="card-num">VARIANT 05</span>
+                <span class="card-style-tag">Alibaba & DHL Style</span>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">Ant Design Enterprise</h3>
+                <p class="card-desc">Xalqaro yirik logistika platformalari (Cainiao, DHL) asoslangan zich va amaliy korporativ interfeys.</p>
+                <div class="mockup-bar">
+                    <span style="background:#bae0ff; color:#003eb3; padding:1px 6px; border-radius:3px;">GENERAL</span>
+                    <span style="background:#ffe58f; color:#874d00; padding:1px 6px; border-radius:3px;">PRIORITY</span>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item"><span class="feature-bullet"></span> Aniq teglangan (Tag-based) toifalar</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Klaviatura orqali tezkor boshqarishga mos</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Katta hajmdagi jadval ro'yxatlari uchun ideal</li>
+                </ul>
+                <a href="design-antdesign.html" class="btn-open-design">
+                    Jonli Sahifani Ochish (Ant Design) &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Variant 6: Mantine -->
+        <div class="design-card theme-mantine">
+            <div class="card-preview-banner">
+                <span class="card-num">VARIANT 06</span>
+                <span class="card-style-tag">Touch & Tablet Board</span>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">Mantine Touch Board</h3>
+                <p class="card-desc">Yumshoq burchaklar, keng bosish zonalari va planshetlarda ishlash uchun qulay kartochkalar.</p>
+                <div class="mockup-bar">
+                    <span>📱 TOUCH OPTIMIZED · DOCK RAMPA</span>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item"><span class="feature-bullet"></span> Katta tugmalar va yumshoq kartochkalar</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Dok rampalari va omborda planshet bilan ishlashga qulay</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Do'stona va intuitiv vizual uslub</li>
+                </ul>
+                <a href="design-mantine.html" class="btn-open-design">
+                    Jonli Sahifani Ochish (Mantine) &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Variant 7: Horizon UI -->
+        <div class="design-card theme-horizon">
+            <div class="card-preview-banner">
+                <span class="card-num">VARIANT 07</span>
+                <span class="card-style-tag">Modern Widget Grid</span>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">Horizon Widget Grid</h3>
+                <p class="card-desc">Alohida blokli (widget-based) zamonaviy va havodor tartib. Har bir jarayon mustaqil panel ko'rinishida.</p>
+                <div class="mockup-bar">
+                    <span>✨ WIDGET CARDS · BOLD CONTRAST</span>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item"><span class="feature-bullet"></span> Katta ekranlar va televizor-monitorlarga mos</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Yorqin aksentlar va katta shriftlar</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Vizual jihatdan eng ko'rkam va zamonaviy</li>
+                </ul>
+                <a href="design-horizon.html" class="btn-open-design">
+                    Jonli Sahifani Ochish (Horizon) &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Variant 8: CoreUI -->
+        <div class="design-card theme-coreui">
+            <div class="card-preview-banner">
+                <span class="card-num">VARIANT 08</span>
+                <span class="card-style-tag">Classic Bootstrap 5</span>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">CoreUI Classic Clean</h3>
+                <p class="card-desc">Barcha kompyuter va brauzerlarda bir xil tez ishlaydigan, o'rganish talab etilmaydigan an'anaviy boshqaruv paneli.</p>
+                <div class="mockup-bar">
+                    <span>⚙️ STANDARD BOOTSTRAP 5 · STABLE</span>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item"><span class="feature-bullet"></span> Xodimlar uchun tanish, sodda navigatsiya</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> Klassik sarlavhali kartochkalar (.card-header)</li>
+                    <li class="feature-item"><span class="feature-bullet"></span> 100% barqaror va tezkor</li>
+                </ul>
+                <a href="design-coreui.html" class="btn-open-design">
+                    Jonli Sahifani Ochish (CoreUI) &rarr;
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="back-nav-bar">
+        <a href="index.html" class="btn-back-home">&larr; Bosh Boshqaruv Markaziga qaytish</a>
+    </div>
+
+    <script>
+        async function loadSummary() {
+            try {
+                const res = await fetch('/api/queue/summary');
+                if (res.ok) {
+                    const d = await res.json();
+                    document.getElementById('kpiTotal').textContent = d.totalToday || '14';
+                    document.getElementById('kpiWaiting').textContent = d.waitingCount || '3';
+                    document.getElementById('kpiCompleted').textContent = d.completedToday || '11';
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+        loadSummary();
+    </script>
+</body>
+</html>

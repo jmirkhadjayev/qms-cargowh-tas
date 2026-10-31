@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 4: Tremor Data Metrics | TAS Cargo QMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tr-bg: #fafafa;
+            --tr-card: #ffffff;
+            --tr-border: #e5e7eb;
+            --tr-text: #111827;
+            --tr-muted: #6b7280;
+            --tr-emerald: #059669;
+            --tr-blue: #2563eb;
+            --tr-amber: #d97706;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-sans); }
+        body { background: var(--tr-bg); color: var(--tr-text); min-height: 100vh; padding-bottom: 50px; font-size: 0.84rem; }
+
+        /* Persistent Theme Switcher Bar */
+        .theme-switcher-bar {
+            background: #111827;
+            color: #f9fafb;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-bottom: 1px solid #1f2937;
+        }
+        .theme-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+        .theme-pill {
+            padding: 4px 9px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.72rem;
+            transition: all 0.15s;
+        }
+        .theme-pill:hover { color: #ffffff; background: #1f2937; }
+        .theme-pill.active { background: #059669; color: #ffffff; font-weight: 700; }
+        .theme-pill.hub-btn { background: #3b82f6; color: #fff; font-weight: 700; }
+
+        .container { max-width: 1360px; margin: 0 auto; padding: 24px; }
+
+        /* Tremor Header */
+        .tremor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .tremor-title { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; }
+        .tremor-desc { font-size: 0.8rem; color: var(--tr-muted); margin-top: 2px; }
+
+        /* Tremor Metric Cards with Mini Progress Bars */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .tremor-card {
+            background: var(--tr-card);
+            border: 1px solid var(--tr-border);
+            border-radius: 8px;
+            padding: 18px 20px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        .tremor-lbl { font-size: 0.75rem; font-weight: 600; color: var(--tr-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+        .tremor-val { font-size: 2rem; font-weight: 800; font-family: var(--font-mono); color: var(--tr-text); margin: 6px 0; }
+        .tremor-bar-bg { width: 100%; height: 4px; background: #f3f4f6; border-radius: 9999px; overflow: hidden; margin-top: 8px; }
+        .tremor-bar-fill { height: 100%; background: var(--tr-emerald); border-radius: 9999px; }
+
+        /* 6 Docks */
+        .docks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .dock-pill-card {
+            background: var(--tr-card);
+            border: 1px solid var(--tr-border);
+            border-radius: 8px;
+            padding: 14px 16px;
+        }
+        .dock-pill-card.busy { border-color: var(--tr-amber); }
+        .dock-num { font-weight: 700; font-size: 0.95rem; }
+        .dock-status-tag {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .tag-green { background: #ecfdf5; color: #047857; }
+        .tag-amber { background: #fffbeb; color: #b45309; }
+
+        /* Table */
+        .table-card {
+            background: var(--tr-card);
+            border: 1px solid var(--tr-border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th {
+            background: #ffffff;
+            color: var(--tr-muted);
+            padding: 12px 18px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--tr-border);
+        }
+        td { padding: 12px 18px; border-bottom: 1px solid var(--tr-border); font-size: 0.83rem; }
+        tr:hover td { background: #f9fafb; }
+        .ticket-code { font-family: var(--font-mono); font-weight: 800; color: #059669; }
+        .ticket-code.prio { color: #d97706; }
+
+        /* Buttons */
+        .btn-tremor {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s;
+            border: 1px solid var(--tr-border);
+        }
+        .btn-dark { background: #111827; color: #ffffff; border-color: #111827; }
+        .btn-dark:hover { background: #1f2937; }
+        .btn-light { background: #ffffff; color: var(--tr-text); }
+        .btn-light:hover { background: #f3f4f6; }
+    </style>
+</head>
+<body>
+
+    <!-- Theme Switcher Bar -->
+    <div class="theme-switcher-bar">
+        <span>🎨 DIZAYN VARIANTLARI:</span>
+        <div class="theme-pills">
+            <a href="design-shadcn.html" class="theme-pill">1. shadcn/ui</a>
+            <a href="design-tailadmin.html" class="theme-pill">2. TailAdmin</a>
+            <a href="design-tabler.html" class="theme-pill">3. Tabler</a>
+            <a href="design-tremor.html" class="theme-pill active">4. Tremor</a>
+            <a href="design-antdesign.html" class="theme-pill">5. Ant Design</a>
+            <a href="design-mantine.html" class="theme-pill">6. Mantine</a>
+            <a href="design-horizon.html" class="theme-pill">7. Horizon</a>
+            <a href="design-coreui.html" class="theme-pill">8. CoreUI</a>
+            <a href="designs.html" class="theme-pill hub-btn">📋 Barcha Variantlar</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Tremor Header -->
+        <header class="tremor-header">
+            <div>
+                <h1 class="tremor-title">TAS Cargo Jonli Metrikalari (Tremor Analytics)</h1>
+                <p class="tremor-desc">Nol darajadagi vizual shovqin, ma'lumotlar zichligi va operatsion ko'rsatkichlarga urg'u</p>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-tremor btn-light" onclick="loadData()">Yangilash</button>
+                <a href="registration.html" class="btn-tremor btn-dark">+ Yangi Ariza</a>
+            </div>
+        </header>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+            <div class="tremor-card">
+                <div class="tremor-lbl">Bugungi Jami Arizalar</div>
+                <div class="tremor-val" id="kpiTotal">0</div>
+                <div class="tremor-bar-bg"><div class="tremor-bar-fill" style="width: 80%;"></div></div>
+                <div style="font-size:0.72rem; color:var(--tr-muted); margin-top:6px;">Reyslardan qabul qilingan yuklar</div>
+            </div>
+            <div class="tremor-card">
+                <div class="tremor-lbl">Kutishdagi Navbat</div>
+                <div class="tremor-val" id="kpiWaiting" style="color:var(--tr-amber);">0</div>
+                <div class="tremor-bar-bg"><div class="tremor-bar-fill" style="width: 45%; background:var(--tr-amber);"></div></div>
+                <div style="font-size:0.72rem; color:var(--tr-muted); margin-top:6px;">O'rtacha kutish: ~12.5 daqiqa</div>
+            </div>
+            <div class="tremor-card">
+                <div class="tremor-lbl">Dokda Xizmat Ko'rsatilmoqda</div>
+                <div class="tremor-val" id="kpiAtDock" style="color:var(--tr-blue);">0</div>
+                <div class="tremor-bar-bg"><div class="tremor-bar-fill" style="width: 60%; background:var(--tr-blue);"></div></div>
+                <div style="font-size:0.72rem; color:var(--tr-muted); margin-top:6px;">6 ta universal dok faol</div>
+            </div>
+            <div class="tremor-card">
+                <div class="tremor-lbl">KPP Chiqish (Yopilgan)</div>
+                <div class="tremor-val" id="kpiCompleted" style="color:var(--tr-emerald);">0</div>
+                <div class="tremor-bar-bg"><div class="tremor-bar-fill" style="width: 100%;"></div></div>
+                <div style="font-size:0.72rem; color:var(--tr-muted); margin-top:6px;">Yuk terminaldan chiqib ketgan</div>
+            </div>
+        </div>
+
+        <!-- 6 Docks Grid -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <strong style="font-size:0.95rem;">6 ta Universal Dok (Barcha toifalar uchun)</strong>
+            <span style="font-size:0.75rem; color:var(--tr-muted);">Doklar bandlik ko'rsatkichi</span>
+        </div>
+        <div class="docks-grid" id="docksGrid"></div>
+
+        <!-- Queue Table -->
+        <div class="table-card">
+            <div style="padding:16px 20px; border-bottom:1px solid var(--tr-border); display:flex; justify-content:space-between; align-items:center;">
+                <strong style="font-size:0.95rem;">Jonli Navbat Oqimi (Live Queue Stream)</strong>
+                <span style="font-size:0.75rem; color:var(--tr-muted);">Avtomatik yangilanadi (5 soniya)</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Talon</th>
+                        <th>AWB Raqami</th>
+                        <th>Yuk Egasi (Consignee)</th>
+                        <th>Joy / Vazn</th>
+                        <th>Toifa</th>
+                        <th>Avtomobil Raqami (UZB / Xalqaro)</th>
+                        <th>Holati</th>
+                    </tr>
+                </thead>
+                <tbody id="queueTableBody">
+                    <tr><td colspan="7" style="text-align:center; padding:20px; color:var(--tr-muted);">Yuklanmoqda...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Quick Nav -->
+        <div style="display:flex; gap:8px; flex-wrap:wrap; padding:12px 16px; background:#fff; border:1px solid var(--tr-border); border-radius:8px;">
+            <a href="registration.html" class="btn-tremor btn-light">1. Registratsiya</a>
+            <a href="warehouse.html" class="btn-tremor btn-light">2. Omborchi</a>
+            <a href="dock.html" class="btn-tremor btn-light">3. Dok Agenti</a>
+            <a href="dispatcher.html" class="btn-tremor btn-light">4. Dispetcher</a>
+            <a href="kpp.html" class="btn-tremor btn-light">5. KPP Chiqish</a>
+            <a href="led-board.html" class="btn-tremor btn-light">6. Katta Tablo</a>
+        </div>
+    </div>
+
+    <script>
+        async function loadData() {
+            try {
+                // Summary
+                const sumRes = await fetch('/api/queue/summary');
+                if (sumRes.ok) {
+                    const s = await sumRes.json();
+                    document.getElementById('kpiTotal').textContent = s.totalToday || '0';
+                    document.getElementById('kpiWaiting').textContent = (s.waitingCount || 0) + (s.preparingCount || 0);
+                    document.getElementById('kpiAtDock').textContent = (s.calledCount || 0) + (s.atDockCount || 0);
+                    document.getElementById('kpiCompleted').textContent = s.completedToday || '0';
+                }
+
+                // Docks
+                const dockRes = await fetch('/api/docks');
+                if (dockRes.ok) {
+                    const docks = await dockRes.json();
+                    const container = document.getElementById('docksGrid');
+                    container.innerHTML = docks.map(d => {
+                        const isOccupied = d.status === 'OCCUPIED';
+                        return `
+                            <div class="dock-pill-card ${isOccupied ? 'busy' : ''}">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span class="dock-num">Dock ${d.dockNumber}</span>
+                                    <span class="dock-status-tag ${isOccupied ? 'tag-amber' : 'tag-green'}">
+                                        ${isOccupied ? 'BAND' : 'BO‘SH'}
+                                    </span>
+                                </div>
+                                <div style="min-height:38px; margin-top:8px;">
+                                    ${isOccupied ? `
+                                        <div style="font-family:var(--font-mono); font-size:1.15rem; font-weight:800; color:#111827;">${d.currentTicketNumber || '-'}</div>
+                                        <div style="font-family:var(--font-mono); font-size:0.72rem; color:#b45309; font-weight:700;">${d.currentVehiclePlate || 'Piyoda'}</div>
+                                    ` : `
+                                        <div style="font-size:0.72rem; color:var(--tr-muted);">Yuk kutilmoqda</div>
+                                    `}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // Queue
+                const queueRes = await fetch('/api/queue/active');
+                if (queueRes.ok) {
+                    const list = await queueRes.json();
+                    const tbody = document.getElementById('queueTableBody');
+                    if (list.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:var(--tr-muted);">Faol navbat yo‘q</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = list.map(t => `
+                        <tr>
+                            <td>
+                                <span class="ticket-code ${t.isPriority ? 'prio' : ''}">${t.ticketNumber}</span>
+                                ${t.isPriority ? '<div style="font-size:0.6rem; color:#d97706; font-weight:800;">PRIORITY</div>' : ''}
+                            </td>
+                            <td style="font-family:var(--font-mono); font-weight:700;">${t.awbNumber}</td>
+                            <td>${t.consigneeName}</td>
+                            <td>${t.totalPieces} dona · ${t.totalWeightKg} kg</td>
+                            <td><span style="background:#f3f4f6; padding:2px 6px; border-radius:4px; font-size:0.7rem; font-weight:600;">${t.category}</span></td>
+                            <td style="font-family:var(--font-mono); font-weight:700; color:#111827;">${t.vehiclePlate || '-'}</td>
+                            <td><span class="dock-status-tag tag-amber">${t.status}</span></td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+        loadData();
+        setInterval(loadData, 5000);
+    </script>
+</body>
+</html>
