@@ -32,3 +32,4 @@ export const queueApi = {
   searchAwb: (awb: string): Promise<any> =>
     apiClient(`/api/awery/awb/${encodeURIComponent(awb)}`),
 };
+

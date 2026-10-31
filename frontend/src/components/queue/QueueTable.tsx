@@ -164,3 +164,4 @@ export const QueueTable: React.FC<QueueTableProps> = React.memo(
 );
 
 QueueTable.displayName = 'QueueTable';
+

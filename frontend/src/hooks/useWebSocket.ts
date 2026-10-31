@@ -53,3 +53,4 @@ export function useWebSocket(
     dismissAlert: () => setActiveAlert(null),
   };
 }
+

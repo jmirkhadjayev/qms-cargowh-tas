@@ -512,48 +512,57 @@
                     <span id="lblQuickRoles">1-Bosishda Tezkor Kirish (Demo Rollar)</span>
                 </div>
                 <div class="quick-roles-grid">
+                    <!-- SuperAdmin (All screens, Full access) -->
+                    <button type="button" class="role-btn admin-role" style="grid-column: 1 / -1; background: #eff6ff; border-color: #bfdbfe;" onclick="quickLogin('supperadmin@uzairports.com', 'admin123', 'index.html')">
+                        <span class="role-avatar" style="background:#2563eb; color:#fff; font-weight:800; font-size:10px;">★ SUP</span>
+                        <div class="role-info">
+                            <span class="role-name" style="color:#1d4ed8; font-weight:800;">Super Administrator (Barcha Huquqlar)</span>
+                            <span class="role-sub" style="color:#1e40af;">supperadmin@uzairports.com &bull; Barcha oynalar va foydalanuvchilar nazorati</span>
+                        </div>
+                    </button>
+
                     <!-- Admin / Dispatcher -->
-                    <button type="button" class="role-btn admin-role" onclick="quickLogin('admin', 'admin123', 'index.html')">
+                    <button type="button" class="role-btn" onclick="quickLogin('admin@uzairports.com', 'admin123', 'dispatcher.html')">
                         <span class="role-avatar"><svg class="icon-svg" style="width:16px; height:16px; color:var(--primary);" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></span>
                         <div class="role-info">
-                            <span class="role-name" id="roleAdmin">Bosh Dispetcher (Admin)</span>
-                            <span class="role-sub">admin / admin123 &bull; Barcha huquqlar</span>
+                            <span class="role-name">Bosh Dispetcher (Admin)</span>
+                            <span class="role-sub">admin@uzairports.com</span>
                         </div>
                     </button>
 
                     <!-- Agent -->
-                    <button type="button" class="role-btn" onclick="quickLogin('agent', 'tas123', 'registration.html')">
+                    <button type="button" class="role-btn" onclick="quickLogin('registration@uzairports.com', 'tas123', 'registration.html')">
                         <span class="role-avatar"><svg class="icon-svg" style="width:16px; height:16px; color:#0284c7;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
                         <div class="role-info">
-                            <span class="role-name" id="roleAgent">Registratsiya</span>
-                            <span class="role-sub">agent / tas123</span>
+                            <span class="role-name">Faqat Registratsiya</span>
+                            <span class="role-sub">registration@uzairports.com</span>
                         </div>
                     </button>
 
                     <!-- Warehouse -->
-                    <button type="button" class="role-btn" onclick="quickLogin('sklad', 'tas123', 'warehouse.html')">
+                    <button type="button" class="role-btn" onclick="quickLogin('warehouse@uzairports.com', 'tas123', 'warehouse.html')">
                         <span class="role-avatar"><svg class="icon-svg" style="width:16px; height:16px; color:#4f46e5;" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
                         <div class="role-info">
-                            <span class="role-name" id="roleSklad">Ombor (Sklad)</span>
-                            <span class="role-sub">sklad / tas123</span>
+                            <span class="role-name">Faqat Ombor (Sklad)</span>
+                            <span class="role-sub">warehouse@uzairports.com</span>
                         </div>
                     </button>
 
                     <!-- Dock -->
-                    <button type="button" class="role-btn" onclick="quickLogin('dock', 'tas123', 'dock.html')">
+                    <button type="button" class="role-btn" onclick="quickLogin('dock@uzairports.com', 'tas123', 'dock.html')">
                         <span class="role-avatar"><svg class="icon-svg" style="width:16px; height:16px; color:#d97706;" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
                         <div class="role-info">
-                            <span class="role-name" id="roleDock">Dok Operatori</span>
-                            <span class="role-sub">dock / tas123</span>
+                            <span class="role-name">Faqat Dok Operatori</span>
+                            <span class="role-sub">dock@uzairports.com</span>
                         </div>
                     </button>
 
                     <!-- KPP -->
-                    <button type="button" class="role-btn" onclick="quickLogin('kpp', 'tas123', 'kpp.html')">
+                    <button type="button" class="role-btn" onclick="quickLogin('kpp@uzairports.com', 'tas123', 'kpp.html')">
                         <span class="role-avatar"><svg class="icon-svg" style="width:16px; height:16px; color:#059669;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
                         <div class="role-info">
-                            <span class="role-name" id="roleKpp">KPP Xavfsizlik</span>
-                            <span class="role-sub">kpp / tas123</span>
+                            <span class="role-name">Faqat KPP Nazorati</span>
+                            <span class="role-sub">kpp@uzairports.com</span>
                         </div>
                     </button>
                 </div>
@@ -745,12 +754,20 @@
                 const response = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({ email: username, password: password })
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    saveSessionAndRedirect(data, targetUrl);
+                    if (data.success && data.user) {
+                        saveSessionAndRedirect(data.user, data.user.targetUrl || targetUrl);
+                        return;
+                    }
+                } else {
+                    const errData = await response.json().catch(() => ({}));
+                    btn.disabled = false;
+                    btnText.textContent = loginDict[currentLang].btn;
+                    showAlert(errData.message || loginDict[currentLang].errAuth, 'error');
                     return;
                 }
             } catch (err) {

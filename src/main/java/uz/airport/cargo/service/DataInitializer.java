@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import uz.airport.cargo.model.*;
 import uz.airport.cargo.repository.AweryAwbRepository;
 import uz.airport.cargo.repository.DockRepository;
+import uz.airport.cargo.repository.UserRepository;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -15,16 +16,65 @@ public class DataInitializer implements CommandLineRunner {
 
     private final DockRepository dockRepository;
     private final AweryAwbRepository aweryAwbRepository;
+    private final UserRepository userRepository;
 
-    public DataInitializer(DockRepository dockRepository, AweryAwbRepository aweryAwbRepository) {
+    public DataInitializer(DockRepository dockRepository,
+                           AweryAwbRepository aweryAwbRepository,
+                           UserRepository userRepository) {
         this.dockRepository = dockRepository;
         this.aweryAwbRepository = aweryAwbRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public void run(String... args) {
         initDocks();
         initAweryAwbs();
+        initUsers();
+    }
+
+    private void initUsers() {
+        log.info("Tizim foydalanuvchilari va rollari tekshirilmoqda...");
+
+        // 1. SuperAdmin accounts
+        createOrUpdateUser("supperadmin@uzairports.com", "admin123", "Bosh Tizim Administratori",
+                UserRole.SUPER_ADMIN, "index.html", "SUP");
+        createOrUpdateUser("superadmin@uzairports.com", "admin123", "Bosh Tizim Administratori (Alias)",
+                UserRole.SUPER_ADMIN, "index.html", "SUP");
+
+        // 2. Admin / Dispatcher
+        createOrUpdateUser("admin@uzairports.com", "admin123", "Sardor Aliyev (Bosh Dispetcher)",
+                UserRole.ADMIN, "dispatcher.html", "ADM");
+
+        // 3. Operator: Registration
+        createOrUpdateUser("registration@uzairports.com", "tas123", "Nodira Karimova (Registratsiya)",
+                UserRole.OPERATOR_REGISTRATION, "registration.html", "REG");
+
+        // 4. Operator: Warehouse
+        createOrUpdateUser("warehouse@uzairports.com", "tas123", "Rustam Mahmudov (Katta Omborchi)",
+                UserRole.OPERATOR_WAREHOUSE, "warehouse.html", "WHS");
+
+        // 5. Operator: Dock
+        createOrUpdateUser("dock@uzairports.com", "tas123", "Jasur Rahimov (Dok Operatori)",
+                UserRole.OPERATOR_DOCK, "dock.html", "DCK");
+
+        // 6. Operator: KPP Checkpoint
+        createOrUpdateUser("kpp@uzairports.com", "tas123", "Farhod Ergashev (KPP Ofitseri)",
+                UserRole.OPERATOR_KPP, "kpp.html", "KPP");
+
+        log.info("Barcha xizmat hisoblari (SuperAdmin, Admin, Registratsiya, Ombor, Dok, KPP) muvaffaqiyatli saqlandi.");
+    }
+
+    private void createOrUpdateUser(String email, String password, String fullName, UserRole role, String targetUrl, String avatar) {
+        User user = userRepository.findByEmailIgnoreCase(email).orElse(new User());
+        user.setEmail(email.toLowerCase().trim());
+        user.setPassword(password);
+        user.setFullName(fullName);
+        user.setRole(role);
+        user.setTargetUrl(targetUrl);
+        user.setAvatar(avatar);
+        user.setActive(true);
+        userRepository.save(user);
     }
 
     private void initDocks() {
@@ -78,7 +128,7 @@ public class DataInitializer implements CommandLineRunner {
                     true, "CC-2026-99123", "Elektron mikrosxemalar va server chiplari"
             ));
 
-            // 5. Release NOT GRANTED (Customs hold) -> Testing section 1.4 & 3.1 refusal!
+            // 5. Release NOT GRANTED (Customs hold)
             aweryAwbRepository.save(new AweryAwb(
                     "250-66491028", "OOO 'Global Trade Tashkent'", "HY-274 (Pekin)",
                     12, 340.0, CargoCategory.GENERAL,

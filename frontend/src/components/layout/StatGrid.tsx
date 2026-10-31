@@ -70,3 +70,4 @@ export const StatGrid: React.FC<StatGridProps> = ({ summary, isLoading }) => {
     </div>
   );
 };
+

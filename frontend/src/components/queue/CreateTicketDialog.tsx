@@ -192,3 +192,4 @@ export const CreateTicketDialog: React.FC<CreateTicketDialogProps> = ({
     </Dialog>
   );
 };
+

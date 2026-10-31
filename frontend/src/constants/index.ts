@@ -32,3 +32,4 @@ export const CATEGORY_LABELS: Record<CargoCategory, string> = {
   HEAVY: 'Og‘ir yuk (HEA)',
   DIPLOMATIC: 'Diplomatik (DIP)',
 };
+

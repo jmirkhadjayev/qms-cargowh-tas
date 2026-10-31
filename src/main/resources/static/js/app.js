@@ -282,6 +282,31 @@ function checkAuthGuard() {
         window.location.href = 'login.html';
         return false;
     }
+
+    if (user && !isLoginPage && !isLedPage) {
+        const currentFile = getCurrentPageFile();
+        const role = user.role;
+
+        // SuperAdmin has full access to every screen
+        if (role === 'SUPER_ADMIN') {
+            return true;
+        }
+
+        // Specific operator roles can ONLY view their assigned screen
+        const roleMap = {
+            'OPERATOR_REGISTRATION': 'registration.html',
+            'OPERATOR_WAREHOUSE': 'warehouse.html',
+            'OPERATOR_DOCK': 'dock.html',
+            'OPERATOR_KPP': 'kpp.html'
+        };
+
+        const dedicatedPage = roleMap[role];
+        if (dedicatedPage && currentFile !== dedicatedPage) {
+            console.warn(`[RBAC] Access to ${currentFile} blocked for ${user.email} (${role}). Redirecting to ${dedicatedPage}`);
+            window.location.href = dedicatedPage;
+            return false;
+        }
+    }
     return true;
 }
 

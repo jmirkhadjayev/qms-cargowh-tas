@@ -33,39 +33,6 @@ public class ApiController {
         this.reportService = reportService;
     }
 
-    // 0. Authentication
-    @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> creds) {
-        String username = creds.getOrDefault("username", "").trim().toLowerCase();
-        String password = creds.getOrDefault("password", "").trim();
-
-        Map<String, Map<String, String>> users = Map.of(
-            "admin", Map.of("username", "admin", "fullName", "Sardor Aliyev", "role", "ADMIN", "roleName", "Bosh Dispetcher (Admin)", "avatar", "👨‍✈️"),
-            "agent", Map.of("username", "agent", "fullName", "Nodira Karimova", "role", "AGENT", "roleName", "Registratsiya Agenti", "avatar", "👩‍💼"),
-            "sklad", Map.of("username", "sklad", "fullName", "Rustam Mahmudov", "role", "WAREHOUSE", "roleName", "Katta Omborchi", "avatar", "👷‍♂️"),
-            "dock", Map.of("username", "dock", "fullName", "Jasur Rahimov", "role", "DOCK_OPERATOR", "roleName", "Dok Operatori (Dock 1)", "avatar", "🚛"),
-            "kpp", Map.of("username", "kpp", "fullName", "Farhod Ergashev", "role", "KPP_SECURITY", "roleName", "KPP Nazorat Ofitseri", "avatar", "👮‍♂️")
-        );
-
-        if (users.containsKey(username)) {
-            // Check password
-            boolean valid = (username.equals("admin") && password.equals("admin123")) ||
-                            (!username.equals("admin") && (password.equals("tas123") || password.equals("admin123")));
-            if (valid) {
-                return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "token", "TAS-JWT-" + UUID.randomUUID().toString().substring(0, 8),
-                    "user", users.get(username)
-                ));
-            }
-        }
-
-        return ResponseEntity.status(401).body(Map.of(
-            "success", false,
-            "error", "Login yoki parol noto'g'ri (Login/password incorrect)"
-        ));
-    }
-
     // 1. Queue Operations
     @PostMapping("/queue/register")
     public ResponseEntity<?> registerTicket(@Valid @RequestBody RegisterTicketRequest request) {
