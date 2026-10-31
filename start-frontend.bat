@@ -12,3 +12,4 @@ echo Backend API proxy: http://localhost:8085
 echo.
 call npm run dev
 pause
+

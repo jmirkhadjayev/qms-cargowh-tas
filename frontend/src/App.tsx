@@ -5,6 +5,17 @@ import { DockMatrix, DockDto } from "./components/DockMatrix";
 import { Card, CardHeader, CardTitle, CardContent } from "./components/ui/card";
 import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogTrigger,
+} from "./components/ui/dialog";
+import { wsService } from "./lib/websocket";
 import {
   FileText,
   Clock,
@@ -12,11 +23,13 @@ import {
   Truck,
   CheckCircle2,
   Search,
-  ExternalLink,
   ShieldCheck,
   Monitor,
   Database,
   ArrowRight,
+  PlusCircle,
+  Radio,
+  Sparkles,
 } from "lucide-react";
 
 interface QueueSummary {
@@ -59,6 +72,15 @@ export function App() {
   const [tickets, setTickets] = useState<TicketDto[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isWsConnected, setIsWsConnected] = useState(false);
+  const [lastNotification, setLastNotification] = useState<string | null>(null);
+
+  // New ticket modal state
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [newAwb, setNewAwb] = useState("250-98765432");
+  const [newPlate, setNewPlate] = useState("01 777 AAA");
+  const [newConsignee, setNewConsignee] = useState("TOSHKENT LOGISTICS MCHJ");
+  const [isPriority, setIsPriority] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -81,9 +103,63 @@ export function App() {
 
   useEffect(() => {
     fetchData();
+
+    // Connect to Spring Boot WebSocket STOMP for live pushes
+    wsService.connect(
+      (update) => {
+        setIsWsConnected(true);
+        fetchData();
+      },
+      (dockUpdate) => {
+        setIsWsConnected(true);
+        fetchData();
+      },
+      (callMsg) => {
+        setIsWsConnected(true);
+        if (callMsg?.ticketNumber && callMsg?.dockNumber) {
+          setLastNotification(
+            `Talon ${callMsg.ticketNumber} -> Dok #${callMsg.dockNumber} ga chaqirildi!`
+          );
+          setTimeout(() => setLastNotification(null), 8000);
+        }
+        fetchData();
+      }
+    );
+
     const interval = setInterval(fetchData, 4000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      wsService.disconnect();
+    };
   }, []);
+
+  const handleCreateTicket = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("/api/queue/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          awbNumber: newAwb,
+          vehiclePlate: newPlate,
+          consigneeName: newConsignee,
+          isPriority: isPriority,
+          pieces: 12,
+          weightKg: 250,
+          category: "GENERAL",
+        }),
+      });
+
+      if (res.ok) {
+        setIsCreateOpen(false);
+        fetchData();
+        setLastNotification(`Yangi talon muvaffaqiyatli ro'yxatga olindi! (AWB: ${newAwb})`);
+        setTimeout(() => setLastNotification(null), 5000);
+      }
+    } catch (err) {
+      alert("Xatolik yuz berdi");
+    }
+  };
 
   const filteredTickets = tickets.filter(
     (t) =>
@@ -97,16 +173,25 @@ export function App() {
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
       <Header onRefresh={fetchData} isRefreshing={isRefreshing} />
 
+      {/* Live Audio / Call Banner */}
+      {lastNotification && (
+        <div className="bg-primary text-white text-xs py-2 px-4 text-center font-bold flex items-center justify-center gap-2 animate-in slide-in-from-top duration-300">
+          <Radio className="w-4 h-4 animate-pulse text-amber-300" />
+          <span>{lastNotification}</span>
+        </div>
+      )}
+
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
         {/* Top Banner */}
         <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <span className="text-[11px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded">
                 TAS / UTTT CARGO RUNWAY 08L
               </span>
               <span className="text-xs font-semibold text-emerald-700 flex items-center gap-1">
-                ● Tizim barqaror ishlamoqda
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Real-time WebSocket Ulangan
               </span>
             </div>
             <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
@@ -118,12 +203,89 @@ export function App() {
           </div>
 
           <div className="flex items-center gap-2 self-start md:self-auto">
+            {/* Create Ticket Modal */}
+            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="text-xs gap-1.5 bg-primary hover:bg-primary-hover shadow-sm">
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  Yangi Talon Yaratish
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <form onSubmit={handleCreateTicket}>
+                  <DialogHeader>
+                    <DialogTitle>Yangi Mijozni Ro'yxatdan O'tkazish</DialogTitle>
+                    <DialogDescription>
+                      AWB raqami Awery ERP bilan tekshiriladi va avtomatik elektron talon chop etiladi.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="grid gap-4 py-4">
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700 block mb-1">
+                        Avianakladnoy (AWB) Raqami
+                      </label>
+                      <Input
+                        value={newAwb}
+                        onChange={(e) => setNewAwb(e.target.value)}
+                        placeholder="Masalan: 250-98765432"
+                        className="font-mono"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700 block mb-1">
+                        Avtomobil Davlat Raqami (UZB / Xalqaro)
+                      </label>
+                      <Input
+                        value={newPlate}
+                        onChange={(e) => setNewPlate(e.target.value)}
+                        placeholder="01 777 AAA"
+                        className="font-mono uppercase font-bold"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700 block mb-1">
+                        Yuk Egasi / Tashkilot Nomi
+                      </label>
+                      <Input
+                        value={newConsignee}
+                        onChange={(e) => setNewConsignee(e.target.value)}
+                        placeholder="Kompaniya nomi"
+                        required
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-1">
+                      <input
+                        type="checkbox"
+                        id="priorityCheck"
+                        checked={isPriority}
+                        onChange={(e) => setIsPriority(e.target.checked)}
+                        className="w-4 h-4 rounded text-primary focus:ring-primary"
+                      />
+                      <label htmlFor="priorityCheck" className="text-xs font-bold text-amber-800 cursor-pointer">
+                        Imtiyozli navbat (Priority / Tez buziluvchi PER yuklar)
+                      </label>
+                    </div>
+                  </div>
+
+                  <DialogFooter>
+                    <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>
+                      Bekor Qilish
+                    </Button>
+                    <Button type="submit">
+                      Talon Berish &rarr;
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+
             <Button asChild variant="outline" size="sm" className="text-xs">
-              <a href="http://localhost:8085/registration.html" target="_blank" rel="noreferrer">
-                Mijoz Ro'yxatga Olish
-              </a>
-            </Button>
-            <Button asChild size="sm" className="text-xs">
               <a href="http://localhost:8085/dock.html" target="_blank" rel="noreferrer">
                 Dok Operatori &rarr;
               </a>
@@ -225,7 +387,12 @@ export function App() {
         <Card>
           <CardHeader className="pb-3 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <CardTitle className="text-base">Jonli Navbat va Arizalar Holati</CardTitle>
+              <CardTitle className="text-base flex items-center gap-2">
+                Jonli Navbat va Arizalar Holati
+                <span className="text-[10px] font-mono font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-200">
+                  {filteredTickets.length} ta ariza
+                </span>
+              </CardTitle>
               <p className="text-xs text-slate-500 mt-0.5">
                 Terminaldagi barcha faol navbat talonlari va ularning hozirgi bosqichi
               </p>
@@ -346,4 +513,3 @@ export function App() {
   );
 }
 export default App;
-
