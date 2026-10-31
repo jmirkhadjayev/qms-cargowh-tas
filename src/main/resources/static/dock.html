@@ -30,32 +30,24 @@
             white-space: nowrap;
         }
         .dock-pill:hover {
-            border-color: var(--primary-light);
+            border-color: var(--primary);
             background: var(--bg-card-hover);
         }
         .dock-pill.active {
-            background: linear-gradient(135deg, #0284c7, #0369a1);
-            border-color: var(--primary-light);
+            background: #2563eb;
+            border-color: #1d4ed8;
             color: #fff;
-            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         }
         .current-operation-card {
-            background: linear-gradient(145deg, rgba(16, 24, 39, 0.95), rgba(15, 23, 42, 0.9));
-            border: 2px solid var(--primary-light);
-            border-radius: 20px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--primary);
+            border-radius: 16px;
             padding: 2rem;
             margin-bottom: 2rem;
+            box-shadow: var(--shadow-card);
             position: relative;
-            overflow: hidden;
-        }
-        .current-operation-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
         }
         .queue-badge-next {
             background: rgba(16, 185, 129, 0.2);
@@ -332,10 +324,10 @@
                                 Tizim qoidalariga ko'ra navbatni sakratish taqiqlangan. Tizim avtomatik tarzda ushbu dok uchun navbat boshidagi mijozni tanladi:
                             </p>
                             
-                            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 16px; padding: 1.25rem 2rem; display: inline-flex; align-items: center; gap: 2.5rem; margin-bottom: 1.5rem; text-align: left; flex-wrap: wrap; justify-content: center;">
+                            <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 2rem; display: inline-flex; align-items: center; gap: 2.5rem; margin-bottom: 1.5rem; text-align: left; flex-wrap: wrap; justify-content: center; box-shadow: var(--shadow-sm);">
                                 <div>
-                                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">1-Navbatdagi Talon</div>
-                                    <div style="font-size: 2.2rem; font-weight: 900; font-family: var(--font-mono); color: #38bdf8; line-height: 1.1;">
+                                    <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">1-Navbatdagi Talon</div>
+                                    <div style="font-size: 2.4rem; font-weight: 900; font-family: var(--font-mono); color: #1d4ed8; line-height: 1.1;">
                                         ${nextTicket.ticketNumber}
                                     </div>
                                     <span class="badge ${nextTicket.isPriority ? 'badge-priority' : 'badge-general'}" style="margin-top: 4px;">
@@ -343,18 +335,18 @@
                                     </span>
                                 </div>
                                 <div>
-                                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">AWB / Yuk egasi</div>
-                                    <div style="font-weight: 700; font-family: var(--font-mono); font-size: 1.05rem;">${nextTicket.awbNumber}</div>
-                                    <div style="font-size: 0.85rem; color: var(--text-secondary); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${nextTicket.consigneeName}</div>
+                                    <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">AWB / Yuk egasi</div>
+                                    <div style="font-weight: 700; font-family: var(--font-mono); font-size: 1.1rem; color: #0f172a;">${nextTicket.awbNumber}</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600;">${nextTicket.consigneeName}</div>
                                 </div>
                                 <div>
-                                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Avto / Joy</div>
-                                    <div style="font-weight: 800; font-family: var(--font-mono); color: #fbbf24; font-size: 1.1rem;">${nextTicket.vehiclePlate || 'Avto kiritilmagan'}</div>
+                                    <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Avto / Joy</div>
+                                    <div style="font-weight: 800; font-family: var(--font-mono); color: #0f172a; font-size: 1.15rem;">${nextTicket.vehiclePlate || 'Avto kiritilmagan'}</div>
                                     <div style="font-size: 0.85rem; color: var(--text-muted);">${nextTicket.totalPieces} dona · ${nextTicket.totalWeightKg} kg</div>
                                 </div>
                             </div>
                             <div>
-                                <button class="btn btn-primary" onclick="callNextClient()" style="padding: 0.9rem 2.2rem; font-size: 1.1rem; font-weight: 700; box-shadow: 0 4px 20px rgba(2, 132, 199, 0.45);">
+                                <button class="btn btn-primary" onclick="callNextClient()" style="padding: 0.9rem 2.2rem; font-size: 1.05rem; font-weight: 700;">
                                     <svg class="icon-svg" style="width:18px;height:18px;vertical-align:-3px;margin-right:8px;" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                                     1-Navbatdagi Mijozni Dok #${currentDockNum} ga Chaqirish
                                 </button>
@@ -364,10 +356,10 @@
                 } else {
                     container.innerHTML = `
                         <div class="glass-card" style="text-align: center; padding: 3rem;">
-                            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem; margin-bottom: 1rem;">
-                                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981;"></span> DOCK #${currentDockNum} BO'SH (FREE)
+                            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem; margin-bottom: 1rem;">
+                                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#059669;"></span> DOCK #${currentDockNum} BO'SH (FREE)
                             </div>
-                            <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Hozirda Dok #${currentDockNum} uchun tayyor yuklar navbati bo'sh</h2>
+                            <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;">Hozirda Dok #${currentDockNum} uchun tayyor yuklar navbati bo'sh</h2>
                             <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
                                 Ombor xodimlari yacheykalardan yuklarni yig'ib dok hududiga chiqarganida bu yerda navbat tartibida avtomatik paydo bo'ladi.
                             </p>
@@ -387,35 +379,35 @@
                             <span class="badge badge-priority" style="font-size: 0.85rem; margin-bottom: 0.5rem;">
                                 DOCK #${currentDockNum} · JORIY OPERATSIYA
                             </span>
-                            <div style="font-size: 3rem; font-weight: 900; font-family: var(--font-mono); color: #38bdf8; line-height: 1;">
+                            <div style="font-size: 3rem; font-weight: 900; font-family: var(--font-mono); color: #1d4ed8; line-height: 1;">
                                 ${activeTicket.ticketNumber}
                             </div>
                         </div>
                         <div style="text-align: right;">
                             <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Holati:</div>
                             ${getStatusBadge(status)}
-                            <div style="font-size: 0.85rem; color: var(--accent); margin-top: 0.4rem; font-family: var(--font-mono);">
+                            <div style="font-size: 0.85rem; color: var(--accent); margin-top: 0.4rem; font-family: var(--font-mono); font-weight: 700;">
                                 Chaqiruvlar soni: ${activeTicket.callCount || 1}
                             </div>
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; padding: 1.25rem; background: rgba(0,0,0,0.3); border-radius: 12px; margin-bottom: 1.5rem;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; padding: 1.25rem; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 1.5rem;">
                         <div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">AWB RAQAMI</div>
-                            <div style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono);">${activeTicket.awbNumber}</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">AWB RAQAMI</div>
+                            <div style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono); color: #0f172a;">${activeTicket.awbNumber}</div>
                         </div>
                         <div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">YUK EGASI</div>
-                            <div style="font-size: 1.05rem; font-weight: 600;">${activeTicket.consigneeName}</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">YUK EGASI</div>
+                            <div style="font-size: 1.05rem; font-weight: 600; color: #1e293b;">${activeTicket.consigneeName}</div>
                         </div>
                         <div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">JOY / VAZN</div>
-                            <div style="font-size: 1.05rem; font-weight: 600;">${activeTicket.totalPieces} dona · ${activeTicket.totalWeightKg} kg</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">JOY / VAZN</div>
+                            <div style="font-size: 1.05rem; font-weight: 600; color: #1e293b;">${activeTicket.totalPieces} dona · ${activeTicket.totalWeightKg} kg</div>
                         </div>
                         <div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">AVTOMOBIL DAVLAT RAQAMI</div>
-                            <div style="font-size: 1.15rem; font-weight: 800; color: #fbbf24; font-family: var(--font-mono);">${activeTicket.vehiclePlate || 'Ko‘rsatilmagan'}</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">AVTOMOBIL DAVLAT RAQAMI (UZB / XALQARO)</div>
+                            <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; font-family: var(--font-mono);">${activeTicket.vehiclePlate || 'Ko‘rsatilmagan'}</div>
                         </div>
                     </div>
 
@@ -559,7 +551,7 @@
                             <div style="font-weight: 600;">${t.consigneeName}</div>
                             ${t.representativeName ? `<div style="font-size: 0.8rem; color: var(--text-muted);">${t.representativeName}</div>` : ''}
                         </td>
-                        <td style="font-family: var(--font-mono); color: #fbbf24; font-weight: 700;">${t.vehiclePlate || '-'}</td>
+                        <td style="font-family: var(--font-mono); color: #0f172a; font-weight: 800;">${t.vehiclePlate || '-'}</td>
                         <td>${t.totalPieces} dona / ${t.totalWeightKg} kg</td>
                         <td><span class="badge badge-general" style="font-size: 0.75rem;">${t.category}</span></td>
                         <td><span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary);">${t.storageLocation || '-'}</span></td>

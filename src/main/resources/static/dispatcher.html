@@ -11,25 +11,39 @@
     <style>
         .tabs-header {
             display: flex;
-            gap: 1rem;
-            border-bottom: 1px solid var(--border-color);
+            gap: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
             margin-bottom: 2rem;
+            background: #ffffff;
+            padding: 0.5rem 0.5rem 0 0.5rem;
+            border-radius: 12px 12px 0 0;
+            box-shadow: var(--shadow-sm);
         }
         .tab-btn {
             background: none;
             border: none;
             color: var(--text-secondary);
             font-family: inherit;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            padding: 0.75rem 1.25rem;
+            padding: 0.75rem 1.5rem;
             cursor: pointer;
             border-bottom: 3px solid transparent;
+            border-radius: 8px 8px 0 0;
             transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .tab-btn:hover {
+            color: var(--primary);
+            background: #f8fafc;
         }
         .tab-btn.active {
             color: var(--primary);
+            font-weight: 700;
             border-bottom-color: var(--primary);
+            background: #eff6ff;
         }
         .dock-summary-card {
             background: var(--bg-card);
@@ -180,7 +194,7 @@
                                 </div>
                                 <div style="font-size: 0.85rem; color: var(--text-muted);">${d.name}</div>
                                 <div style="margin-top: 0.75rem; font-family: var(--font-mono); font-weight: 700;">
-                                    ${d.currentTicketNumber ? `<span style="color: #1d4ed8; font-size: 1.2rem; font-weight: 800;">${d.currentTicketNumber}</span> <span style="font-size: 0.8rem; color:#d97706;">(${d.currentVehiclePlate || 'Piyoda'})</span>` : '<span style="color: var(--text-muted);">Bo‘sh</span>'}
+                                    ${d.currentTicketNumber ? `<span style="color: #1d4ed8; font-size: 1.2rem; font-weight: 800;">${d.currentTicketNumber}</span> <span style="font-size: 0.8rem; color:#0f172a; font-weight: 700;">(${d.currentVehiclePlate || 'Piyoda'})</span>` : '<span style="color: var(--text-muted);">Bo‘sh</span>'}
                                 </div>
                             </div>
                         `;
@@ -202,7 +216,7 @@
                             </td>
                             <td style="font-family: var(--font-mono); font-weight: 700; color: #0f172a;">${t.awbNumber}</td>
                             <td style="font-weight: 600; color: #1e293b;">${t.consigneeName}</td>
-                            <td style="font-family: var(--font-mono); color: #d97706; font-weight: 700;">${t.vehiclePlate || 'Piyoda'}</td>
+                            <td style="font-family: var(--font-mono); color: #0f172a; font-weight: 800;">${t.vehiclePlate || 'Piyoda'}</td>
                             <td>${t.issuedPieces}/${t.totalPieces} dona · ${t.totalWeightKg} kg</td>
                             <td>${t.category}</td>
                             <td>${t.assignedDockNumber ? 'Dock #' + t.assignedDockNumber : '—'}</td>

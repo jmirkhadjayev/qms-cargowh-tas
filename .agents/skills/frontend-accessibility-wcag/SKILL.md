@@ -38,3 +38,4 @@ This skill ensures that all user interfaces for TAS Cargo QMS remain legible and
      - 🟢 Yashil + "TAYYOR" / "APPROVED"
      - 🟡 Sariq + "KUTMOQDA" / "WAITING"
      - 🔴 Qizil + "RAD ETILDI" / "BLOCKED"
+
