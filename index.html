@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAS Cargo | Tashkent Airport Logistics Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/tashkent-airport-emblem.svg" type="image/svg+xml">
+</head>
+<body>
+
+    <!-- Main Content Body -->
+    <div class="main-content">
+        
+        <!-- Dashboard Top Banner (AI SaaS Analytics Style) -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; flex-wrap:wrap; gap:12px;">
+            <div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                    <span style="font-size:0.64rem; font-weight:700; background:var(--primary-light); color:var(--primary); padding:2px 7px; border-radius:4px; letter-spacing:0.04em; text-transform:uppercase; display:inline-flex; align-items:center; gap:4px;">
+                        <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+                        TAS / UTTT RUNWAY 08L CARGO
+                    </span>
+                    <span style="font-size:0.68rem; color:var(--emerald); font-weight:700;">● TIZIM TO'LIQ FAOL</span>
+                </div>
+                <h2 style="font-size:1.25rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.015em;" data-i18n="hubTitle">Dispetcherlik va Boshqaruv Markazi</h2>
+                <p style="font-size:0.78rem; color:var(--text-muted);" data-i18n="hubDesc">Import yuklarini berish jarayoni, ombor tayyorgarligi, doklar va KPP nazorat portallari</p>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a href="activity-log.html" class="btn btn-secondary" style="border-color:#6366f1; color:#4f46e5; font-weight:700; background:#eef2ff;">
+                    <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    <span>📜 Amallar Jurnali (Audit)</span>
+                </a>
+                <button onclick="openSuperAdminRbacModal()" class="btn btn-secondary" style="border-color:var(--primary); color:var(--primary); font-weight:700; background:var(--primary-light);">
+                    <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>🛡️ Xodimlar Ruxsatnomalari (RBAC)</span>
+                </button>
+                <button onclick="refreshDashboard()" class="btn btn-secondary">
+                    <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    <span data-i18n="refresh">Yangilash</span>
+                </button>
+                <a href="dispatcher.html" class="btn btn-primary">
+                    <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+                    <span data-i18n="analyticsBtn">Jonli Tahlil va Hisobotlar</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- KPI Metric Cards (Compact AI SaaS Analytics Style) -->
+        <div class="stat-grid">
+            <!-- 1. Total Applications -->
+            <div class="stat-card">
+                <div class="stat-header-flex">
+                    <span class="stat-label" data-i18n="kpiTotal">Bugungi Jami Arizalar</span>
+                    <div class="stat-icon-badge">
+                        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="kpiTotal">0</div>
+                <div class="stat-subtext">
+                    <span class="stat-trend up">+18.4%</span>
+                    <span>Ro'yxatdan o'tgan AWB</span>
+                </div>
+                <div class="stat-progress-bar">
+                    <div class="stat-progress-fill" style="width: 85%;"></div>
+                </div>
+            </div>
+
+            <!-- 2. Waiting in Warehouse -->
+            <div class="stat-card waiting">
+                <div class="stat-header-flex">
+                    <span class="stat-label" data-i18n="kpiWaiting">Omborda Kutilmoqda</span>
+                    <div class="stat-icon-badge">
+                        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="kpiWaiting">0</div>
+                <div class="stat-subtext">
+                    <span class="stat-trend neutral">Navbatda</span>
+                    <span>Kutish zalidagi mijozlar</span>
+                </div>
+                <div class="stat-progress-bar">
+                    <div class="stat-progress-fill" style="width: 45%; background: var(--amber);"></div>
+                </div>
+            </div>
+
+            <!-- 3. Warehouse Preparing -->
+            <div class="stat-card preparing">
+                <div class="stat-header-flex">
+                    <span class="stat-label" data-i18n="kpiPreparing">Sklad Yig'moqda</span>
+                    <div class="stat-icon-badge">
+                        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="kpiPreparing">0</div>
+                <div class="stat-subtext">
+                    <span class="stat-trend up">Yacheyka</span>
+                    <span>Yuk tayyorlanmoqda</span>
+                </div>
+                <div class="stat-progress-bar">
+                    <div class="stat-progress-fill" style="width: 60%; background: var(--indigo);"></div>
+                </div>
+            </div>
+
+            <!-- 4. At Docks -->
+            <div class="stat-card docks">
+                <div class="stat-header-flex">
+                    <span class="stat-label" data-i18n="kpiAtDock">Doklarda Berilmoqda</span>
+                    <div class="stat-icon-badge">
+                        <svg class="icon-svg" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="kpiAtDock">0</div>
+                <div class="stat-subtext">
+                    <span class="stat-trend up">Rampa 1-6</span>
+                    <span>Xizmat ko'rsatish</span>
+                </div>
+                <div class="stat-progress-bar">
+                    <div class="stat-progress-fill" style="width: 50%; background: var(--primary);"></div>
+                </div>
+            </div>
+
+            <!-- 5. Completed at KPP -->
+            <div class="stat-card completed">
+                <div class="stat-header-flex">
+                    <span class="stat-label" data-i18n="kpiCompleted">KPP dan Chiqib Ketdi</span>
+                    <div class="stat-icon-badge">
+                        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="kpiCompleted">0</div>
+                <div class="stat-subtext">
+                    <span class="stat-trend up">100% OK</span>
+                    <span>Shlakbaumdan o'tdi</span>
+                </div>
+                <div class="stat-progress-bar">
+                    <div class="stat-progress-fill" style="width: 100%; background: var(--emerald);"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI SaaS Analytics: Smart Dispatcher Insights Card (Dribbble 27409568) -->
+        <div class="ai-insights-card">
+            <div class="ai-insights-header">
+                <div class="ai-title-wrap">
+                    <div class="ai-icon-badge">
+                        <svg class="icon-svg icon-svg-md" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/></svg>
+                    </div>
+                    <div>
+                        <h3 style="font-size:0.92rem; font-weight:700; color:var(--text-primary); letter-spacing:-0.01em;">
+                            AI Dispetcher Intellekti &amp; Yuk Oqimi Prognozi
+                        </h3>
+                        <p style="font-size:0.72rem; color:var(--text-muted); font-weight:500;">
+                            Awery ERP ma'lumotlari va aeroport telemetriyasi asosida real vaqtli optimallashtirish
+                        </p>
+                    </div>
+                </div>
+                <div class="ai-badge">
+                    <span class="pulse-dot" style="background:#2563eb;"></span>
+                    AI REAL-TIME AGENT
+                </div>
+            </div>
+            <div class="ai-insights-grid">
+                <div class="ai-insight-pill">
+                    <span class="ai-insight-dot blue"></span>
+                    <div>
+                        <strong>Dok 1–2 Balansi:</strong> Oddiy yuklar uchun Rampa 01 va 02 navbati erkin. O'rtacha xizmat vaqti: <strong>7.4 daqiqa</strong>.
+                    </div>
+                </div>
+                <div class="ai-insight-pill">
+                    <span class="ai-insight-dot purple"></span>
+                    <div>
+                        <strong>Tez buziluvchi (Perishable) yuklar:</strong> Sovutgichli Dok 04 ga TK-6511 reysi dori-darmonlariga avtomatik ustuvorlik berilsin.
+                    </div>
+                </div>
+                <div class="ai-insight-pill">
+                    <span class="ai-insight-dot green"></span>
+                    <div>
+                        <strong>KPP Shlakbaum O'tkazuvchanligi:</strong> Darvozada o'rtacha nazorat vaqti <strong>44 soniya</strong>. Tirbandlik ko'rsatkichi 0%.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aviation Warehouse Dock Bays Live Visualizer (Dock 1-6) -->
+        <div style="margin-bottom: 12px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:0.95rem; font-weight:700; color:var(--text-primary);">Yuk Berish Dok Rampalari (Dock 1 – 6)</span>
+                <span style="font-size:0.68rem; font-weight:700; background:var(--emerald-light); color:var(--emerald); border:1px solid var(--emerald-border); padding:2px 7px; border-radius:4px; letter-spacing:0.03em;">JONLI MONITORING</span>
+            </div>
+            <a href="dock.html" style="font-size:0.76rem; font-weight:600; color:var(--primary); text-decoration:none;">Barcha doklarni boshqarish &rarr;</a>
+        </div>
+
+        <div class="dock-bays-strip" id="dockBaysContainer">
+            <!-- Rendered dynamically via loadDocks() -->
+            <div class="dock-bay-card"><div class="bay-top"><span class="bay-num">DOCK 01</span><span class="bay-lamp"></span></div><span class="bay-truck-icon"><svg class="icon-svg" style="width:20px;height:20px;color:var(--primary);margin:4px 0;" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span><div class="bay-ticket">-</div><div class="bay-status-lbl">BO'SH</div></div>
+            <div class="dock-bay-card"><div class="bay-top"><span class="bay-num">DOCK 02</span><span class="bay-lamp"></span></div><span class="bay-truck-icon"><svg class="icon-svg" style="width:20px;height:20px;color:var(--primary);margin:4px 0;" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span><div class="bay-ticket">-</div><div class="bay-status-lbl">BO'SH</div></div>
+            <div class="dock-bay-card"><div class="bay-top"><span class="bay-num">DOCK 03</span><span class="bay-lamp"></span></div><span class="bay-truck-icon"><svg class="icon-svg" style="width:20px;height:20px;color:var(--primary);margin:4px 0;" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span><div class="bay-ticket">-</div><div class="bay-status-lbl">BO'SH</div></div>
+            <div class="dock-bay-card"><div class="bay-top"><span class="bay-num">DOCK 04</span><span class="bay-lamp"></span></div><span class="bay-truck-icon"><svg class="icon-svg" style="width:20px;height:20px;color:var(--primary);margin:4px 0;" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span><div class="bay-ticket">-</div><div class="bay-status-lbl">BO'SH</div></div>
+            <div class="dock-bay-card"><div class="bay-top"><span class="bay-num">DOCK 05</span><span class="bay-lamp"></span></div><span class="bay-truck-icon"><svg class="icon-svg" style="width:20px;height:20px;color:var(--primary);margin:4px 0;" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span><div class="bay-ticket">-</div><div class="bay-status-lbl">BO'SH</div></div>
+            <div class="dock-bay-card"><div class="bay-top"><span class="bay-num">DOCK 06</span><span class="bay-lamp"></span></div><span class="bay-truck-icon"><svg class="icon-svg" style="width:20px;height:20px;color:var(--primary);margin:4px 0;" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span><div class="bay-ticket">-</div><div class="bay-status-lbl">BO'SH</div></div>
+        </div>
+
+        <!-- ERP SALES AUTOMATION GRID: ORDER LIST & RECENT ACTIVITY FEED (Dribbble 26370765) -->
+        <div class="erp-dashboard-grid">
+            
+            <!-- Left Card: Cargo Order List & Dispatch Table -->
+            <div class="erp-card">
+                <div class="erp-card-header">
+                    <div class="erp-card-title">
+                        <svg class="icon-svg" style="color:var(--primary); width:18px; height:18px;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        <span>Yuk Buyurtmalari va Dispetcherlik Ro'yxati</span>
+                    </div>
+
+                    <!-- Filter Tabs -->
+                    <div class="erp-filter-tabs">
+                        <button class="erp-tab-btn active" id="tabAll" onclick="filterOrderList('ALL')">
+                            Barchasi <span class="erp-tab-badge" id="badgeAll">0</span>
+                        </button>
+                        <button class="erp-tab-btn" id="tabWait" onclick="filterOrderList('WAITING')">
+                            Kutishda <span class="erp-tab-badge" id="badgeWait">0</span>
+                        </button>
+                        <button class="erp-tab-btn" id="tabPrep" onclick="filterOrderList('PREPARING')">
+                            Sklad <span class="erp-tab-badge" id="badgePrep">0</span>
+                        </button>
+                        <button class="erp-tab-btn" id="tabDock" onclick="filterOrderList('AT_DOCK')">
+                            Dokda <span class="erp-tab-badge" id="badgeDock">0</span>
+                        </button>
+                        <button class="erp-tab-btn" id="tabClosed" onclick="filterOrderList('CLOSED')">
+                            Chiqdi <span class="erp-tab-badge" id="badgeClosed">0</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table Content -->
+                <div class="table-responsive" style="border:none; border-radius:0;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Talon</th>
+                                <th>AWB Raqami</th>
+                                <th>Yuk Egasi (Consignee)</th>
+                                <th>Joy / Vazn</th>
+                                <th>Rampa</th>
+                                <th>Holati</th>
+                                <th style="text-align:right;">Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody">
+                            <tr>
+                                <td colspan="7" style="text-align:center; padding:2rem; color:var(--text-muted);">
+                                    Yuk buyurtmalari yuklanmoqda...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right Card: Recent Activity Feed (Audit & Lifecycle Stream) -->
+            <div class="erp-card">
+                <div class="erp-card-header">
+                    <div class="erp-card-title">
+                        <svg class="icon-svg" style="color:var(--primary); width:18px; height:18px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>Oxirgi Harakatlar Jurnali</span>
+                    </div>
+                    <span style="font-size:0.68rem; color:var(--text-muted); font-family:var(--font-mono); font-weight:700;">AUDIT STREAM</span>
+                </div>
+
+                <div class="activity-feed-list" id="activityFeedContainer">
+                    <div style="text-align:center; padding:2rem; color:var(--text-muted); font-size:0.78rem;">
+                        Jonli harakatlar yangilanmoqda...
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Aviation Radar & Live Inbound Cargo Flights Widget -->
+        <div class="aviation-radar-card">
+            <div class="radar-card-header">
+                <div class="radar-header-title">
+                    <div class="radar-icon-badge">
+                        <svg class="icon-svg icon-svg-md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+                    </div>
+                    <div>
+                        <h3 style="font-size:0.95rem; font-weight:700; color:var(--text-primary); letter-spacing:-0.01em;">
+                            Aeroport Havo Harakati va Yuk Reyslari Radari
+                        </h3>
+                        <p style="font-size:0.74rem; color:var(--text-secondary); font-weight:500;">
+                            TAS / UTTT Havo hududidagi yaqinlashayotgan yuk samolyotlari va bojxona relizlari (Live Telemetriya)
+                        </p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:0.7rem; font-family:var(--font-mono); font-weight:700; color:var(--emerald); background:var(--emerald-light); border:1px solid var(--emerald-border); padding:3px 10px; border-radius:9999px;">
+                        ● RADAR AKTIV: 35 NM SCAN
+                    </span>
+                    <button class="btn-airport-chime" onclick="triggerAirportChimeTest()" title="Aeroport e'lonini sinash">
+                        <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span>Chime Sinovi</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="radar-grid-layout">
+                <!-- Circular Radar Scope -->
+                <div class="radar-scope" title="Toshkent Xalqaro Aeroporti (TAS/UTTT) 35 NM Havo Hududi Radari">
+                    <div class="scope-ring scope-ring-1"></div>
+                    <div class="scope-ring scope-ring-2"></div>
+                    <div class="scope-ring scope-ring-3"></div>
+                    <div class="scope-cross-x"></div>
+                    <div class="scope-cross-y"></div>
+                    <div class="scope-sweep"></div>
+                    
+                    <!-- Aircraft Blips -->
+                    <div class="flight-target flight-target-1" title="HY424 (B767-300F) DEL->TAS 1,008 kg">
+                        <div class="flight-target-dot"></div>
+                        <span>HY424</span>
+                    </div>
+                    <div class="flight-target flight-target-2" title="TK6511 (A330-200F) IST->TAS 2,450 kg">
+                        <div class="flight-target-dot" style="background:var(--primary);"></div>
+                        <span>TK6511</span>
+                    </div>
+                    <div class="flight-target flight-target-3" title="LH8220 (B777F) FRA->TAS 3,500 kg">
+                        <div class="flight-target-dot" style="background:var(--amber);"></div>
+                        <span>LH8220</span>
+                    </div>
+                </div>
+
+                <!-- Flight Manifest List -->
+                <div class="flight-manifest-list">
+                    <!-- Flight 1 -->
+                    <div class="manifest-item">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="stat-icon-badge" style="width:36px; height:36px; background:var(--emerald-light); color:var(--emerald); border-color:var(--emerald-border);">
+                                <svg class="icon-svg icon-svg-md" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+                            </div>
+                            <div>
+                                <div class="manifest-flight-callsign">
+                                    <span>HY-424</span>
+                                    <span style="font-size:0.68rem; background:var(--emerald-light); color:var(--emerald); border:1px solid var(--emerald-border); padding:2px 7px; border-radius:4px; font-weight:700;">QO'NDI</span>
+                                </div>
+                                <div class="manifest-route">Dehli (DEL) &rarr; Toshkent (TAS) &bull; Boeing 767-300F</div>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div class="manifest-weight">1,008 kg</div>
+                            <div style="font-size:0.72rem; color:var(--primary); font-family:var(--font-mono); font-weight:700;">AWB: 250-51253053</div>
+                        </div>
+                    </div>
+
+                    <!-- Flight 2 -->
+                    <div class="manifest-item">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="stat-icon-badge" style="width:36px; height:36px; background:var(--primary-light); color:var(--primary); border-color:var(--primary-border);">
+                                <svg class="icon-svg icon-svg-md" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+                            </div>
+                            <div>
+                                <div class="manifest-flight-callsign">
+                                    <span>TK-6511</span>
+                                    <span style="font-size:0.68rem; background:var(--primary-light); color:var(--primary); border:1px solid var(--primary-border); padding:2px 7px; border-radius:4px; font-weight:700;">YONALISHDA</span>
+                                </div>
+                                <div class="manifest-route">Istanbul (IST) &rarr; Toshkent (TAS) &bull; Airbus A330-200F</div>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div class="manifest-weight">2,450 kg</div>
+                            <div style="font-size:0.72rem; color:var(--emerald); font-family:var(--font-mono); font-weight:700;">AWB: 250-84920183</div>
+                        </div>
+                    </div>
+
+                    <!-- Flight 3 -->
+                    <div class="manifest-item">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="stat-icon-badge" style="width:36px; height:36px; background:var(--amber-light); color:var(--amber); border-color:var(--amber-border);">
+                                <svg class="icon-svg icon-svg-md" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                            </div>
+                            <div>
+                                <div class="manifest-flight-callsign">
+                                    <span>LH-8220</span>
+                                    <span style="font-size:0.68rem; background:var(--amber-light); color:var(--amber); border:1px solid var(--amber-border); padding:2px 7px; border-radius:4px; font-weight:700;">RAMPADA</span>
+                                </div>
+                                <div class="manifest-route">Frankfurt (FRA) &rarr; Toshkent (TAS) &bull; Boeing 777F</div>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div class="manifest-weight">3,500 kg</div>
+                            <div style="font-size:0.72rem; color:var(--amber); font-family:var(--font-mono); font-weight:700;">AWB: 250-99210482</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Title: Portals -->
+        <div style="margin-bottom: 14px; display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="font-size:0.95rem; font-weight:700; color:var(--text-primary);">Operatsion Ishchi Joylar (Terminal Portallari)</h3>
+            <span style="font-size:0.7rem; color:var(--text-muted); font-family:var(--font-mono);">TAS-CARGO-DISPATCH-V2</span>
+        </div>
+
+        <!-- Portals Navigation Grid (Vector Icons) -->
+        <div class="portal-grid">
+            <!-- 1. Registration Agent -->
+            <a href="registration.html" class="portal-card" id="cardReg">
+                <div>
+                    <div class="portal-icon">
+                        <svg class="icon-svg icon-svg-lg" style="color:var(--primary);" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>
+                    </div>
+                    <div class="portal-role" data-i18n="step1Title">1-BOSQICH · MA'MURIY BINO</div>
+                    <h3 class="portal-name" data-i18n="portalRegName">Registratsiya Agenti</h3>
+                    <p class="portal-desc" data-i18n="portalRegDesc">
+                        Mijoz AWB sini kiritish, CargoUZ Awery ERP orqali Bojxona ruxsatini (Release Permit) tekshirish va QR-kodli elektron talon chop etish.
+                    </p>
+                </div>
+                <div class="portal-footer">
+                    <span><span data-i18n="enter">Kirish</span> &rarr;</span>
+                    <span class="portal-badge">Kassa / Admin</span>
+                </div>
+            </a>
+
+            <!-- 2. Warehouse Tablet -->
+            <a href="warehouse.html" class="portal-card" id="cardWarehouse">
+                <div>
+                    <div class="portal-icon">
+                        <svg class="icon-svg icon-svg-lg" style="color:#4f46e5;" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                    </div>
+                    <div class="portal-role" data-i18n="step2Title">2-BOSQICH · OMBOR (SKLAD)</div>
+                    <h3 class="portal-name" data-i18n="portalWhName">Ombor Xodimi Paneli</h3>
+                    <p class="portal-desc" data-i18n="portalWhDesc">
+                        Elektron yig'uv topshiriqlari: AWB, saqlash yacheykasi, joylar soni. Yukni topib dokka chiqarish va "Yuk tayyor" deb tasdiqlash.
+                    </p>
+                </div>
+                <div class="portal-footer">
+                    <span><span data-i18n="enter">Kirish</span> &rarr;</span>
+                    <span class="portal-badge">Planshet / Sklad</span>
+                </div>
+            </a>
+
+            <!-- 3. Dock Operator -->
+            <a href="dock.html" class="portal-card" id="cardDock">
+                <div>
+                    <div class="portal-icon">
+                        <svg class="icon-svg icon-svg-lg" style="color:#d97706;" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                    </div>
+                    <div class="portal-role" data-i18n="step3Title">3-BOSQICH · YUK BERISH DOKLARI</div>
+                    <h3 class="portal-name" data-i18n="portalDockName">Dok Operatori (Rampa)</h3>
+                    <p class="portal-desc" data-i18n="portalDockDesc">
+                        Dock 1–6 boshqaruvi: mijozni chaqirish, qabul qilish, berishni boshlash, yakunlash hamda qisman berish (kamomad akti) qayd etish.
+                    </p>
+                </div>
+                <div class="portal-footer">
+                    <span><span data-i18n="enter">Kirish</span> &rarr;</span>
+                    <span class="portal-badge">Dock 1 – 6</span>
+                </div>
+            </a>
+
+            <!-- 4. LED Board Display -->
+            <a href="led-board.html" target="_blank" class="portal-card" id="cardLed">
+                <div>
+                    <div class="portal-icon">
+                        <svg class="icon-svg icon-svg-lg" style="color:#0284c7;" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </div>
+                    <div class="portal-role" data-i18n="stepLedTitle">AXBOROT · KUTISH ZALI & DOKLAR</div>
+                    <h3 class="portal-name" data-i18n="portalLedName">Katta LED Tablo Monitor</h3>
+                    <p class="portal-desc" data-i18n="portalLedDesc">
+                        Katta TV ekranlar uchun mo'ljallangan yuqori kontrastli jonli tablo. Talon raqamlari, avtomobil raqami va avtomatik ovozli e'lon.
+                    </p>
+                </div>
+                <div class="portal-footer">
+                    <span>Oynada ochish &rarr;</span>
+                    <span class="portal-badge">Ovozli TV Tablo</span>
+                </div>
+            </a>
+
+            <!-- 5. KPP Security Gate -->
+            <a href="kpp.html" class="portal-card" id="cardKpp">
+                <div>
+                    <div class="portal-icon">
+                        <svg class="icon-svg icon-svg-lg" style="color:#059669;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    </div>
+                    <div class="portal-role" data-i18n="step4Title">4-BOSQICH · CHIQISH NAZORATI</div>
+                    <h3 class="portal-name" data-i18n="portalKppName">KPP Qo'riqlash Punkti</h3>
+                    <p class="portal-desc" data-i18n="portalKppDesc">
+                        Darvozada QR-kodni skanerlash, yuk to'liq berilganini va AWB to'g'riligini tekshirish hamda transport vositasi chiqishini tasdiqlash.
+                    </p>
+                </div>
+                <div class="portal-footer">
+                    <span><span data-i18n="enter">Kirish</span> &rarr;</span>
+                    <span class="portal-badge">QR Skaner / KPP</span>
+                </div>
+            </a>
+
+            <!-- 6. Awery ERP Simulator -->
+            <a href="awery-sim.html" class="portal-card" id="cardAwery">
+                <div>
+                    <div class="portal-icon">
+                        <svg class="icon-svg icon-svg-lg" style="color:#2563eb;" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                    </div>
+                    <div class="portal-role">INTEGRATSIYA · AWERY ERP</div>
+                    <h3 class="portal-name" data-i18n="portalAweryName">Awery ERP Simulyatori</h3>
+                    <p class="portal-desc" data-i18n="portalAweryDesc">
+                        Aeroport yuk tizimi (Awery) bazasi. Yangi AWB kiritish, Bojxona relizini yoqish/o'chirish va integratsiyani sinovdan o'tkazish.
+                    </p>
+                </div>
+                <div class="portal-footer">
+                    <span><span data-i18n="enter">Kirish</span> &rarr;</span>
+                    <span class="portal-badge">Awery API Test</span>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Ticket QR Modal View -->
+    <div class="modal-overlay" id="qrModal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <h3 style="font-size: 1.15rem; margin-bottom: 6px; font-weight: 800;" id="qrModalTicketTitle">Talon QR Cheki</h3>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;" id="qrModalSubtitle">Toshkent Xalqaro Aeroporti</p>
+            <div style="background:#ffffff; border:1px solid var(--border-color); border-radius:8px; padding:12px; display:inline-block; margin-bottom:12px;">
+                <img id="qrModalImg" src="" alt="QR" style="width: 170px; height: 170px; display:block;">
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700; color: var(--text-primary); margin-bottom: 16px;" id="qrModalAwbText"></div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="printQrDirectly()">Chop etish</button>
+                <button class="btn btn-secondary" onclick="closeQrModal()">Yopish</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let allTickets = [];
+        let currentFilter = 'ALL';
+
+        // Fetch Live Summary Stats
+        async function loadSummary() {
+            try {
+                const res = await fetch('/api/queue/summary');
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('kpiTotal').textContent = data.totalToday || 0;
+                    document.getElementById('kpiWaiting').textContent = data.waitingCount || 0;
+                    document.getElementById('kpiPreparing').textContent = data.preparingCount || 0;
+                    document.getElementById('kpiAtDock').textContent = data.atDockCount || 0;
+                    document.getElementById('kpiCompleted').textContent = data.kppExitedToday || 0;
+                }
+            } catch (err) {
+                console.warn('Summary fetch failed:', err);
+            }
+        }
+
+        // Fetch Live Docks status for visual strip
+        async function loadDocks() {
+            try {
+                const res = await fetch('/api/docks');
+                if (res.ok) {
+                    const docks = await res.json();
+                    const container = document.getElementById('dockBaysContainer');
+                    if (!container) return;
+
+                    let html = '';
+                    docks.forEach(d => {
+                        const isBusy = d.status !== 'FREE';
+                        const statusClass = isBusy ? 'bay-lamp busy' : 'bay-lamp';
+                        const statusLabel = d.status === 'FREE' ? "BO'SH" : d.status === 'CALLING' ? "CHAQIRILDI" : "BERILMOQDA";
+                        const ticketDisplay = d.currentTicketNumber || '-';
+                        
+                        html += `
+                            <div class="dock-bay-card" onclick="window.location.href='dock.html'">
+                                <div class="bay-top">
+                                    <span class="bay-num">DOCK 0${d.dockNumber}</span>
+                                    <span class="${statusClass}"></span>
+                                </div>
+                                <span class="bay-truck-icon">
+                                    <svg class="icon-svg" style="width:20px;height:20px;color:var(--primary);margin:4px 0;" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                                </span>
+                                <div class="bay-ticket">${ticketDisplay}</div>
+                                <div class="bay-status-lbl">${statusLabel}</div>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                }
+            } catch (err) {
+                console.warn('Docks fetch failed:', err);
+            }
+        }
+
+        // Load ERP Order List
+        async function loadOrderList() {
+            try {
+                const res = await fetch('/api/queue/recent');
+                if (res.ok) {
+                    allTickets = await res.json();
+                    updateOrderListUI();
+                }
+            } catch (e) {
+                console.warn('Order list fetch failed:', e);
+            }
+        }
+
+        function filterOrderList(statusFilter) {
+            currentFilter = statusFilter;
+            document.querySelectorAll('.erp-tab-btn').forEach(b => b.classList.remove('active'));
+            const tabId = statusFilter === 'ALL' ? 'tabAll' : 
+                          statusFilter === 'WAITING' ? 'tabWait' : 
+                          statusFilter === 'PREPARING' ? 'tabPrep' : 
+                          statusFilter === 'AT_DOCK' ? 'tabDock' : 'tabClosed';
+            const activeTab = document.getElementById(tabId);
+            if (activeTab) activeTab.classList.add('active');
+            updateOrderListUI();
+        }
+
+        function updateOrderListUI() {
+            // Calculate counts
+            const total = allTickets.length;
+            const waiting = allTickets.filter(t => t.status === 'REGISTERED' || t.status === 'PREPARATION_PENDING').length;
+            const prep = allTickets.filter(t => t.status === 'PREPARING' || t.status === 'PREPARED').length;
+            const atDock = allTickets.filter(t => t.status === 'CALLED' || t.status === 'ARRIVED' || t.status === 'ISSUING' || t.status === 'PARTIAL_ISSUED').length;
+            const closed = allTickets.filter(t => t.status === 'CLOSED' || t.status === 'EXIT_CONFIRMED' || t.status === 'WAITING_KPP').length;
+
+            document.getElementById('badgeAll').textContent = total;
+            document.getElementById('badgeWait').textContent = waiting;
+            document.getElementById('badgePrep').textContent = prep;
+            document.getElementById('badgeDock').textContent = atDock;
+            document.getElementById('badgeClosed').textContent = closed;
+
+            // Filter
+            let filtered = allTickets;
+            if (currentFilter === 'WAITING') {
+                filtered = allTickets.filter(t => t.status === 'REGISTERED' || t.status === 'PREPARATION_PENDING');
+            } else if (currentFilter === 'PREPARING') {
+                filtered = allTickets.filter(t => t.status === 'PREPARING' || t.status === 'PREPARED');
+            } else if (currentFilter === 'AT_DOCK') {
+                filtered = allTickets.filter(t => t.status === 'CALLED' || t.status === 'ARRIVED' || t.status === 'ISSUING' || t.status === 'PARTIAL_ISSUED');
+            } else if (currentFilter === 'CLOSED') {
+                filtered = allTickets.filter(t => t.status === 'CLOSED' || t.status === 'EXIT_CONFIRMED' || t.status === 'WAITING_KPP');
+            }
+
+            const tbody = document.getElementById('orderTableBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-muted); font-size:0.8rem;">Ushbu holatda yuk buyurtmalari mavjud emas</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.slice(0, 10).map(t => {
+                const badgeClass = t.status === 'REGISTERED' ? 'badge-registered' :
+                                   t.status === 'PREPARING' ? 'badge-preparing' :
+                                   t.status === 'PREPARED' ? 'badge-prepared' :
+                                   t.status === 'CALLED' ? 'badge-called' :
+                                   t.status === 'ISSUING' ? 'badge-issuing' :
+                                   t.status === 'CLOSED' ? 'badge-closed' : 'badge-registered';
+
+                const statusText = t.status === 'REGISTERED' ? 'Ro‘yxatda' :
+                                   t.status === 'PREPARING' ? 'Yig‘ilmoqda' :
+                                   t.status === 'PREPARED' ? 'Dokka tayyor' :
+                                   t.status === 'CALLED' ? 'Chaqirildi' :
+                                   t.status === 'ISSUING' ? 'Berilmoqda' :
+                                   t.status === 'CLOSED' ? 'Yakunlandi' : t.status;
+
+                const dockText = t.assignedDockNumber ? `Dock 0${t.assignedDockNumber}` : '—';
+                const priorityTag = t.isPriority ? `<span style="color:#d97706; font-size:0.65rem; font-weight:700; margin-left:4px;">[PRIORITY]</span>` : '';
+
+                return `
+                    <tr>
+                        <td>
+                            <strong style="color:var(--primary); font-family:var(--font-mono); font-size:0.86rem;">${t.ticketNumber}</strong>
+                            ${priorityTag}
+                        </td>
+                        <td>
+                            <span style="font-family:var(--font-mono); font-weight:700; color:var(--text-primary);">${t.awbNumber}</span>
+                        </td>
+                        <td>
+                            <div style="font-weight:600; color:var(--text-primary); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                ${t.consigneeName || t.consignee || '—'}
+                            </div>
+                            <div style="font-size:0.68rem; color:var(--text-muted);">${t.vehiclePlate || 'Piyoda'}</div>
+                        </td>
+                        <td>
+                            <span style="font-weight:700;">${t.totalPieces ?? t.pieces ?? '—'} dona</span> / <span style="font-family:var(--font-mono);">${t.totalWeightKg ?? t.weightKg ?? '—'} kg</span>
+                        </td>
+                        <td>
+                            <span style="font-family:var(--font-mono); font-weight:700; color:var(--primary);">${dockText}</span>
+                        </td>
+                        <td>
+                            <span class="badge ${badgeClass}">${statusText}</span>
+                        </td>
+                        <td style="text-align:right;">
+                            <button class="btn btn-secondary" style="padding:3px 8px; font-size:0.7rem;" onclick="viewTicketQr('${t.id}', '${t.ticketNumber}', '${t.awbNumber}')" title="QR Chekni ko'rish">
+                                <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                <span>QR Chek</span>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Load Activity Feed from Audit events
+        async function loadActivityFeed() {
+            try {
+                const res = await fetch('/api/audit/recent');
+                if (res.ok) {
+                    const events = await res.json();
+                    const container = document.getElementById('activityFeedContainer');
+                    if (!container) return;
+
+                    if (!events || events.length === 0) {
+                        container.innerHTML = `<div style="text-align:center; padding:2rem; color:var(--text-muted); font-size:0.78rem;">Hozircha harakatlar mavjud emas</div>`;
+                        return;
+                    }
+
+                    container.innerHTML = events.slice(0, 7).map(ev => {
+                        let colorClass = 'blue';
+                        let iconSvg = `<svg class="icon-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
+
+                        if (ev.eventType.includes('REGISTER')) {
+                            colorClass = 'blue';
+                            iconSvg = `<svg class="icon-svg" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>`;
+                        } else if (ev.eventType.includes('PREPAR')) {
+                            colorClass = 'purple';
+                            iconSvg = `<svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>`;
+                        } else if (ev.eventType.includes('DOCK') || ev.eventType.includes('CALL')) {
+                            colorClass = 'amber';
+                            iconSvg = `<svg class="icon-svg" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`;
+                        } else if (ev.eventType.includes('EXIT') || ev.eventType.includes('COMPLET') || ev.eventType.includes('KPP')) {
+                            colorClass = 'green';
+                            iconSvg = `<svg class="icon-svg" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+                        }
+
+                        const timeFormatted = ev.timestamp ? new Date(ev.timestamp).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Hozir';
+
+                        return `
+                            <div class="activity-item">
+                                <div class="activity-icon-wrap ${colorClass}">
+                                    ${iconSvg}
+                                </div>
+                                <div class="activity-body">
+                                    <div class="activity-top">
+                                        <span class="activity-title">${ev.eventType || 'Hodisa'}</span>
+                                        <span class="activity-time">${timeFormatted}</span>
+                                    </div>
+                                    <div class="activity-desc">${ev.description || 'Operatsiya bajarildi'}</div>
+                                    <span class="activity-tag">${ev.operator || 'Tizim'} &bull; ${ev.ticketNumber || 'TAS'}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (e) {
+                console.warn('Activity feed fetch failed:', e);
+            }
+        }
+
+        async function viewTicketQr(ticketId, ticketNumber, awbNumber) {
+            try {
+                const res = await fetch(`/api/queue/ticket/${ticketId}/qr`);
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('qrModalTicketTitle').textContent = `Talon: ${ticketNumber}`;
+                    document.getElementById('qrModalAwbText').textContent = `AWB: ${awbNumber}`;
+                    document.getElementById('qrModalImg').src = data.qrCode;
+                    document.getElementById('qrModal').style.display = 'flex';
+                }
+            } catch (e) {
+                showToast("QR kodni yuklashda xatolik", "error");
+            }
+        }
+
+        function closeQrModal() {
+            document.getElementById('qrModal').style.display = 'none';
+        }
+
+        function printQrDirectly() {
+            window.print();
+        }
+
+        function refreshDashboard() {
+            loadSummary();
+            loadDocks();
+            loadOrderList();
+            loadActivityFeed();
+            showToast("Boshqaruv markazi yangilandi", "info");
+        }
+
+        refreshDashboard();
+        setInterval(() => {
+            loadSummary();
+            loadDocks();
+            loadOrderList();
+            loadActivityFeed();
+        }, 4000);
+    </script>
+</body>
+</html>

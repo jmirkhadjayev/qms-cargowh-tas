@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dok Operatori Paneli | TAS Cargo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .dock-selector-bar {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        .dock-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .dock-pill:hover {
+            border-color: var(--primary);
+            background: var(--bg-card-hover);
+        }
+        .dock-pill.active {
+            background: #2563eb;
+            border-color: #1d4ed8;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+        .current-operation-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--primary);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-card);
+            position: relative;
+        }
+        .queue-badge-next {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            font-weight: 800;
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.8rem;
+        }
+        .queue-badge-waiting {
+            background: rgba(148, 163, 184, 0.1);
+            color: #94a3b8;
+            border: 1px dashed rgba(148, 163, 184, 0.3);
+            font-weight: 600;
+            padding: 0.35rem 0.65rem;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <a href="index.html" class="brand-wrapper">
+            <div class="brand-logo-badge">TAS</div>
+            <div>
+                <h1 class="brand-title">Yuk Berish Doki Paneli</h1>
+                <div class="brand-subtitle">3-bosqich · Rampa va Doklarda yukni topshirish</div>
+            </div>
+        </a>
+        <div class="header-status">
+            <div class="live-clock" id="liveClock">16:40:00 (Toshkent)</div>
+            <a href="index.html" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Bosh menyu</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Dock Selector Pills -->
+        <div class="dock-selector-bar">
+            <div class="dock-pill active" onclick="switchDock(1, this)">Dock 1 (Universal)</div>
+            <div class="dock-pill" onclick="switchDock(2, this)">Dock 2 (Universal)</div>
+            <div class="dock-pill" onclick="switchDock(3, this)">Dock 3 (Universal)</div>
+            <div class="dock-pill" onclick="switchDock(4, this)">Dock 4 (Universal)</div>
+            <div class="dock-pill" onclick="switchDock(5, this)">Dock 5 (Universal)</div>
+            <div class="dock-pill" onclick="switchDock(6, this)">Dock 6 (Universal)</div>
+        </div>
+
+        <!-- Current Active Operation on Selected Dock -->
+        <div id="dockActiveZone">
+            <div class="glass-card" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                Dok ma'lumotlari yuklanmoqda...
+            </div>
+        </div>
+
+        <!-- Ready Cargo Queue waiting for Dock Assignment -->
+        <div class="glass-card" style="margin-top: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h3 style="font-size: 1.3rem; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.6rem;">
+                        <svg class="icon-svg" style="width:20px;height:20px;color:var(--primary);" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        Navbatdagi Yuklar Ro'yxati (Elektron Navbat)
+                    </h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">Agentlar navbatdagilarni to'liq ko'rib turadi. Tizim qoidalariga ko'ra navbatni sakratish taqiqlangan — faqat 1-navbatdagi mijoz chaqiriladi.</p>
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <button class="btn btn-secondary" onclick="loadDockData()"><svg class="icon-svg" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Yangilash</button>
+                </div>
+            </div>
+
+            <!-- Tab Pills for Queue Views -->
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; flex-wrap: wrap;">
+                <button id="tabDockQueue" class="btn btn-primary" style="padding: 0.45rem 1rem; font-size: 0.85rem;" onclick="setQueueTab('dockQueue')">
+                    📌 Ushbu Dok Navbati (<span id="cntDockQueue">0</span>)
+                </button>
+                <button id="tabAllPrepared" class="btn btn-secondary" style="padding: 0.45rem 1rem; font-size: 0.85rem;" onclick="setQueueTab('allPrepared')">
+                    📋 Barcha Tayyor Yuklar (<span id="cntAllPrepared">0</span>)
+                </button>
+                <button id="tabPreparing" class="btn btn-secondary" style="padding: 0.45rem 1rem; font-size: 0.85rem;" onclick="setQueueTab('preparing')">
+                    📦 Omborda Yig'ilayotganlar (<span id="cntPreparing">0</span>)
+                </button>
+            </div>
+
+            <!-- Anti-Queue Skipping Info Bar -->
+            <div style="background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(14, 165, 233, 0.25); border-radius: 10px; padding: 0.65rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; font-size: 0.85rem; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.1rem;">🛡️</span>
+                    <span style="color: var(--text-secondary);"><strong>Navbat intizomi:</strong> O'zboshimchalik bilan boshqa arizalarni chaqirish (navbatni sakratish) bloklangan. Faqat navbat boshidagi 1-mijoz chaqirilishi mumkin.</span>
+                </div>
+                <div id="queuePositionSummary" style="font-family: var(--font-mono); color: #fbbf24; font-weight: 600;">
+                    Navbatdagi 1-talon: -
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 130px;">Navbat O'rni</th>
+                            <th>Talon</th>
+                            <th>AWB</th>
+                            <th>Yuk egasi</th>
+                            <th>Avtomobil</th>
+                            <th>Joy / Vazn</th>
+                            <th>Kategoriya</th>
+                            <th>Ombordagi Joyi</th>
+                            <th>Holati / Amal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="preparedQueueTable">
+                        <tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 2rem;">Yuklanmoqda...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Partial Issue (Akt tuzish) -->
+    <div class="modal-overlay" id="partialModal">
+        <div class="modal-content">
+            <h3 style="color: var(--warning); margin-bottom: 0.5rem; font-size: 1.25rem;"><svg class="icon-svg" style="width:18px;height:18px;vertical-align:-3px;color:var(--warning);margin-right:6px;" viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Qisman Berish (Kamomad/Zarar Akti)</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.25rem;">
+                Talon: <strong id="partModalTicket" style="color: #1d4ed8;"></strong> | Jami joy: <span id="partModalTotal"></span> ta
+            </p>
+
+            <div class="form-group">
+                <label class="form-label">Haqiqatda Berilgan Joylar Soni *</label>
+                <input type="number" id="partActualPieces" class="form-control" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Kamomad yoki Nuqson Sababi (Aktga ilova) *</label>
+                <textarea id="partReason" class="form-control" rows="3" placeholder="Masalan: 2 ta quti shikastlanganligi sababli dalolatnoma tuzildi..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                <button class="btn btn-danger" style="flex: 1;" onclick="submitPartialIssue()">
+                    Dalolatnoma bilan Qisman Berish
+                </button>
+                <button class="btn btn-secondary" onclick="closePartialModal()">
+                    Bekor qilish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let currentDockNum = 1;
+        let currentTicketId = null;
+        let activeQueueTab = 'dockQueue';
+        let cachedDocks = [];
+        let cachedTickets = [];
+
+        function switchDock(dockNum, el) {
+            currentDockNum = dockNum;
+            document.querySelectorAll('.dock-pill').forEach(p => p.classList.remove('active'));
+            if (el) el.classList.add('active');
+            loadDockData();
+        }
+
+        function setQueueTab(tabName) {
+            activeQueueTab = tabName;
+            ['tabDockQueue', 'tabAllPrepared', 'tabPreparing'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.className = (id === 'tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)) ? 'btn btn-primary' : 'btn btn-secondary';
+                }
+            });
+            if (cachedDocks.length && cachedTickets.length) {
+                const dock = cachedDocks.find(d => d.dockNumber === currentDockNum) || cachedDocks[0];
+                const dockQueue = getDockEligibleQueue(cachedTickets, dock);
+                const isDockBusy = isDockCurrentlyBusy(dock, cachedTickets);
+                renderPreparedQueue(cachedTickets, dock, isDockBusy, dockQueue);
+            }
+        }
+
+        function isEligibleForDock(ticket, dock) {
+            if (!ticket || !dock) return false;
+            if (ticket.assignedDockNumber) {
+                return ticket.assignedDockNumber === dock.dockNumber;
+            }
+            if (!dock.supportedCategories || dock.supportedCategories === 'ALL' || dock.supportedCategories.includes('ALL')) {
+                return true;
+            }
+            const cats = dock.supportedCategories.split(',').map(s => s.trim().toUpperCase());
+            const tCat = ticket.category ? ticket.category.toUpperCase() : 'GENERAL';
+            return cats.includes(tCat) || cats.includes('ALL');
+        }
+
+        function sortQueuePriorityFifo(list) {
+            return [...list].sort((a, b) => {
+                const aPri = a.isPriority ? 1 : 0;
+                const bPri = b.isPriority ? 1 : 0;
+                if (aPri !== bPri) return bPri - aPri; // Priority first
+                return new Date(a.registeredAt) - new Date(b.registeredAt); // Earlier registration first
+            });
+        }
+
+        function getDockEligibleQueue(allTickets, dock) {
+            const prepared = allTickets.filter(t => 
+                (t.status === 'PREPARED' || (t.status === 'DOCK_ASSIGNED' && !t.assignedDockNumber)) && 
+                isEligibleForDock(t, dock)
+            );
+            return sortQueuePriorityFifo(prepared);
+        }
+
+        function isDockCurrentlyBusy(dock, allTickets) {
+            let active = null;
+            if (dock.currentTicketId) {
+                active = allTickets.find(t => t.id === dock.currentTicketId);
+            }
+            if (!active) {
+                active = allTickets.find(t => t.assignedDockNumber === currentDockNum && 
+                    (t.status === 'CALLED' || t.status === 'ARRIVED' || t.status === 'ISSUING'));
+            }
+            return !!active && (active.status === 'CALLED' || active.status === 'ARRIVED' || active.status === 'ISSUING');
+        }
+
+        async function loadDockData() {
+            try {
+                const [docksRes, queueRes] = await Promise.all([
+                    fetch('/api/docks'),
+                    fetch('/api/queue/active')
+                ]);
+
+                if (docksRes.ok && queueRes.ok) {
+                    cachedDocks = await docksRes.json();
+                    cachedTickets = await queueRes.json();
+
+                    const dock = cachedDocks.find(d => d.dockNumber === currentDockNum) || cachedDocks[0];
+                    const dockQueue = getDockEligibleQueue(cachedTickets, dock);
+                    const isDockBusy = isDockCurrentlyBusy(dock, cachedTickets);
+
+                    renderActiveDockZone(dock, cachedTickets, dockQueue);
+                    renderPreparedQueue(cachedTickets, dock, isDockBusy, dockQueue);
+                }
+            } catch (err) {
+                console.warn(err);
+            }
+        }
+
+        function renderActiveDockZone(dock, allTickets, dockQueue) {
+            const container = document.getElementById('dockActiveZone');
+            
+            // Check if dock has an active ticket assigned
+            let activeTicket = null;
+            if (dock.currentTicketId) {
+                activeTicket = allTickets.find(t => t.id === dock.currentTicketId);
+            }
+            if (!activeTicket) {
+                activeTicket = allTickets.find(t => t.assignedDockNumber === currentDockNum && 
+                    (t.status === 'CALLED' || t.status === 'ARRIVED' || t.status === 'ISSUING'));
+            }
+
+            if (!activeTicket) {
+                currentTicketId = null;
+                const nextTicket = (dockQueue && dockQueue.length > 0) ? dockQueue[0] : null;
+
+                if (nextTicket) {
+                    container.innerHTML = `
+                        <div class="glass-card" style="text-align: center; padding: 2.5rem; position: relative; border-color: rgba(56, 189, 248, 0.4);">
+                            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 0.4rem 1.1rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem; margin-bottom: 1.25rem;">
+                                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981;"></span> DOCK #${currentDockNum} BO'SH (XIZMATGA TAYYOR)
+                            </div>
+                            <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Yuk berishni boshlash uchun navbatdagi mijozni chaqiring</h2>
+                            <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 1.5rem; font-size: 0.9rem;">
+                                Tizim qoidalariga ko'ra navbatni sakratish taqiqlangan. Tizim avtomatik tarzda ushbu dok uchun navbat boshidagi mijozni tanladi:
+                            </p>
+                            
+                            <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 2rem; display: inline-flex; align-items: center; gap: 2.5rem; margin-bottom: 1.5rem; text-align: left; flex-wrap: wrap; justify-content: center; box-shadow: var(--shadow-sm);">
+                                <div>
+                                    <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">1-Navbatdagi Talon</div>
+                                    <div style="font-size: 2.4rem; font-weight: 900; font-family: var(--font-mono); color: #1d4ed8; line-height: 1.1;">
+                                        ${nextTicket.ticketNumber}
+                                    </div>
+                                    <span class="badge ${nextTicket.isPriority ? 'badge-priority' : 'badge-general'}" style="margin-top: 4px;">
+                                        ${nextTicket.isPriority ? 'IMTIYOZLI' : 'ODDIY'}
+                                    </span>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">AWB / Yuk egasi</div>
+                                    <div style="font-weight: 700; font-family: var(--font-mono); font-size: 1.1rem; color: #0f172a;">${nextTicket.awbNumber}</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600;">${nextTicket.consigneeName}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Avto / Joy</div>
+                                    <div style="font-weight: 800; font-family: var(--font-mono); color: #0f172a; font-size: 1.15rem;">${nextTicket.vehiclePlate || 'Avto kiritilmagan'}</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">${nextTicket.totalPieces} dona · ${nextTicket.totalWeightKg} kg</div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary" onclick="callNextClient()" style="padding: 0.9rem 2.2rem; font-size: 1.05rem; font-weight: 700;">
+                                    <svg class="icon-svg" style="width:18px;height:18px;vertical-align:-3px;margin-right:8px;" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                                    1-Navbatdagi Mijozni Dok #${currentDockNum} ga Chaqirish
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="glass-card" style="text-align: center; padding: 3rem;">
+                            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem; margin-bottom: 1rem;">
+                                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#059669;"></span> DOCK #${currentDockNum} BO'SH (FREE)
+                            </div>
+                            <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;">Hozirda Dok #${currentDockNum} uchun tayyor yuklar navbati bo'sh</h2>
+                            <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
+                                Ombor xodimlari yacheykalardan yuklarni yig'ib dok hududiga chiqarganida bu yerda navbat tartibida avtomatik paydo bo'ladi.
+                            </p>
+                        </div>
+                    `;
+                }
+                return;
+            }
+
+            currentTicketId = activeTicket.id;
+            const status = activeTicket.status;
+
+            container.innerHTML = `
+                <div class="current-operation-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                        <div>
+                            <span class="badge badge-priority" style="font-size: 0.85rem; margin-bottom: 0.5rem;">
+                                DOCK #${currentDockNum} · JORIY OPERATSIYA
+                            </span>
+                            <div style="font-size: 3rem; font-weight: 900; font-family: var(--font-mono); color: #1d4ed8; line-height: 1;">
+                                ${activeTicket.ticketNumber}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Holati:</div>
+                            ${getStatusBadge(status)}
+                            <div style="font-size: 0.85rem; color: var(--accent); margin-top: 0.4rem; font-family: var(--font-mono); font-weight: 700;">
+                                Chaqiruvlar soni: ${activeTicket.callCount || 1}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; padding: 1.25rem; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 1.5rem;">
+                        <div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">AWB RAQAMI</div>
+                            <div style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono); color: #0f172a;">${activeTicket.awbNumber}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">YUK EGASI</div>
+                            <div style="font-size: 1.05rem; font-weight: 600; color: #1e293b;">${activeTicket.consigneeName}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">JOY / VAZN</div>
+                            <div style="font-size: 1.05rem; font-weight: 600; color: #1e293b;">${activeTicket.totalPieces} dona · ${activeTicket.totalWeightKg} kg</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">AVTOMOBIL DAVLAT RAQAMI (UZB / XALQARO)</div>
+                            <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; font-family: var(--font-mono);">${activeTicket.vehiclePlate || 'Ko‘rsatilmagan'}</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Controls depending on Step -->
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        ${status === 'CALLED' ? `
+                            <button class="btn btn-secondary" onclick="recallClient(${activeTicket.id})">
+                                <svg class="icon-svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> Qayta chaqirish (Audio/LED)
+                            </button>
+                            <button class="btn btn-primary" onclick="markArrived(${activeTicket.id})">
+                                <svg class="icon-svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Mijoz Dokka Yetib Keldi
+                            </button>
+                        ` : ''}
+
+                        ${status === 'ARRIVED' ? `
+                            <button class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.05rem;" onclick="startIssue(${activeTicket.id})">
+                                <svg class="icon-svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Yuk Berishni Boshlash
+                            </button>
+                        ` : ''}
+
+                        ${status === 'ISSUING' ? `
+                            <button class="btn btn-success" style="flex: 1; padding: 1rem;" onclick="completeIssue(${activeTicket.id})">
+                                <svg class="icon-svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Yuk To'liq Berildi (KPP ga yo'llash)
+                            </button>
+                            <button class="btn btn-secondary" style="border-color: var(--warning); color: var(--warning);" onclick="openPartialModal(${activeTicket.id}, '${activeTicket.ticketNumber}', ${activeTicket.totalPieces})">
+                                <svg class="icon-svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Qisman berish (Dalolatnoma)
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPreparedQueue(allTickets, dock, isDockBusy, dockQueue) {
+            const tbody = document.getElementById('preparedQueueTable');
+            
+            const allPrepared = sortQueuePriorityFifo(allTickets.filter(t => t.status === 'PREPARED' || t.status === 'DOCK_ASSIGNED'));
+            const preparingList = sortQueuePriorityFifo(allTickets.filter(t => t.status === 'PREPARING' || t.status === 'PREPARATION_PENDING' || t.status === 'REGISTERED'));
+
+            // Update badge counters
+            document.getElementById('cntDockQueue').textContent = dockQueue ? dockQueue.length : 0;
+            document.getElementById('cntAllPrepared').textContent = allPrepared.length;
+            document.getElementById('cntPreparing').textContent = preparingList.length;
+
+            const nextTicket = (dockQueue && dockQueue.length > 0) ? dockQueue[0] : null;
+            const summaryEl = document.getElementById('queuePositionSummary');
+            if (summaryEl) {
+                if (nextTicket) {
+                    summaryEl.innerHTML = `Navbatdagi 1-talon: <span style="color:#38bdf8;">${nextTicket.ticketNumber}</span> (${nextTicket.consigneeName})`;
+                } else {
+                    summaryEl.textContent = "Dok navbatida arizalar yo'q";
+                }
+            }
+
+            let displayList = [];
+            if (activeQueueTab === 'dockQueue') {
+                displayList = dockQueue || [];
+            } else if (activeQueueTab === 'allPrepared') {
+                displayList = allPrepared;
+            } else if (activeQueueTab === 'preparing') {
+                displayList = preparingList;
+            }
+
+            if (displayList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 2.5rem; color: var(--text-muted);">Ushbu bo\'limda hozircha arizalar mavjud emas</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = displayList.map((t, index) => {
+                const isNextInDockQueue = dockQueue && dockQueue.length > 0 && dockQueue[0].id === t.id;
+                
+                // Position badge
+                let posBadge = '';
+                if (activeQueueTab === 'dockQueue') {
+                    if (index === 0) {
+                        posBadge = `<span class="queue-badge-next">⭐ №1 (KEYINGI)</span>`;
+                    } else {
+                        posBadge = `<span class="queue-badge-waiting">№${index + 1}</span>`;
+                    }
+                } else if (activeQueueTab === 'allPrepared') {
+                    if (isNextInDockQueue) {
+                        posBadge = `<span class="queue-badge-next">⭐ Dok #${currentDockNum}</span>`;
+                    } else if (t.assignedDockNumber) {
+                        posBadge = `<span class="queue-badge-waiting">Dok #${t.assignedDockNumber}</span>`;
+                    } else {
+                        posBadge = `<span class="queue-badge-waiting">#${index + 1} Umumiy</span>`;
+                    }
+                } else {
+                    posBadge = `<span class="queue-badge-waiting">#${index + 1} Kutilmoqda</span>`;
+                }
+
+                // Action Column: STRICT NO QUEUE SKIPPING
+                let actionHtml = '';
+                if (activeQueueTab === 'dockQueue') {
+                    if (index === 0) {
+                        if (isDockBusy) {
+                            actionHtml = `<span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); font-size: 0.8rem; padding: 0.4rem 0.75rem;">🔒 Dok band (Kutmoqda)</span>`;
+                        } else {
+                            actionHtml = `
+                                <button class="btn btn-primary" style="padding: 0.45rem 1rem; font-size: 0.85rem; font-weight: 700;" onclick="callClientToThisDock(${t.id})">
+                                    <svg class="icon-svg" style="width:13px;height:13px;vertical-align:-2px;margin-right:5px;" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> 📢 Chaqirish
+                                </button>
+                            `;
+                        }
+                    } else {
+                        actionHtml = `
+                            <span class="badge" style="background: rgba(148, 163, 184, 0.1); color: #94a3b8; border: 1px dashed rgba(148, 163, 184, 0.25); font-size: 0.8rem; padding: 0.4rem 0.75rem;" title="Navbatni sakratish taqiqlangan! Oldingi mijozlar xizmat olgandan so'ng chaqiriladi.">
+                                🔒 Navbati kelmagan
+                            </span>
+                        `;
+                    }
+                } else if (activeQueueTab === 'allPrepared') {
+                    if (isNextInDockQueue) {
+                        if (isDockBusy) {
+                            actionHtml = `<span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">🔒 Dok band</span>`;
+                        } else {
+                            actionHtml = `
+                                <button class="btn btn-primary" style="padding: 0.45rem 1rem; font-size: 0.85rem; font-weight: 700;" onclick="callClientToThisDock(${t.id})">
+                                    <svg class="icon-svg" style="width:13px;height:13px;vertical-align:-2px;margin-right:5px;" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> 📢 Dok #${currentDockNum} ga
+                                </button>
+                            `;
+                        }
+                    } else {
+                        actionHtml = `<span class="badge" style="background: rgba(148, 163, 184, 0.1); color: #94a3b8; font-size: 0.8rem; padding: 0.4rem 0.75rem;">🔒 Navbati kutilmoqda</span>`;
+                    }
+                } else {
+                    actionHtml = `<span class="badge badge-preparing" style="font-size: 0.8rem; padding: 0.4rem 0.75rem;"><svg class="icon-svg" style="width:12px;height:12px;vertical-align:-1px;margin-right:4px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg> Sklad yig'moqda</span>`;
+                }
+
+                return `
+                    <tr style="${index === 0 && activeQueueTab === 'dockQueue' ? 'background: rgba(2, 132, 199, 0.08);' : ''}">
+                        <td>${posBadge}</td>
+                        <td>
+                            <strong class="ticket-num ${t.isPriority ? 'priority' : ''}" style="font-size: 1.1rem;">
+                                ${t.ticketNumber}
+                            </strong>
+                            ${t.isPriority ? '<div style="font-size: 0.7rem; color: var(--accent); font-weight: 700;">PRIORITY</div>' : ''}
+                        </td>
+                        <td style="font-family: var(--font-mono); font-weight: 600;">${t.awbNumber}</td>
+                        <td>
+                            <div style="font-weight: 600;">${t.consigneeName}</div>
+                            ${t.representativeName ? `<div style="font-size: 0.8rem; color: var(--text-muted);">${t.representativeName}</div>` : ''}
+                        </td>
+                        <td style="font-family: var(--font-mono); color: #0f172a; font-weight: 800;">${t.vehiclePlate || '-'}</td>
+                        <td>${t.totalPieces} dona / ${t.totalWeightKg} kg</td>
+                        <td><span class="badge badge-general" style="font-size: 0.75rem;">${t.category}</span></td>
+                        <td><span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary);">${t.storageLocation || '-'}</span></td>
+                        <td>${actionHtml}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function callNextClient() {
+            try {
+                const res = await fetch('/api/queue/dock/call-next', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dockId: currentDockNum, operator: "Dock_Agent_" + currentDockNum })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`Talon ${data.ticketNumber} Dok ${currentDockNum} ga chaqirildi!`, "success");
+                    playVoiceCall(data.ticketNumber, currentDockNum);
+                    loadDockData();
+                } else {
+                    showToast(data.message || data.error || "Chaqirishda xatolik", "error");
+                }
+            } catch (e) {
+                showToast("Server bilan bog'lanishda xatolik yuz berdi", "error");
+            }
+        }
+
+        async function callClientToThisDock(ticketId) {
+            try {
+                const res = await fetch('/api/queue/dock/call', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ticketId: ticketId, dockId: currentDockNum, operator: "Dock_Agent_" + currentDockNum })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`Talon ${data.ticketNumber} Dok ${currentDockNum} ga chaqirildi!`, "success");
+                    playVoiceCall(data.ticketNumber, currentDockNum);
+                    loadDockData();
+                } else {
+                    showToast(data.message || data.error || "Navbatni sakratish taqiqlangan!", "error");
+                }
+            } catch (e) {
+                showToast("Chaqirishda xatolik yuz berdi", "error");
+            }
+        }
+
+        async function recallClient(ticketId) {
+            try {
+                const res = await fetch('/api/queue/dock/recall', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ticketId: ticketId, operator: "Dock_Agent_" + currentDockNum })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`Talon ${data.ticketNumber} qayta chaqirildi!`, "info");
+                    playVoiceCall(data.ticketNumber, currentDockNum);
+                    loadDockData();
+                } else {
+                    showToast(data.message || data.error || "Xatolik", "error");
+                }
+            } catch (e) {
+                showToast("Xatolik", "error");
+            }
+        }
+
+        async function markArrived(ticketId) {
+            try {
+                const res = await fetch('/api/queue/dock/arrived', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ticketId: ticketId, operator: "Dock_Agent_" + currentDockNum })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast("Mijoz yetib kelgani belgilandi", "success");
+                    loadDockData();
+                } else {
+                    showToast(data.message || data.error || "Xatolik", "error");
+                }
+            } catch (e) {
+                showToast("Xatolik", "error");
+            }
+        }
+
+        async function startIssue(ticketId) {
+            try {
+                const res = await fetch('/api/queue/dock/start-issue', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ticketId: ticketId, operator: "Dock_Agent_" + currentDockNum })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast("Yuk berish boshlandi!", "info");
+                    loadDockData();
+                } else {
+                    showToast(data.message || data.error || "Xatolik", "error");
+                }
+            } catch (e) {
+                showToast("Xatolik", "error");
+            }
+        }
+
+        async function completeIssue(ticketId) {
+            try {
+                const res = await fetch('/api/queue/dock/complete-issue', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ticketId: ticketId, operator: "Dock_Agent_" + currentDockNum, remarks: "To'liq topshirildi" })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast("Yuk muvaffaqiyatli topshirildi va Dok bo'shatildi!", "success");
+                    loadDockData();
+                } else {
+                    showToast(data.message || data.error || "Xatolik", "error");
+                }
+            } catch (e) {
+                showToast("Xatolik", "error");
+            }
+        }
+
+        function openPartialModal(id, ticketNo, total) {
+            currentTicketId = id;
+            document.getElementById('partModalTicket').textContent = ticketNo;
+            document.getElementById('partModalTotal').textContent = total;
+            document.getElementById('partActualPieces').value = total - 1;
+            document.getElementById('partialModal').style.display = 'flex';
+        }
+
+        function closePartialModal() {
+            document.getElementById('partialModal').style.display = 'none';
+        }
+
+        async function submitPartialIssue() {
+            const actual = parseInt(document.getElementById('partActualPieces').value);
+            const reason = document.getElementById('partReason').value.trim();
+            if (!reason) {
+                showToast("Sabab kiritilishi shart!", "error");
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/queue/dock/partial-issue', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ticketId: currentTicketId,
+                        actualPieces: actual,
+                        reason: reason,
+                        operator: "Dock_Agent_" + currentDockNum
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast("Qisman berish rasmiylashtirildi!", "warning");
+                    closePartialModal();
+                    loadDockData();
+                } else {
+                    showToast(data.message || data.error || "Xatolik", "error");
+                }
+            } catch (e) {
+                showToast("Xatolik", "error");
+            }
+        }
+
+        loadDockData();
+        setInterval(loadDockData, 4000);
+    </script>
+</body>
+</html>
