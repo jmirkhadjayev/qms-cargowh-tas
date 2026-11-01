@@ -28,7 +28,15 @@
                 <h2 style="font-size:1.25rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.015em;" data-i18n="hubTitle">Dispetcherlik va Boshqaruv Markazi</h2>
                 <p style="font-size:0.78rem; color:var(--text-muted);" data-i18n="hubDesc">Import yuklarini berish jarayoni, ombor tayyorgarligi, doklar va KPP nazorat portallari</p>
             </div>
-            <div style="display:flex; gap:8px;">
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a href="activity-log.html" class="btn btn-secondary" style="border-color:#6366f1; color:#4f46e5; font-weight:700; background:#eef2ff;">
+                    <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    <span>📜 Amallar Jurnali (Audit)</span>
+                </a>
+                <button onclick="openSuperAdminRbacModal()" class="btn btn-secondary" style="border-color:var(--primary); color:var(--primary); font-weight:700; background:var(--primary-light);">
+                    <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>🛡️ Xodimlar Ruxsatnomalari (RBAC)</span>
+                </button>
                 <button onclick="refreshDashboard()" class="btn btn-secondary">
                     <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
                     <span data-i18n="refresh">Yangilash</span>

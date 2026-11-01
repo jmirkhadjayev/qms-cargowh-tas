@@ -11,6 +11,8 @@ public class UserDto {
     private String roleTitle;
     private String targetUrl;
     private String avatar;
+    private java.util.List<String> allowedPages;
+    private boolean active;
 
     public UserDto() {}
 
@@ -22,6 +24,8 @@ public class UserDto {
         this.roleTitle = user.getRole() != null ? user.getRole().getTitle() : "";
         this.targetUrl = user.getTargetUrl();
         this.avatar = user.getAvatar();
+        this.allowedPages = user.getAllowedPageList();
+        this.active = user.isActive();
     }
 
     public Long getId() { return id; }
@@ -44,5 +48,11 @@ public class UserDto {
 
     public String getAvatar() { return avatar; }
     public void setAvatar(String avatar) { this.avatar = avatar; }
+
+    public java.util.List<String> getAllowedPages() { return allowedPages; }
+    public void setAllowedPages(java.util.List<String> allowedPages) { this.allowedPages = allowedPages; }
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 }
 

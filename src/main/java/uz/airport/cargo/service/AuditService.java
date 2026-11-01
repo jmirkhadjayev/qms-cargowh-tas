@@ -15,9 +15,11 @@ public class AuditService {
 
     private static final Logger log = LoggerFactory.getLogger(AuditService.class);
     private final AuditEventRepository auditEventRepository;
+    private final ActivityLogService activityLogService;
 
-    public AuditService(AuditEventRepository auditEventRepository) {
+    public AuditService(AuditEventRepository auditEventRepository, ActivityLogService activityLogService) {
         this.auditEventRepository = auditEventRepository;
+        this.activityLogService = activityLogService;
     }
 
     @Transactional
@@ -28,6 +30,14 @@ public class AuditService {
         auditEventRepository.save(event);
         log.info("[AUDIT] {} | AWB: {} | Ticket: {} | {} -> {} | User: {} | {}",
                 eventType, awbNumber, ticketNumber, oldStatus, newStatus, operator, details);
+
+        try {
+            String action = (eventType != null && eventType.contains("REG")) ? "Yaratish" : "O'zgartirish";
+            String changedFields = (oldStatus != null && newStatus != null) ? "status, oldStatus, newStatus" : "ticketNumber, awbNumber, status";
+            String opName = (operator != null && !operator.isBlank()) ? operator : "Tizim Operatori";
+            String entityId = (awbNumber != null && !awbNumber.isBlank()) ? awbNumber : (ticketNumber != null ? ticketNumber : String.valueOf(ticketId));
+            activityLogService.logAction(opName, "operator@uzairports.com", action, "Navbat Arizasi", entityId, changedFields, "127.0.0.1", details);
+        } catch (Exception ignored) {}
     }
 
     public List<AuditEvent> getRecentEvents() {
