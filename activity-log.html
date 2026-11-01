@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAS Cargo | Amallar Jurnali (Activity Log)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/tashkent-airport-emblem.svg" type="image/svg+xml">
+    <style>
+        .audit-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+        }
+
+        .audit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .audit-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.015em;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .audit-filters-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .audit-filter-input, .audit-filter-select {
+            height: 38px;
+            padding: 0 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            color: #1f2937;
+            background: #ffffff;
+            outline: none;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+        .audit-filter-input:focus, .audit-filter-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .audit-date-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f8fafc;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .audit-date-group input[type="date"] {
+            border: none;
+            background: transparent;
+            font-size: 0.78rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: #334155;
+            outline: none;
+        }
+
+        .audit-notice {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .audit-table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+        }
+
+        .audit-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            text-align: left;
+        }
+
+        .audit-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 700;
+            font-size: 0.74rem;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+
+        .audit-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #1e293b;
+            vertical-align: middle;
+            transition: background 0.12s ease;
+        }
+
+        .audit-table tbody tr {
+            cursor: pointer;
+        }
+
+        .audit-table tbody tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* Action Badges */
+        .badge-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            line-height: 1.2;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+        .badge-action-create {
+            background: #f0fdf4;
+            color: #15803d;
+            border-color: #86efac;
+        }
+        .badge-action-update {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border-color: #93c5fd;
+        }
+        .badge-action-download {
+            background: #faf5ff;
+            color: #7e22ce;
+            border-color: #d8b4fe;
+        }
+        .badge-action-delete {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fca5a5;
+        }
+        .badge-action-login {
+            background: #ecfeff;
+            color: #0e7490;
+            border-color: #67e8f9;
+        }
+        .badge-action-general {
+            background: #f1f5f9;
+            color: #475569;
+            border-color: #cbd5e1;
+        }
+
+        /* Field Pills */
+        .field-pill {
+            display: inline-block;
+            padding: 2px 7px;
+            margin: 2px 4px 2px 0;
+            border-radius: 4px;
+            background: #f1f5f9;
+            color: #334155;
+            font-size: 0.68rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+        }
+        .field-pill-count {
+            background: #e2e8f0;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .mono-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .user-name-bold {
+            font-weight: 700;
+            color: #0f172a;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .user-email-soft {
+            font-size: 0.74rem;
+            color: #64748b;
+            display: block;
+        }
+
+        .audit-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 4px 0 4px;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        .pagination-btn {
+            height: 34px;
+            padding: 0 12px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .pagination-btn:hover:not(:disabled) {
+            background: #f8fafc;
+            border-color: #94a3b8;
+            color: #0f172a;
+        }
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-content">
+        
+        <!-- Breadcrumb & Status -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; flex-wrap:wrap; gap:12px;">
+            <div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                    <span style="font-size:0.64rem; font-weight:700; background:var(--primary-light); color:var(--primary); padding:2px 7px; border-radius:4px; letter-spacing:0.04em; text-transform:uppercase; display:inline-flex; align-items:center; gap:4px;">
+                        <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        SUPER ADMIN · AUDIT LOG
+                    </span>
+                    <span style="font-size:0.68rem; color:var(--emerald); font-weight:700;">● O'ZGARMAS YAZUVLAR (APPEND-ONLY)</span>
+                </div>
+                <h2 style="font-size:1.25rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.015em;">Amallar jurnali</h2>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button onclick="refreshLogs()" class="btn btn-secondary">
+                    <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    <span>Yangilash</span>
+                </button>
+                <a href="index.html" class="btn btn-secondary">
+                    <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    <span>Hub Markaziga Qaytish</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Audit Card -->
+        <div class="audit-card">
+            
+            <!-- Header & Filter Row (Exact layout from user screenshot) -->
+            <div class="audit-header">
+                <div>
+                    <h3 class="audit-title">
+                        <svg class="icon-svg icon-svg-md" style="color:var(--primary);" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        Amallar jurnali
+                    </h3>
+                </div>
+
+                <!-- Right Side Filter Bar -->
+                <div class="audit-filters-bar">
+                    <!-- Date Range -->
+                    <div class="audit-date-group">
+                        <input type="date" id="filterStartDate" title="Boshlanish sanasi">
+                        <span style="color:#94a3b8; font-size:0.75rem;">→</span>
+                        <input type="date" id="filterEndDate" title="Tugallanish sanasi">
+                        <span style="font-size:0.8rem; cursor:pointer;" title="Sana tanlash">📅</span>
+                    </div>
+
+                    <!-- Object Dropdown -->
+                    <select id="filterEntity" class="audit-filter-select" onchange="applyFilters()">
+                        <option value="">Obyekt ∨</option>
+                    </select>
+
+                    <!-- Action Dropdown -->
+                    <select id="filterAction" class="audit-filter-select" onchange="applyFilters()">
+                        <option value="">Amal ∨</option>
+                        <option value="Yaratish">Yaratish</option>
+                        <option value="O'zgartirish">O'zgartirish</option>
+                        <option value="Yuklab olish">Yuklab olish</option>
+                        <option value="O'chirish">O'chirish</option>
+                        <option value="Kirish">Kirish</option>
+                    </select>
+
+                    <!-- Object ID Search -->
+                    <input type="text" id="filterEntityId" class="audit-filter-input" placeholder="Obyekt ID" style="width: 110px;" onkeydown="if(event.key==='Enter') applyFilters()">
+
+                    <!-- Apply & Reset Buttons -->
+                    <button onclick="applyFilters()" class="btn btn-primary" style="height:38px; padding:0 14px; font-size:0.8rem;">
+                        Qidirish
+                    </button>
+                    <button onclick="resetFilters()" class="btn btn-secondary" style="height:38px; padding:0 10px; font-size:0.8rem;" title="Filtrlarni tozalash">
+                        Tozalash
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mandatory Read-Only Disclaimer Text (Exact text from screenshot) -->
+            <div class="audit-notice">
+                Jurnal faqat o'qish uchun — yozuvlarni na interfeys, na API orqali o'zgartirib yoki o'chirib bo'lmaydi. O'zgarishlar uchun faqat haqiqatan o'zgargan maydonlar saqlanadi.
+            </div>
+
+            <!-- Table -->
+            <div class="audit-table-wrapper">
+                <table class="audit-table" id="auditTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 140px;">Sana va vaqt</th>
+                            <th style="min-width: 180px;">Foydalanuvchi</th>
+                            <th style="width: 110px;">Amal</th>
+                            <th style="min-width: 160px;">Obyekt</th>
+                            <th style="width: 70px;">ID</th>
+                            <th style="min-width: 260px;">O'zgargan maydonlar</th>
+                            <th style="width: 130px;">IP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                                Ma'lumotlar yuklanmoqda...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Table Footer & Pagination -->
+            <div class="audit-footer">
+                <div id="paginationInfo">
+                    Jami: 0 ta yozuv
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button id="prevBtn" onclick="changePage(-1)" class="pagination-btn" disabled>« Oldingi</button>
+                    <span id="pageIndicator" style="font-weight: 700; color: #0f172a; font-size: 0.8rem;">1 / 1</span>
+                    <button id="nextBtn" onclick="changePage(1)" class="pagination-btn" disabled>Keyingi »</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Log Detail Modal Dialog -->
+    <div id="logDetailModal" class="modal-backdrop" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.45); z-index:9999; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(3px);">
+        <div style="background:#ffffff; border-radius:12px; width:100%; max-width:680px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); overflow:hidden; border:1px solid #e2e8f0; animation: modalPop 0.18s ease-out;">
+            <div style="padding:16px 20px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; background:#f8fafc;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.1rem;">📜</span>
+                    <h3 style="margin:0; font-size:1rem; font-weight:800; color:#0f172a;">Amal Tafsilotlari (Audit Entry)</h3>
+                </div>
+                <button onclick="closeLogDetailModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:#64748b; line-height:1;">&times;</button>
+            </div>
+            <div id="logModalContent" style="padding:20px; max-height:75vh; overflow-y:auto; font-size:0.85rem; color:#1e293b;">
+                <!-- Dynamically filled -->
+            </div>
+            <div style="padding:12px 20px; border-top:1px solid #e2e8f0; background:#f8fafc; text-align:right;">
+                <button onclick="closeLogDetailModal()" class="btn btn-secondary">Yopish</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let currentPage = 0;
+        const pageSize = 15;
+        let totalPages = 1;
+
+        async function fetchLogs(page = 0) {
+            currentPage = page;
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
+            const entity = document.getElementById('filterEntity').value;
+            const action = document.getElementById('filterAction').value;
+            const entityId = document.getElementById('filterEntityId').value.trim();
+
+            const params = new URLSearchParams({
+                page: currentPage,
+                size: pageSize
+            });
+            if (startDate) params.append('startDate', startDate);
+            if (endDate) params.append('endDate', endDate);
+            if (entity) params.append('entityName', entity);
+            if (action) params.append('action', action);
+            if (entityId) params.append('entityId', entityId);
+
+            try {
+                const res = await fetch(`/api/activity-logs?${params.toString()}`);
+                if (!res.ok) throw new Error('Yuklashda xatolik yuz berdi');
+                const data = await res.json();
+                renderTable(data);
+                populateEntityDropdown(data.entityOptions);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('auditTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px; color: var(--danger);">
+                            Jurnalni yuklashda xatolik: ${err.message}
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function renderTable(data) {
+            const list = data.content || [];
+            totalPages = data.totalPages || 1;
+            const totalElements = data.totalElements || 0;
+
+            document.getElementById('paginationInfo').textContent = 
+                `Ko'rsatilmoqda: ${list.length ? (data.currentPage * pageSize + 1) : 0}-${Math.min((data.currentPage + 1) * pageSize, totalElements)} / Jami: ${totalElements} ta yozuv`;
+            document.getElementById('pageIndicator').textContent = `${(data.currentPage + 1)} / ${Math.max(1, totalPages)}`;
+            document.getElementById('prevBtn').disabled = data.isFirst || currentPage === 0;
+            document.getElementById('nextBtn').disabled = data.isLast || (currentPage >= totalPages - 1);
+
+            const tbody = document.getElementById('auditTableBody');
+            if (!list.length) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                            Tanlangan filtrlar bo'yicha hech qanday yozuv topilmadi
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = list.map(item => {
+                const timeStr = formatDateTime(item.timestamp);
+                const actionBadge = getActionBadgeHtml(item.action, item.actionCode);
+                const pillsHtml = renderFieldPills(item.changedFields);
+
+                return `
+                    <tr onclick="openLogDetail(${item.id})">
+                        <td class="mono-text" style="color:#0f172a; white-space:nowrap;">${timeStr}</td>
+                        <td>
+                            <span class="user-name-bold">${escapeHtml(item.userName)}</span>
+                            <span class="user-email-soft">${escapeHtml(item.userEmail)}</span>
+                        </td>
+                        <td>${actionBadge}</td>
+                        <td style="color:#1e293b; font-weight:500;">${escapeHtml(item.entityName)}</td>
+                        <td class="mono-text" style="color:#475569; font-weight:600;">${escapeHtml(item.entityId || '—')}</td>
+                        <td>${pillsHtml}</td>
+                        <td class="mono-text" style="color:#475569; white-space:nowrap;">${escapeHtml(item.ipAddress || '127.0.0.1')}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderFieldPills(fieldsStr) {
+            if (!fieldsStr || fieldsStr === '—') {
+                return '<span style="color:#94a3b8; font-size:0.8rem;">—</span>';
+            }
+            const parts = fieldsStr.split(',').map(s => s.trim()).filter(Boolean);
+            if (parts.length === 0) return '<span style="color:#94a3b8;">—</span>';
+
+            return parts.map(p => {
+                if (p.startsWith('+')) {
+                    return `<span class="field-pill field-pill-count">${escapeHtml(p)}</span>`;
+                }
+                return `<span class="field-pill">${escapeHtml(p)}</span>`;
+            }).join(' ');
+        }
+
+        function getActionBadgeHtml(action, actionCode) {
+            const act = (action || '').toLowerCase();
+            const code = (actionCode || '').toUpperCase();
+
+            if (act.includes('yarat') || code === 'CREATE') {
+                return `<span class="badge-action badge-action-create">Yaratish</span>`;
+            }
+            if (act.includes('o\'zgar') || act.includes('ozgar') || code === 'UPDATE') {
+                return `<span class="badge-action badge-action-update">O'zgartirish</span>`;
+            }
+            if (act.includes('yuklab') || code === 'DOWNLOAD') {
+                return `<span class="badge-action badge-action-download">Yuklab olish</span>`;
+            }
+            if (act.includes('o\'chir') || act.includes('ochir') || code === 'DELETE') {
+                return `<span class="badge-action badge-action-delete">O'chirish</span>`;
+            }
+            if (act.includes('kirish') || code === 'LOGIN') {
+                return `<span class="badge-action badge-action-login">Kirish</span>`;
+            }
+            return `<span class="badge-action badge-action-general">${escapeHtml(action || 'Amal')}</span>`;
+        }
+
+        function formatDateTime(dtStr) {
+            if (!dtStr) return '—';
+            try {
+                const d = new Date(dtStr);
+                const pad = n => String(n).padStart(2, '0');
+                const date = `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
+                const time = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+                return `${date} ${time}`;
+            } catch(e) {
+                return dtStr.replace('T', ' ').substring(0, 19);
+            }
+        }
+
+        function populateEntityDropdown(options) {
+            if (!options || !Array.isArray(options)) return;
+            const select = document.getElementById('filterEntity');
+            const currentVal = select.value;
+            const existing = Array.from(select.options).map(o => o.value);
+
+            options.forEach(opt => {
+                if (opt && !existing.includes(opt)) {
+                    const el = document.createElement('option');
+                    el.value = opt;
+                    el.textContent = opt;
+                    select.appendChild(el);
+                }
+            });
+            if (currentVal) select.value = currentVal;
+        }
+
+        function applyFilters() {
+            fetchLogs(0);
+        }
+
+        function resetFilters() {
+            document.getElementById('filterStartDate').value = '';
+            document.getElementById('filterEndDate').value = '';
+            document.getElementById('filterEntity').value = '';
+            document.getElementById('filterAction').value = '';
+            document.getElementById('filterEntityId').value = '';
+            fetchLogs(0);
+        }
+
+        function refreshLogs() {
+            fetchLogs(currentPage);
+        }
+
+        function changePage(delta) {
+            const newPage = currentPage + delta;
+            if (newPage >= 0 && newPage < totalPages) {
+                fetchLogs(newPage);
+            }
+        }
+
+        async function openLogDetail(id) {
+            try {
+                const res = await fetch(`/api/activity-logs/${id}`);
+                if (!res.ok) throw new Error('Tafsilotlarni yuklab bo\'lmadi');
+                const item = await res.json();
+
+                const content = document.getElementById('logModalContent');
+                content.innerHTML = `
+                    <div style="display:grid; grid-template-columns: 140px 1fr; gap:12px; margin-bottom:16px;">
+                        <span style="font-weight:700; color:#64748b;">Sana va vaqt:</span>
+                        <span class="mono-text" style="font-weight:700; color:#0f172a;">${formatDateTime(item.timestamp)}</span>
+
+                        <span style="font-weight:700; color:#64748b;">Foydalanuvchi:</span>
+                        <div>
+                            <strong>${escapeHtml(item.userName)}</strong><br>
+                            <span style="color:#64748b; font-size:0.75rem;">${escapeHtml(item.userEmail)}</span>
+                        </div>
+
+                        <span style="font-weight:700; color:#64748b;">Amal:</span>
+                        <div>${getActionBadgeHtml(item.action, item.actionCode)}</div>
+
+                        <span style="font-weight:700; color:#64748b;">Obyekt:</span>
+                        <span style="font-weight:600; color:#1e293b;">${escapeHtml(item.entityName)}</span>
+
+                        <span style="font-weight:700; color:#64748b;">Obyekt ID:</span>
+                        <span class="mono-text" style="font-weight:700; color:#2563eb;">${escapeHtml(item.entityId || '—')}</span>
+
+                        <span style="font-weight:700; color:#64748b;">IP Manzil:</span>
+                        <span class="mono-text">${escapeHtml(item.ipAddress || '127.0.0.1')}</span>
+
+                        <span style="font-weight:700; color:#64748b;">O'zgargan maydonlar:</span>
+                        <div>${renderFieldPills(item.changedFields)}</div>
+                    </div>
+
+                    ${item.details ? `
+                        <div style="margin-top:16px;">
+                            <span style="font-weight:700; color:#0f172a; display:block; margin-bottom:6px;">Tafsilot / Izoh:</span>
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:12px; font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:#334155; line-height:1.5; white-space:pre-wrap;">${escapeHtml(item.details)}</div>
+                        </div>
+                    ` : ''}
+
+                    <div style="margin-top:16px; padding:10px 12px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:6px; font-size:0.75rem; color:#1e40af; display:flex; align-items:center; gap:8px;">
+                        <span>🔒</span>
+                        <span>Ushbu yozuv tizim yadrosida saqlangan va o'zgartirib yoki o'chirib bo'lmaydi (Read-only immutable log).</span>
+                    </div>
+                `;
+
+                const modal = document.getElementById('logDetailModal');
+                modal.style.display = 'flex';
+            } catch(e) {
+                alert(e.message);
+            }
+        }
+
+        function closeLogDetailModal() {
+            document.getElementById('logDetailModal').style.display = 'none';
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchLogs(0);
+        });
+    </script>
+</body>
+</html>

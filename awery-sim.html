@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awery ERP Simulyatori | TAS Cargo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="app-header">
+        <a href="index.html" class="brand-wrapper">
+            <div class="brand-logo-badge">AWER</div>
+            <div>
+                <h1 class="brand-title">Awery ERP Integratsiya Simulyatori</h1>
+                <div class="brand-subtitle">Aeroport yuk tizimi · Bojxona ruxsatnomalari (Release Permits)</div>
+            </div>
+        </a>
+        <div class="header-status">
+            <div class="live-clock" id="liveClock">16:40:00 (Toshkent)</div>
+            <a href="index.html" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Bosh menyu</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div>
+                <h2 class="page-title">Awery ERP dagi AWB va Bojxona Relizlari</h2>
+                <p class="page-desc">
+                    TZ 9-bo'limi talabiga binoan, elektron navbat tizimi yuk ma'lumotlarini to'g'ridan-to'g'ri Awery ERP dan oladi.
+                    Bu yerda siz har qanday AWB bo'yicha bojxona ruxsatini yoqishingiz yoki o'chirishingiz mumkin.
+                </p>
+            </div>
+            <div>
+                <a href="registration.html" class="btn btn-primary">
+                    &larr; Registratsiya Paneliga O'tish
+                </a>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h3 style="font-size: 1.25rem; margin-bottom: 1.25rem;">Awery ERP Tizimidagi Faol Avianakladnoylar (AWB)</h3>
+            <div class="table-responsive">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>AWB Raqami</th>
+                            <th>Yuk egasi (Consignee)</th>
+                            <th>Reys</th>
+                            <th>Joy / Vazn</th>
+                            <th>Kategoriya</th>
+                            <th>Ombordagi Joyi</th>
+                            <th>Bojxona Relizi (Permit)</th>
+                            <th>Amal (Sinov uchun)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="aweryTableBody">
+                        <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Yuklanmoqda...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        async function loadAweryAwbs() {
+            try {
+                const res = await fetch('/api/awery/search');
+                if (res.ok) {
+                    const list = await res.json();
+                    const tbody = document.getElementById('aweryTableBody');
+                    tbody.innerHTML = list.map(a => {
+                        const isGranted = Boolean(a.releasePermitGranted);
+                        return `
+                            <tr>
+                                <td><strong style="color: #1d4ed8; font-family: var(--font-mono); font-size: 1.05rem;">${a.awbNumber}</strong></td>
+                                <td style="font-weight: 600;">${a.consignee}</td>
+                                <td style="font-size: 0.85rem; color: var(--text-secondary);">${a.flightNumber || '-'}</td>
+                                <td>${a.pieces} dona · ${a.weightKg} kg</td>
+                                <td><span class="badge badge-registered">${a.category}</span></td>
+                                <td style="font-size: 0.85rem; color: #b45309; font-weight: 700; font-family: var(--font-mono);">${a.warehouseLocation || '-'}</td>
+                                <td>
+                                    ${isGranted ? 
+                                        '<span class="badge badge-prepared" style="font-size: 0.8rem;">RUXSAT BERILGAN</span>' : 
+                                        '<span class="badge badge-danger" style="font-size: 0.8rem;">RUXSAT BERILMAGAN</span>'
+                                    }
+                                </td>
+                                <td>
+                                    <button class="btn ${isGranted ? 'btn-secondary' : 'btn-success'}" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="toggleAwbPermit('${a.awbNumber}')">
+                                        ${isGranted ? 'Ruxsatni Bekor Qilish' : 'Ruxsat Berish'}
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.warn(err);
+            }
+        }
+
+        async function toggleAwbPermit(awbNumber) {
+            try {
+                const res = await fetch(`/api/awery/awb/${encodeURIComponent(awbNumber)}/toggle-permit`, {
+                    method: 'POST'
+                });
+                if (res.ok) {
+                    showToast(`AWB ${awbNumber} bojxona holati o'zgartirildi!`, "info");
+                    loadAweryAwbs();
+                }
+            } catch (e) {
+                showToast("Xatolik", "error");
+            }
+        }
+
+        loadAweryAwbs();
+    </script>
+</body>
+</html>

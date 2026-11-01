@@ -1,0 +1,1909 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+/* ==========================================================================
+   NEO-CLASSIC LOGISTICS DASHBOARD THEME (TAILADMIN LOGISTICS TEMPLATE)
+   - Clean, Professional, Light Only (Tun rejimi yo'q)
+   - Balanced, Non-bloated Typography ("Fontlar jaaa katta bo'lmasin")
+   - Enterprise Aviation & Cargo Management System
+   ========================================================================== */
+
+:root {
+    /* Brand Primary & Accents */
+    --primary: #2563eb;          /* TailAdmin Corporate Blue */
+    --primary-hover: #1d4ed8;
+    --primary-light: #eff6ff;    /* Soft blue tint for icons/active states */
+    --primary-border: #bfdbfe;
+    
+    --navy: #0f172a;             /* Deep Slate/Navy header contrast */
+    --navy-light: #1e293b;
+    --accent: #d97706;           /* Amber / Priority accent */
+    
+    --emerald: #059669;          /* Success / Active */
+    --emerald-light: #ecfdf5;
+    --emerald-border: #a7f3d0;
+    
+    --amber: #d97706;            /* Pending / In Transit */
+    --amber-light: #fffbeb;
+    --amber-border: #fde68a;
+    
+    --indigo: #4f46e5;           /* Warehouse / Processing */
+    --indigo-light: #eef2ff;
+    --indigo-border: #c7d2fe;
+    
+    --danger: #dc2626;           /* Alerts / Blocked */
+    --danger-light: #fef2f2;
+    --danger-border: #fecaca;
+    
+    /* Backgrounds */
+    --bg-app: #f8fafc;           /* TailAdmin Clean Slate Background */
+    --bg-sidebar: #ffffff;
+    --bg-topbar: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #fcfdfe;
+    --bg-input: #ffffff;
+    --bg-subtle: #f1f5f9;
+    --bg-ticker: #f1f5f9;
+    
+    /* Borders & Dividers */
+    --border-color: #e2e8f0;     /* Crisp TailAdmin 1px border */
+    --border-subtle: #e2e8f0;
+    --border-card: #e2e8f0;
+    --border-card-hover: #cbd5e1;
+    --border-focus: #3b82f6;
+    
+    /* Typography Colors */
+    --text-primary: #0f172a;     /* Slate 900 */
+    --text-secondary: #334155;   /* Slate 700 */
+    --text-muted: #64748b;       /* Slate 500 */
+    --text-dim: #94a3b8;         /* Slate 400 */
+    
+    /* Fonts (Montserrat Neo-Classic) */
+    --font-sans: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Montserrat', monospace;
+    
+    /* Layout Dimensions */
+    --sidebar-width: 255px;
+    --sidebar-collapsed-width: 70px;
+    --topbar-height: 62px;
+    
+    /* Border Radii */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    
+    /* Refined TailAdmin Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px 0 rgba(15, 23, 42, 0.03);
+    --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -1px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
+}
+
+/* Base Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    font-size: 0.84rem;
+    line-height: 1.5;
+}
+
+button, input, select, textarea {
+    font-family: var(--font-sans);
+}
+
+/* ==========================================================================
+   AVIATION LIVE TELEMETRY TICKER (TailAdmin Compact Style)
+   ========================================================================== */
+
+.aviation-ticker-bar {
+    display: none !important;
+}
+
+.ticker-label-badge {
+    background: var(--primary);
+    color: #ffffff;
+    padding: 0 12px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+    z-index: 2;
+}
+
+.ticker-track {
+    display: inline-flex;
+    align-items: center;
+    gap: 28px;
+    animation: tickerScroll 40s linear infinite;
+    padding-left: 16px;
+}
+
+.ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+}
+
+.ticker-item strong {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.ticker-pill {
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.ticker-pill.green { background: var(--emerald-light); color: var(--emerald); }
+.ticker-pill.cyan { background: var(--primary-light); color: var(--primary); }
+.ticker-pill.orange { background: var(--amber-light); color: var(--amber); }
+
+@keyframes tickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* ==========================================================================
+   TAILADMIN SAAS LAYOUT (Sidebar + Topbar + Content Area)
+   ========================================================================== */
+
+.saas-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background: var(--bg-app);
+}
+
+/* Sidebar */
+.saas-sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    transition: width 0.25s ease;
+}
+
+.saas-sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+.saas-sidebar.collapsed .brand-name-group,
+.saas-sidebar.collapsed .nav-text,
+.saas-sidebar.collapsed .nav-badge,
+.saas-sidebar.collapsed .nav-section-title,
+.saas-sidebar.collapsed .user-details,
+.saas-sidebar.collapsed .btn-sidebar-logout {
+    display: none;
+}
+
+.saas-sidebar.collapsed .saas-nav-item {
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.saas-sidebar.collapsed .saas-user-card {
+    justify-content: center;
+    padding: 8px 0;
+}
+
+/* Sidebar Brand */
+.saas-brand {
+    height: var(--topbar-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.saas-brand-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+}
+
+.brand-logo-img {
+    height: 36px;
+    width: auto;
+    max-width: 170px;
+    object-fit: contain;
+    display: block;
+}
+
+.brand-emblem-collapsed {
+    display: none;
+    height: 34px;
+    width: 34px;
+}
+
+.saas-sidebar.collapsed .brand-logo-img {
+    display: none;
+}
+
+.saas-sidebar.collapsed .brand-emblem-collapsed {
+    display: block;
+    margin: 0 auto;
+}
+
+.brand-cargo-tag {
+    font-size: 0.58rem;
+    font-weight: 800;
+    color: #c49a2b;
+    background: #fffdf8;
+    border: 1px solid #f2e3b6;
+    padding: 1px 5px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+}
+
+.sidebar-toggle-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.sidebar-toggle-btn:hover {
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+/* Navigation items */
+.saas-nav-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nav-section-title {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    padding: 12px 10px 4px 10px;
+}
+
+.saas-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: all 0.18s ease;
+    position: relative;
+}
+
+.saas-nav-item:hover {
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+}
+
+.saas-nav-item.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.saas-nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 3px;
+    background: var(--primary);
+    border-radius: 0 3px 3px 0;
+}
+
+.nav-icon {
+    font-size: 1.05rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    flex-shrink: 0;
+}
+
+.nav-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav-badge {
+    font-size: 0.64rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 9999px;
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    border: 1px solid var(--border-color);
+}
+
+.nav-badge.live {
+    background: var(--emerald-light);
+    color: var(--emerald);
+    border-color: var(--emerald-border);
+}
+
+/* Sidebar Footer User Card */
+.saas-sidebar-footer {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border-color);
+    background: #ffffff;
+}
+
+.saas-user-card {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 6px 8px;
+    border-radius: var(--radius-md);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+}
+
+.user-avatar-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.user-status-dot {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 7px;
+    height: 7px;
+    background: var(--emerald);
+    border-radius: 50%;
+    border: 1px solid #ffffff;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+}
+
+.user-name-txt {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-role-txt {
+    font-size: 0.66rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.btn-sidebar-logout {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.btn-sidebar-logout:hover {
+    color: var(--danger);
+}
+
+/* ==========================================================================
+   MAIN CONTENT & TOPBAR (TailAdmin Clean Layout)
+   ========================================================================== */
+
+.saas-main {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: margin-left 0.25s ease;
+    background: var(--bg-app);
+}
+
+.saas-sidebar.collapsed + .saas-main {
+    margin-left: var(--sidebar-collapsed-width);
+}
+
+/* Standalone Operational Page Header (TailAdmin Neo-Classic) */
+.app-header {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+}
+
+.brand-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.brand-logo-badge {
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    color: #ffffff;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+
+.brand-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.brand-subtitle {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.header-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.live-clock {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+}
+
+.main-content {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* Topbar */
+.saas-topbar {
+    height: var(--topbar-height);
+    background: var(--bg-topbar);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    gap: 16px;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topbar-page-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar-breadcrumbs {
+    font-size: 0.65rem;
+    color: var(--primary);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.topbar-page-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+}
+
+/* Search Box */
+.saas-search-box {
+    position: relative;
+    width: 300px;
+    max-width: 100%;
+}
+
+.saas-search-input {
+    width: 100%;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 7px 36px 7px 32px;
+    font-size: 0.78rem;
+    color: var(--text-primary);
+    outline: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.saas-search-input:focus {
+    background: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.search-icon-left {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.search-shortcut-badge {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 0.6rem;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+/* Topbar Right Tools */
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.live-badge-tool {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--emerald-light);
+    border: 1px solid var(--emerald-border);
+    padding: 5px 10px;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--emerald);
+}
+
+.pulse-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--emerald);
+    border-radius: 50%;
+}
+
+.topbar-clock {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+}
+
+/* Audio Airport Chime Button */
+.btn-airport-chime {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-airport-chime:hover {
+    background: var(--primary-light);
+    border-color: var(--primary-border);
+    color: var(--primary);
+}
+
+/* Language Toggle */
+.lang-toggle-saas {
+    display: flex;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+}
+
+.lang-btn-saas {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.lang-btn-saas.active {
+    background: #ffffff;
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Content Container */
+.saas-content {
+    padding: 20px 24px;
+    flex: 1;
+}
+
+/* ==========================================================================
+   KPI METRIC CARDS (TailAdmin Logistics Template Style)
+   Compact, Non-bloated, Boardroom Quality ("Fontlar jaaa katta bo'lmasin")
+   ========================================================================== */
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    position: relative;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-card-hover);
+}
+
+.stat-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.stat-icon-badge {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-md);
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid var(--primary-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.stat-card.waiting .stat-icon-badge {
+    background: var(--amber-light);
+    color: var(--amber);
+    border-color: var(--amber-border);
+}
+
+.stat-card.preparing .stat-icon-badge {
+    background: var(--indigo-light);
+    color: var(--indigo);
+    border-color: var(--indigo-border);
+}
+
+.stat-card.docks .stat-icon-badge {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary-border);
+}
+
+.stat-card.completed .stat-icon-badge {
+    background: var(--emerald-light);
+    color: var(--emerald);
+    border-color: var(--emerald-border);
+}
+
+.stat-value {
+    font-size: 1.55rem;          /* Compact Neo-Classic value (not 2.6rem or 3.5rem) */
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.15;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+}
+
+.stat-subtext {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.stat-trend {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+.stat-trend.up { background: var(--emerald-light); color: var(--emerald); }
+.stat-trend.neutral { background: var(--bg-subtle); color: var(--text-secondary); }
+
+.stat-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--bg-subtle);
+    border-radius: 4px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.stat-progress-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+/* ==========================================================================
+   DOCK BAYS STRIP (TailAdmin Logistics Rampa Bays)
+   ========================================================================== */
+
+.dock-bays-strip {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+@media (max-width: 1200px) {
+    .dock-bays-strip { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+    .dock-bays-strip { grid-template-columns: repeat(2, 1fr); }
+}
+
+.dock-bay-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    position: relative;
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dock-bay-card:hover {
+    border-color: var(--border-card-hover);
+    box-shadow: var(--shadow-md);
+}
+
+.bay-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.bay-num {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--primary);
+    font-family: var(--font-mono);
+}
+
+.bay-lamp {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--emerald);
+}
+.bay-lamp.busy {
+    background: var(--amber);
+}
+
+.bay-truck-icon {
+    font-size: 1.15rem;
+    margin: 2px 0;
+    display: block;
+}
+
+.bay-ticket {
+    font-size: 0.88rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+}
+
+.bay-status-lbl {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+/* ==========================================================================
+   INBOUND FLIGHTS & CARGO TRACKING (Neo-Classic Table Card)
+   ========================================================================== */
+
+.aviation-radar-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-card);
+}
+
+.radar-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.radar-header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.radar-icon-badge {
+    width: 32px;
+    height: 32px;
+    background: var(--primary-light);
+    border: 1px solid var(--primary-border);
+    color: var(--primary);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+}
+
+.radar-grid-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 18px;
+    align-items: center;
+}
+
+@media (max-width: 992px) {
+    .radar-grid-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.radar-scope {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    position: relative;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.scope-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px dashed #cbd5e1;
+    border-radius: 50%;
+}
+.scope-ring-1 { width: 50px; height: 50px; }
+.scope-ring-2 { width: 105px; height: 105px; }
+.scope-ring-3 { width: 155px; height: 155px; }
+
+.scope-cross-x {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e2e8f0;
+}
+.scope-cross-y {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: #e2e8f0;
+}
+
+.scope-sweep {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 85px;
+    height: 85px;
+    transform-origin: 0 0;
+    background: conic-gradient(from 0deg, rgba(37, 99, 235, 0.2) 0deg, transparent 60deg);
+    border-radius: 50%;
+    animation: radarScopeRotate 6s linear infinite;
+}
+
+@keyframes radarScopeRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.flight-target {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.6rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.flight-target-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--emerald);
+    border-radius: 50%;
+}
+
+.flight-target-1 { top: 28%; left: 58%; }
+.flight-target-2 { top: 62%; left: 24%; }
+.flight-target-3 { top: 68%; left: 68%; }
+
+/* Flight Manifest Items */
+.flight-manifest-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.manifest-item {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.manifest-flight-callsign {
+    font-size: 0.84rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.manifest-route {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+}
+
+.manifest-weight {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--primary);
+    font-family: var(--font-mono);
+}
+
+/* ==========================================================================
+   PORTAL CARDS (TailAdmin Logistics Workstation Hub)
+   ========================================================================== */
+
+.portal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.portal-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.portal-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-card-hover);
+    box-shadow: var(--shadow-md);
+}
+
+.portal-icon {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.portal-role {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.portal-name {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+}
+
+.portal-desc {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-bottom: 16px;
+}
+
+.portal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.portal-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+    padding: 2px 8px;
+    border-radius: 9999px;
+    border: 1px solid var(--border-color);
+}
+
+/* ==========================================================================
+   BUTTONS & FORM CONTROLS (Neo-Classic TailAdmin)
+   ========================================================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 0.78rem;
+    padding: 8px 14px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.18s ease;
+    text-decoration: none;
+    outline: none;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.btn-secondary {
+    background: #ffffff;
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+.btn-secondary:hover {
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+    border-color: var(--border-card-hover);
+}
+
+.btn-success {
+    background: var(--emerald);
+    color: #ffffff;
+    border-color: var(--emerald);
+}
+.btn-success:hover {
+    background: #047857;
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: #ffffff;
+    border-color: var(--danger);
+}
+
+.btn-warning {
+    background: var(--amber);
+    color: #ffffff;
+    border-color: var(--amber);
+}
+
+/* Form Container & Inputs */
+.glass-card, .form-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    color: var(--text-primary);
+    outline: none;
+    font-weight: 500;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* ==========================================================================
+   INPUT PLACEHOLDER STYLING (Soft, distinct, light example hints)
+   ========================================================================== */
+::placeholder {
+    color: #94a3b8 !important;   /* Slate 400 - soft, light hint color */
+    opacity: 0.55 !important;
+    font-weight: 400 !important;
+    letter-spacing: normal !important;
+}
+
+::-webkit-input-placeholder {
+    color: #94a3b8 !important;
+    opacity: 0.55 !important;
+    font-weight: 400 !important;
+    letter-spacing: normal !important;
+}
+
+:-moz-placeholder {
+    color: #94a3b8 !important;
+    opacity: 0.55 !important;
+    font-weight: 400 !important;
+    letter-spacing: normal !important;
+}
+
+::-moz-placeholder {
+    color: #94a3b8 !important;
+    opacity: 0.55 !important;
+    font-weight: 400 !important;
+    letter-spacing: normal !important;
+}
+
+:-ms-input-placeholder {
+    color: #94a3b8 !important;
+    opacity: 0.55 !important;
+    font-weight: 400 !important;
+    letter-spacing: normal !important;
+}
+
+.form-control::placeholder,
+.form-input::placeholder,
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
+    color: #94a3b8 !important;
+    opacity: 0.55 !important;
+    font-weight: 400 !important;
+    font-size: 0.88em !important;
+}
+
+/* Vehicle plate placeholder: ensure it stays readable normal case, not forced uppercase/monospace */
+#plateInput::placeholder {
+    font-family: var(--font-sans) !important;
+    text-transform: none !important;
+    font-size: 0.76rem !important;
+    font-weight: 400 !important;
+    color: #94a3b8 !important;
+    opacity: 0.55 !important;
+}
+
+/* ==========================================================================
+   DATA TABLES (Dense, Crisp TailAdmin Logistics Design)
+   ========================================================================== */
+
+.table-container, .table-responsive {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+
+.table-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border-color);
+    background: #ffffff;
+}
+
+.table-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.data-table, .table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th, .table-custom th {
+    background: var(--bg-subtle);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table td, .table-custom td {
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+    font-weight: 500;
+}
+
+.data-table tr:hover td, .table-custom tr:hover td {
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+}
+
+.data-table tr:last-child td, .table-custom tr:last-child td {
+    border-bottom: none;
+}
+
+.ticket-num {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    color: #1d4ed8 !important;
+}
+
+.ticket-num.priority {
+    color: #d97706 !important;
+}
+
+/* ==========================================================================
+   STATUS BADGES (Refined TailAdmin Pills)
+   ========================================================================== */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.badge-registered { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+.badge-preparing { background: var(--indigo-light); color: var(--indigo); border: 1px solid var(--indigo-border); }
+.badge-prepared { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border); }
+.badge-called { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge-arrived { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
+.badge-issuing { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border); }
+.badge-closed { background: var(--emerald-light); color: var(--emerald); border: 1px solid var(--emerald-border); }
+.badge-waiting_kpp { background: #fae8ff; color: #a21caf; border: 1px solid #f5d0fe; }
+.badge-warning { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge-danger { background: var(--danger-light); color: var(--danger); border: 1px solid var(--danger-border); }
+
+/* Quick AWB Chips */
+.quick-awb-chip {
+    display: inline-block;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    margin-right: 4px;
+    margin-bottom: 6px;
+    transition: all 0.18s ease;
+}
+
+.quick-awb-chip:hover {
+    background: var(--primary-light);
+    border-color: var(--primary-border);
+    color: var(--primary);
+}
+
+/* Modals */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 16px;
+}
+
+.modal-overlay.active,
+.modal-overlay.open {
+    display: flex;
+}
+
+.modal-card, .modal-content {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Ticket Print Receipt */
+.ticket-print-box {
+    background: #ffffff;
+    color: #0f172a;
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.ticket-print-number {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 6px 0;
+    line-height: 1;
+}
+
+.ticket-print-divider {
+    border-top: 1px dashed var(--border-color);
+    margin: 12px 0;
+}
+
+.ticket-print-info {
+    text-align: left;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.ticket-print-info strong {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.ticket-print-qr {
+    width: 130px;
+    height: 130px;
+    margin: 10px auto;
+    display: block;
+    background: #ffffff;
+    padding: 4px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+/* Tracking History Box */
+.tracking-history-box {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    margin-top: 10px;
+    max-height: 220px;
+    overflow-y: auto;
+    font-size: 0.76rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .saas-sidebar {
+        transform: translateX(-100%);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+    }
+    .saas-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    .saas-main {
+        margin-left: 0 !important;
+    }
+    .saas-search-box {
+        display: none;
+    }
+    .topbar-right .topbar-clock {
+        display: none;
+    }
+    .aviation-ticker-bar {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   SVG VECTOR ICONS SYSTEM (Feather / Lucide Style)
+   Replaces all emojis with crisp scalable vectors
+   ========================================================================== */
+
+.icon-svg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.icon-svg-sm { width: 14px; height: 14px; }
+.icon-svg-md { width: 16px; height: 16px; }
+.icon-svg-lg { width: 20px; height: 20px; }
+
+/* ==========================================================================
+   AI SAAS ANALYTICS DISPATCHER INTELLIGENCE (Dribbble 27409568)
+   ========================================================================== */
+
+.ai-insights-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+}
+
+.ai-insights-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #2563eb, #8b5cf6);
+}
+
+.ai-insights-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ai-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ai-icon-badge {
+    width: 32px;
+    height: 32px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #2563eb;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #2563eb;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+}
+
+.ai-insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+
+.ai-insight-pill {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+}
+
+.ai-insight-pill strong {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.ai-insight-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+.ai-insight-dot.blue { background: #2563eb; }
+.ai-insight-dot.green { background: #059669; }
+.ai-insight-dot.purple { background: #8b5cf6; }
+
+/* ==========================================================================
+   ERP ORDER LIST & RECENT ACTIVITY FEED GRID (Dribbble 26370765)
+   ========================================================================== */
+
+.erp-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr;
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 1100px) {
+    .erp-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.erp-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+}
+
+.erp-card-header {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.erp-card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.erp-filter-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-subtle);
+    padding: 3px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.erp-tab-btn {
+    background: transparent;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.16s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.erp-tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.erp-tab-btn.active {
+    background: #ffffff;
+    color: var(--primary);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    font-weight: 700;
+}
+
+.erp-tab-badge {
+    background: var(--bg-subtle);
+    border-radius: 9999px;
+    padding: 1px 6px;
+    font-size: 0.62rem;
+    font-family: var(--font-mono);
+}
+
+.erp-tab-btn.active .erp-tab-badge {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+/* Recent Activity Feed Timeline */
+.activity-feed-list {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: 480px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+}
+
+.activity-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    bottom: -14px;
+    width: 2px;
+    background: #e2e8f0;
+}
+
+.activity-icon-wrap {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 2;
+}
+
+.activity-icon-wrap.green {
+    background: #ecfdf5;
+    color: #059669;
+    border-color: #a7f3d0;
+}
+
+.activity-icon-wrap.amber {
+    background: #fffbeb;
+    color: #d97706;
+    border-color: #fde68a;
+}
+
+.activity-icon-wrap.purple {
+    background: #faf5ff;
+    color: #9333ea;
+    border-color: #e9d5ff;
+}
+
+.activity-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.activity-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+
+.activity-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.activity-time {
+    font-size: 0.66rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+}
+
+.activity-desc {
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.activity-tag {
+    font-size: 0.64rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-top: 4px;
+    display: inline-block;
+}
+
