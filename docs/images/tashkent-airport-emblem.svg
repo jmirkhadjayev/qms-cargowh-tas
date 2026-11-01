@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80" fill="none">
+  <!-- Circular Golden Medallion with Uzbek Girih Pattern & Airplane -->
+  <g transform="translate(40, 40)">
+    <circle cx="0" cy="0" r="36" stroke="#C49A2B" stroke-width="2.5" fill="#FFFDF8"/>
+    <circle cx="0" cy="0" r="26" stroke="#C49A2B" stroke-width="1.8" fill="none"/>
+    
+    <!-- 8 Interconnected Ornamental Petals -->
+    <path d="M0 -36 C 14 -29, 23 -17, 26 0 C 23 17, 14 29, 0 36 C -14 29, -23 17, -26 0 C -23 -17, -14 -29, 0 -36" stroke="#C49A2B" stroke-width="2.2" fill="none"/>
+    <path d="M-36 0 C -29 14, -17 23, 0 26 C 17 23, 29 14, 36 0 C 29 -14, 17 -23, 0 -26 C -17 -23, -29 -14, -36 0" stroke="#C49A2B" stroke-width="2.2" fill="none"/>
+    <path d="M-25.5 -25.5 C -9 -29, 6 -23, 18 -18 C 23 -6, 29 9, 25.5 25.5 C 9 29, -6 23, -18 18 C -23 6, -29 -9, -25.5 -25.5" stroke="#C49A2B" stroke-width="1.8" fill="none"/>
+    <path d="M25.5 -25.5 C 29 -9, 23 6, 18 18 C 6 23, -9 29, -25.5 25.5 C -29 9, -23 -6, -18 -18 C -6 -23, 9 -29, 25.5 -25.5" stroke="#C49A2B" stroke-width="1.8" fill="none"/>
+
+    <!-- Central Airplane Silhouette flying diagonally up-right (45 deg) -->
+    <g transform="rotate(45)">
+      <!-- Fuselage -->
+      <path d="M0 -17 C 2.5 -17, 4 -12, 4 -2 L 4 7 L 2 16 L -2 16 L -4 7 L -4 -2 C -4 -12, -2.5 -17, 0 -17 Z" fill="#C49A2B"/>
+      <!-- Main Wings -->
+      <path d="M-3.5 -1 L -17 8 L -17 11.5 L -3.5 6 L 3.5 6 L 17 11.5 L 17 8 L 3.5 -1 Z" fill="#C49A2B"/>
+      <!-- Tail Stabilizers -->
+      <path d="M-2 11 L -8 16.5 L -8 18 L -1.8 16 L 1.8 16 L 8 18 L 8 16.5 L 2 11 Z" fill="#C49A2B"/>
+    </g>
+  </g>
+</svg>

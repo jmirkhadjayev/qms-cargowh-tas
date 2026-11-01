@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAS Cargo | Tizimga Kirish (TailAdmin Logistics Hub)</title>
+    <link rel="icon" type="image/svg+xml" href="images/tashkent-airport-emblem.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --primary-border: #bfdbfe;
+            --navy: #0f172a;
+            --bg-app: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --text-dim: #94a3b8;
+            --font-sans: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Montserrat', monospace;
+            --shadow-card: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-sans);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 24px 16px;
+            font-size: 0.84rem;
+            line-height: 1.5;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(37, 99, 235, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(15, 23, 42, 0.03) 0%, transparent 40%);
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        /* Top Brand Bar outside modal */
+        .login-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .brand-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .brand-name {
+            font-size: 0.84rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+        }
+
+        .brand-tag {
+            font-size: 0.62rem;
+            font-weight: 700;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 1px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-family: var(--font-mono);
+        }
+
+        /* Language Toggle */
+        .lang-switch {
+            display: flex;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* Neo-Classic TailAdmin Login Card */
+        .login-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 28px 26px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .login-title-wrap {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-title {
+            font-size: 1.25rem;          /* Balanced Neo-Classic Title ("jaaa katta bo'lmasin") */
+            font-weight: 800;
+            letter-spacing: -0.015em;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .login-subtitle {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+            font-weight: 500;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .icon-svg {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.125em;
+            fill: none !important;
+            stroke: currentColor !important;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .icon-svg-sm { width: 14px; height: 14px; }
+        .icon-svg-md { width: 16px; height: 16px; }
+        .icon-svg-lg { width: 20px; height: 20px; }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px !important;
+            height: 16px !important;
+            max-width: 16px !important;
+            max-height: 16px !important;
+            color: var(--text-muted);
+            pointer-events: none;
+            z-index: 2;
+            fill: none !important;
+            stroke: var(--text-muted) !important;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .form-input {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 9px 36px 9px 34px;
+            font-size: 0.82rem;
+            color: var(--text-primary);
+            outline: none;
+            font-weight: 500;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .pw-toggle {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pw-toggle:hover {
+            color: var(--text-primary);
+        }
+
+        /* Options */
+        .form-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            font-size: 0.74rem;
+            font-weight: 500;
+        }
+
+        .remember-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .remember-wrap input {
+            accent-color: var(--primary);
+            cursor: pointer;
+            width: 14px;
+            height: 14px;
+        }
+
+        .forgot-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Submit Button */
+        .btn-login {
+            width: 100%;
+            background: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: all 0.18s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-login:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        /* 1-Click Role Quick Logins (Demo Rollar) */
+        .quick-roles-section {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .quick-roles-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .quick-roles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 7px;
+        }
+
+        .role-btn {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 10px;
+            color: var(--text-secondary);
+            font-size: 0.74rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.16s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .role-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary-border);
+            color: var(--primary);
+        }
+
+        .role-btn.admin-role {
+            grid-column: span 2;
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+        .role-btn.admin-role:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .role-avatar {
+            font-size: 1.05rem;
+            line-height: 1;
+        }
+
+        .role-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .role-name {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .role-sub {
+            font-size: 0.64rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        /* Error/Alert box */
+        .login-alert {
+            display: none;
+            margin-bottom: 14px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .login-alert.error {
+            background: var(--danger-light);
+            border: 1px solid var(--danger-border);
+            color: var(--danger);
+            display: flex;
+        }
+
+        .login-alert.success {
+            background: var(--emerald-light);
+            border: 1px solid var(--emerald-border);
+            color: var(--emerald);
+            display: flex;
+        }
+
+        /* Footer status */
+        .login-footer-meta {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0 2px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--emerald);
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Center Login Box -->
+    <div class="login-wrapper">
+        
+        <!-- Header Branding & Lang -->
+        <div class="login-header-bar">
+            <div class="brand-badge" style="background:#ffffff; padding:6px 14px; border:1px solid var(--border-color); border-radius:10px;">
+                <img src="images/tashkent-airport-logo.svg" alt="Tashkent International Airport" style="height:38px; width:auto; display:block;">
+            </div>
+
+            <div class="lang-switch">
+                <button class="lang-btn active" id="btnLangUz" onclick="setLoginLang('uz')">UZ</button>
+                <button class="lang-btn" id="btnLangRu" onclick="setLoginLang('ru')">RU</button>
+            </div>
+        </div>
+
+        <!-- Neo-Classic Card -->
+        <div class="login-card">
+            
+            <div class="login-title-wrap">
+                <h1 class="login-title" id="txtTitle">Tizimga Kirish</h1>
+                <p class="login-subtitle" id="txtSubtitle">Toshkent Xalqaro Aeroporti Yuk Terminali · Elektron Navbat va Dispetcherlik</p>
+            </div>
+
+            <!-- Feedback Alert -->
+            <div id="loginAlert" class="login-alert">
+                <svg class="icon-svg" style="color:var(--danger); width:15px; height:15px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="alertText">Xatolik yuz berdi</span>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label" for="usernameInput">
+                        <span id="lblUser">Foydalanuvchi nomi</span>
+                        <span style="color:var(--text-muted);font-size:0.65rem;">Login ID</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <svg class="icon-svg input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <input type="text" id="usernameInput" class="form-input" placeholder="admin, agent, sklad, dock, kpp..." required autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="passwordInput">
+                        <span id="lblPass">Xavfsizlik Paroli</span>
+                        <a href="javascript:void(0)" onclick="quickFillPass()" class="forgot-link" style="font-size:0.68rem;" id="lnkAutoPass">Demo parol</a>
+                    </label>
+                    <div class="input-wrapper">
+                        <svg class="icon-svg input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <input type="password" id="passwordInput" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                        <button type="button" class="pw-toggle" onclick="togglePasswordVisibility()" title="Parolni ko'rsatish">
+                            <svg class="icon-svg" id="pwToggleIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-wrap">
+                        <input type="checkbox" id="rememberMe" checked>
+                        <span id="lblRemember">Meni eslab qolish</span>
+                    </label>
+                    <a href="javascript:void(0)" onclick="showDemoCredentialsHelp()" class="forgot-link" id="lblHelp">Kirish yordami</a>
+                </div>
+
+                <button type="submit" class="btn-login" id="btnLogin">
+                    <span id="btnLoginText">Tizimga Kirish</span>
+                    <svg class="icon-svg" style="width:14px; height:14px;" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+            </form>
+
+            <!-- 1-Click Fast Roles (Tezkor Demo Rollar) -->
+            <div class="quick-roles-section">
+                <div class="quick-roles-title">
+                    <svg class="icon-svg" style="width:13px; height:13px; color:var(--primary);" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <span id="lblQuickRoles">1-Bosishda Tezkor Kirish (Demo Rollar)</span>
+                </div>
+                <div class="quick-roles-grid">
+                    <!-- SuperAdmin (All screens, Full access) -->
+                    <button type="button" class="role-btn admin-role" style="grid-column: 1 / -1; background: #eff6ff; border-color: #bfdbfe;" onclick="quickLogin('supperadmin@uzairports.com', 'admin123', 'index.html')">
+                        <span class="role-avatar" style="background:#2563eb; color:#fff; font-weight:800; font-size:10px;">★ SUP</span>
+                        <div class="role-info">
+                            <span class="role-name" style="color:#1d4ed8; font-weight:800;">Super Administrator (Barcha Huquqlar)</span>
+                            <span class="role-sub" style="color:#1e40af;">supperadmin@uzairports.com &bull; Barcha oynalar va foydalanuvchilar nazorati</span>
+                        </div>
+                    </button>
+
+                    <!-- Admin / Dispatcher -->
+                    <button type="button" class="role-btn" onclick="quickLogin('admin@uzairports.com', 'admin123', 'dispatcher.html')">
+                        <span class="role-avatar"><svg class="icon-svg" style="width:16px; height:16px; color:var(--primary);" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></span>
+                        <div class="role-info">
+                            <span class="role-name" id="roleAdmin">Bosh Dispetcher (Admin)</span>
+                            <span class="role-sub">admin@uzairports.com</span>
+                        </div>
+                    </button>
+
+                    <!-- Agent -->
+                    <button type="button" class="role-btn" onclick="quickLogin('registration@uzairports.com', 'tas123', 'registration.html')">
+                        <span class="role-avatar"><svg class="icon-svg" style="width:16px; height:16px; color:#0284c7;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+                        <div class="role-info">
+                            <span class="role-name" id="roleAgent">Faqat Registratsiya</span>
+                            <span class="role-sub">registration@uzairports.com</span>
+                        </div>
+                    </button>
+
+                    <!-- Warehouse -->
+                    <button type="button" class="role-btn" onclick="quickLogin('warehouse@uzairports.com', 'tas123', 'warehouse.html')">
+                        <span class="role-avatar"><svg class="icon-svg" style="width:16px; height:16px; color:#4f46e5;" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
+                        <div class="role-info">
+                            <span class="role-name" id="roleSklad">Faqat Ombor (Sklad)</span>
+                            <span class="role-sub">warehouse@uzairports.com</span>
+                        </div>
+                    </button>
+
+                    <!-- Dock -->
+                    <button type="button" class="role-btn" onclick="quickLogin('dock@uzairports.com', 'tas123', 'dock.html')">
+                        <span class="role-avatar"><svg class="icon-svg" style="width:16px; height:16px; color:#d97706;" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
+                        <div class="role-info">
+                            <span class="role-name" id="roleDock">Faqat Dok Operatori</span>
+                            <span class="role-sub">dock@uzairports.com</span>
+                        </div>
+                    </button>
+
+                    <!-- KPP -->
+                    <button type="button" class="role-btn" onclick="quickLogin('kpp@uzairports.com', 'tas123', 'kpp.html')">
+                        <span class="role-avatar"><svg class="icon-svg" style="width:16px; height:16px; color:#059669;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
+                        <div class="role-info">
+                            <span class="role-name" id="roleKpp">Faqat KPP Nazorati</span>
+                            <span class="role-sub">kpp@uzairports.com</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Meta -->
+        <div class="login-footer-meta">
+            <div>
+                <span class="status-dot"></span>
+                <span id="lblApiStatus">CargoUZ Awery API Ulangan</span>
+            </div>
+            <div>
+                <span>v2.5.0 · TAS UTTT UTC+5</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/mock-api.js"></script>
+    <script>
+        // Clean Light Only: enforce light mode
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.removeItem('tas_cargo_theme');
+
+        // Dictionary for Login page (UZ/RU)
+        const loginDict = {
+            uz: {
+                title: "Tizimga Kirish",
+                subtitle: "Toshkent Xalqaro Aeroporti Yuk Terminali · Elektron Navbat va Dispetcherlik",
+                user: "Foydalanuvchi nomi",
+                pass: "Xavfsizlik Paroli",
+                autoPass: "Demo parol",
+                remember: "Meni eslab qolish",
+                help: "Kirish yordami",
+                btn: "Tizimga Kirish →",
+                btnLoading: "Tekshirilmoqda...",
+                quick: "1-Bosishda Tezkor Kirish (Demo Rollar)",
+                roleAdmin: "Bosh Dispetcher (Admin)",
+                roleAgent: "Registratsiya Agenti",
+                roleSklad: "Ombor (Sklad)",
+                roleDock: "Dok Operatori",
+                roleKpp: "KPP Xavfsizlik",
+                apiStatus: "CargoUZ Awery API Ulangan",
+                errEmpty: "Iltimos, login va parolni kiriting!",
+                errAuth: "Login yoki parol noto'g'ri!",
+                welcome: "Xush kelibsiz,"
+            },
+            ru: {
+                title: "Вход в Систему",
+                subtitle: "Грузовой Терминал Международного Аэропорта Ташкент · Электронная Очередь",
+                user: "Имя пользователя",
+                pass: "Пароль безопасности",
+                autoPass: "Демо пароль",
+                remember: "Запомнить меня",
+                help: "Справка по входу",
+                btn: "Войти в Систему →",
+                btnLoading: "Проверка данных...",
+                quick: "Быстрый вход в 1 клик (Демо роли)",
+                roleAdmin: "Главный Диспетчер (Админ)",
+                roleAgent: "Агент Регистрации",
+                roleSklad: "Грузовой Склад",
+                roleDock: "Оператор Дока",
+                roleKpp: "Служба КПП",
+                apiStatus: "API CargoUZ Awery Подключен",
+                errEmpty: "Пожалуйста, введите логин и пароль!",
+                errAuth: "Неверный логин или пароль!",
+                welcome: "Добро пожаловать,"
+            }
+        };
+
+        let currentLang = localStorage.getItem('tas_cargo_lang') || 'uz';
+
+        function setLoginLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('tas_cargo_lang', lang);
+            
+            document.getElementById('btnLangUz').classList.toggle('active', lang === 'uz');
+            document.getElementById('btnLangRu').classList.toggle('active', lang === 'ru');
+
+            const d = loginDict[lang];
+            document.getElementById('txtTitle').textContent = d.title;
+            document.getElementById('txtSubtitle').textContent = d.subtitle;
+            document.getElementById('lblUser').textContent = d.user;
+            if (document.getElementById('lblPass')) document.getElementById('lblPass').textContent = d.pass;
+            if (document.getElementById('lnkAutoPass')) document.getElementById('lnkAutoPass').textContent = d.autoPass;
+            if (document.getElementById('lblRemember')) document.getElementById('lblRemember').textContent = d.remember;
+            if (document.getElementById('lblHelp')) document.getElementById('lblHelp').textContent = d.help;
+            if (document.getElementById('btnLoginText')) document.getElementById('btnLoginText').textContent = d.btn;
+            if (document.getElementById('lblQuickRoles')) document.getElementById('lblQuickRoles').textContent = d.quick;
+            if (document.getElementById('roleAdmin')) document.getElementById('roleAdmin').textContent = d.roleAdmin;
+            if (document.getElementById('roleAgent')) document.getElementById('roleAgent').textContent = d.roleAgent;
+            if (document.getElementById('roleSklad')) document.getElementById('roleSklad').textContent = d.roleSklad;
+            if (document.getElementById('roleDock')) document.getElementById('roleDock').textContent = d.roleDock;
+            if (document.getElementById('roleKpp')) document.getElementById('roleKpp').textContent = d.roleKpp;
+            if (document.getElementById('lblApiStatus')) document.getElementById('lblApiStatus').textContent = d.apiStatus;
+        }
+
+        function togglePasswordVisibility() {
+            const input = document.getElementById('passwordInput');
+            const icon = document.getElementById('pwToggleIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+            } else {
+                input.type = 'password';
+                icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+            }
+        }
+
+        function quickFillPass() {
+            const user = document.getElementById('usernameInput').value.trim().toLowerCase();
+            if (user === 'admin') {
+                document.getElementById('passwordInput').value = 'admin123';
+            } else {
+                document.getElementById('passwordInput').value = 'tas123';
+            }
+        }
+
+        function showAlert(msg, type = 'error') {
+            const alertBox = document.getElementById('loginAlert');
+            const icon = alertBox.querySelector('svg');
+            const text = document.getElementById('alertText');
+            
+            alertBox.className = 'login-alert ' + type;
+            if (icon) {
+                if (type === 'success') {
+                    icon.innerHTML = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>';
+                    icon.style.color = 'var(--emerald)';
+                } else {
+                    icon.innerHTML = '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
+                    icon.style.color = 'var(--danger)';
+                }
+            }
+            text.textContent = msg;
+            alertBox.style.display = 'flex';
+        }
+
+        function hideAlert() {
+            document.getElementById('loginAlert').style.display = 'none';
+        }
+
+        function showDemoCredentialsHelp() {
+            const helpMsg = currentLang === 'ru' 
+                ? "Тестовые учётные записи:\n• admin / admin123 (Админ/Диспетчер)\n• agent / tas123 (Регистрация)\n• sklad / tas123 (Склад)\n• dock / tas123 (Док)\n• kpp / tas123 (КПП)"
+                : "Demo hisob ma'lumotlari:\n• admin / admin123 (Admin/Dispetcher)\n• agent / tas123 (Registratsiya)\n• sklad / tas123 (Ombor)\n• dock / tas123 (Dok)\n• kpp / tas123 (KPP)";
+            alert(helpMsg);
+        }
+
+        // Mock users fallback in case server API is offline
+        const mockUsers = {
+            'supperadmin@uzairports.com': { id: 1, email: 'supperadmin@uzairports.com', username: 'supperadmin@uzairports.com', fullName: 'Bosh Tizim Administratori', role: 'SUPER_ADMIN', roleName: 'Super Administrator', avatar: 'SUP', targetUrl: 'index.html', allowedPages: ['index.html', 'dispatcher.html', 'registration.html', 'warehouse.html', 'dock.html', 'kpp.html', 'led-board.html', 'awery-sim.html', 'activity-log.html'] },
+            'superadmin@uzairports.com': { id: 1, email: 'supperadmin@uzairports.com', username: 'supperadmin@uzairports.com', fullName: 'Bosh Tizim Administratori', role: 'SUPER_ADMIN', roleName: 'Super Administrator', avatar: 'SUP', targetUrl: 'index.html', allowedPages: ['index.html', 'dispatcher.html', 'registration.html', 'warehouse.html', 'dock.html', 'kpp.html', 'led-board.html', 'awery-sim.html', 'activity-log.html'] },
+            'admin@uzairports.com': { id: 2, email: 'admin@uzairports.com', username: 'admin@uzairports.com', fullName: 'Sardor Aliyev (Bosh Dispetcher)', role: 'ADMIN', roleName: 'Bosh Dispetcher (Admin)', avatar: 'ADM', targetUrl: 'dispatcher.html', allowedPages: ['dispatcher.html', 'dock.html', 'led-board.html', 'activity-log.html'] },
+            'registration@uzairports.com': { id: 3, email: 'registration@uzairports.com', username: 'registration@uzairports.com', fullName: 'Nodira Karimova (Registratsiya)', role: 'OPERATOR_REGISTRATION', roleName: 'Registratsiya Agenti', avatar: 'REG', targetUrl: 'registration.html', allowedPages: ['registration.html'] },
+            'warehouse@uzairports.com': { id: 4, email: 'warehouse@uzairports.com', username: 'warehouse@uzairports.com', fullName: 'Rustam Mahmudov (Katta Omborchi)', role: 'OPERATOR_WAREHOUSE', roleName: 'Ombor Xodimi (Sklad)', avatar: 'WHS', targetUrl: 'warehouse.html', allowedPages: ['warehouse.html'] },
+            'dock@uzairports.com': { id: 5, email: 'dock@uzairports.com', username: 'dock@uzairports.com', fullName: 'Jasur Rahimov (Dok Operatori)', role: 'OPERATOR_DOCK', roleName: 'Dok Operatori (Rampa)', avatar: 'DCK', targetUrl: 'dock.html', allowedPages: ['dock.html'] },
+            'kpp@uzairports.com': { id: 6, email: 'kpp@uzairports.com', username: 'kpp@uzairports.com', fullName: 'Farhod Ergashev (KPP Ofitseri)', role: 'OPERATOR_KPP', roleName: 'KPP Nazorat Xodimi', avatar: 'KPP', targetUrl: 'kpp.html', allowedPages: ['kpp.html'] },
+            'admin': { id: 2, email: 'admin@uzairports.com', username: 'admin@uzairports.com', fullName: 'Sardor Aliyev (Bosh Dispetcher)', role: 'ADMIN', roleName: 'Bosh Dispetcher (Admin)', avatar: 'ADM', targetUrl: 'dispatcher.html', allowedPages: ['dispatcher.html', 'dock.html', 'led-board.html', 'activity-log.html'] },
+            'agent': { id: 3, email: 'registration@uzairports.com', username: 'registration@uzairports.com', fullName: 'Nodira Karimova (Registratsiya)', role: 'OPERATOR_REGISTRATION', roleName: 'Registratsiya Agenti', avatar: 'REG', targetUrl: 'registration.html', allowedPages: ['registration.html'] },
+            'registration': { id: 3, email: 'registration@uzairports.com', username: 'registration@uzairports.com', fullName: 'Nodira Karimova (Registratsiya)', role: 'OPERATOR_REGISTRATION', roleName: 'Registratsiya Agenti', avatar: 'REG', targetUrl: 'registration.html', allowedPages: ['registration.html'] },
+            'sklad': { id: 4, email: 'warehouse@uzairports.com', username: 'warehouse@uzairports.com', fullName: 'Rustam Mahmudov (Katta Omborchi)', role: 'OPERATOR_WAREHOUSE', roleName: 'Ombor Xodimi (Sklad)', avatar: 'WHS', targetUrl: 'warehouse.html', allowedPages: ['warehouse.html'] },
+            'warehouse': { id: 4, email: 'warehouse@uzairports.com', username: 'warehouse@uzairports.com', fullName: 'Rustam Mahmudov (Katta Omborchi)', role: 'OPERATOR_WAREHOUSE', roleName: 'Ombor Xodimi (Sklad)', avatar: 'WHS', targetUrl: 'warehouse.html', allowedPages: ['warehouse.html'] },
+            'dock':  { id: 5, email: 'dock@uzairports.com', username: 'dock@uzairports.com', fullName: 'Jasur Rahimov (Dok Operatori)', role: 'OPERATOR_DOCK', roleName: 'Dok Operatori (Rampa)', avatar: 'DCK', targetUrl: 'dock.html', allowedPages: ['dock.html'] },
+            'kpp':   { id: 6, email: 'kpp@uzairports.com', username: 'kpp@uzairports.com', fullName: 'Farhod Ergashev (KPP Ofitseri)', role: 'OPERATOR_KPP', roleName: 'KPP Nazorat Xodimi', avatar: 'KPP', targetUrl: 'kpp.html', allowedPages: ['kpp.html'] },
+            'supperadmin': { id: 1, email: 'supperadmin@uzairports.com', username: 'supperadmin@uzairports.com', fullName: 'Bosh Tizim Administratori', role: 'SUPER_ADMIN', roleName: 'Super Administrator', avatar: 'SUP', targetUrl: 'index.html', allowedPages: ['index.html', 'dispatcher.html', 'registration.html', 'warehouse.html', 'dock.html', 'kpp.html', 'led-board.html', 'awery-sim.html', 'activity-log.html'] },
+            'superadmin': { id: 1, email: 'supperadmin@uzairports.com', username: 'supperadmin@uzairports.com', fullName: 'Bosh Tizim Administratori', role: 'SUPER_ADMIN', roleName: 'Super Administrator', avatar: 'SUP', targetUrl: 'index.html', allowedPages: ['index.html', 'dispatcher.html', 'registration.html', 'warehouse.html', 'dock.html', 'kpp.html', 'led-board.html', 'awery-sim.html', 'activity-log.html'] }
+        };
+
+        // 1-Click quick login handler
+        function quickLogin(username, password, targetUrl) {
+            document.getElementById('usernameInput').value = username;
+            document.getElementById('passwordInput').value = password;
+            executeLogin(username, password, targetUrl);
+        }
+
+        // Form submit handler
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const username = document.getElementById('usernameInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+
+            if (!username || !password) {
+                showAlert(loginDict[currentLang].errEmpty, 'error');
+                return;
+            }
+
+            const target = mockUsers[username.toLowerCase()] ? mockUsers[username.toLowerCase()].targetUrl : 'index.html';
+            executeLogin(username, password, target);
+        }
+
+        async function executeLogin(username, password, targetUrl) {
+            hideAlert();
+            const btn = document.getElementById('btnLogin');
+            const btnText = document.getElementById('btnLoginText');
+            btn.disabled = true;
+            btnText.textContent = loginDict[currentLang].btnLoading;
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: username, password: password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.user) {
+                        saveSessionAndRedirect(data.user, data.user.targetUrl || targetUrl);
+                        return;
+                    }
+                } else {
+                    const errData = await response.json().catch(() => ({}));
+                    btn.disabled = false;
+                    btnText.textContent = loginDict[currentLang].btn;
+                    showAlert(errData.message || loginDict[currentLang].errAuth, 'error');
+                    return;
+                }
+            } catch (err) {
+                console.warn('Backend login endpoint offline, using local verification fallback:', err);
+            }
+
+            // Local fallback validation
+            const u = username.toLowerCase();
+            const valid = (['supperadmin', 'superadmin', 'supperadmin@uzairports.com', 'superadmin@uzairports.com'].includes(u) && (password === 'admin123' || password === 'tas123')) ||
+                          (['admin', 'admin@uzairports.com'].includes(u) && (password === 'admin123' || password === 'tas123')) ||
+                          (['agent', 'registration', 'registration@uzairports.com',
+                            'sklad', 'warehouse', 'warehouse@uzairports.com',
+                            'dock', 'dock@uzairports.com',
+                            'kpp', 'kpp@uzairports.com'].includes(u) && (password === 'tas123' || password === 'admin123'));
+
+            if (valid && mockUsers[u]) {
+                const sessionUser = mockUsers[u];
+                saveSessionAndRedirect(sessionUser, targetUrl);
+            } else {
+                btn.disabled = false;
+                btnText.textContent = loginDict[currentLang].btn;
+                showAlert(loginDict[currentLang].errAuth, 'error');
+            }
+        }
+
+        function saveSessionAndRedirect(userObj, targetUrl) {
+            localStorage.setItem('tas_cargo_user', JSON.stringify(userObj));
+            showAlert(`${loginDict[currentLang].welcome} ${userObj.fullName || userObj.username}!`, 'success');
+            
+            setTimeout(() => {
+                window.location.href = targetUrl || 'index.html';
+            }, 300);
+        }
+
+        // Initialize language
+        setLoginLang(currentLang);
+    </script>
+</body>
+</html>

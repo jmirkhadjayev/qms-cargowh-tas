@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registratsiya Agenti | TAS Cargo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 2rem;
+        }
+        @media (max-width: 1024px) {
+            .split-layout { grid-template-columns: 1fr; }
+        }
+        .permit-status-box {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+            font-size: 0.95rem;
+            line-height: 1.45;
+        }
+        .permit-granted {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #047857;
+        }
+        .permit-denied {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+        .quick-awb-chip {
+            display: inline-block;
+            background: #f1f5f9;
+            border: 1px solid var(--border-card);
+            color: var(--text-primary);
+            padding: 0.45rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            cursor: pointer;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        .quick-awb-chip:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+        .tracking-history-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+            max-height: 250px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            color: #0f172a;
+        }
+        .tracking-step {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .tracking-step:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <a href="index.html" class="brand-wrapper">
+            <div class="brand-logo-badge">TAS</div>
+            <div>
+                <h1 class="brand-title" data-i18n="portalRegName">Registratsiya Agenti Paneli</h1>
+                <div class="brand-subtitle" data-i18n="step1Title">1-bosqich · Ma'muriy bino · Talon berish</div>
+            </div>
+        </a>
+        <div class="header-status">
+            <div class="live-clock" id="liveClock">16:40:00 (Toshkent)</div>
+            <a href="index.html" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;" data-i18n="mainMenu">Bosh menyu</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="split-layout">
+            <!-- Left Column: Registration Form -->
+            <div class="glass-card">
+                <h2 style="font-size: 1.35rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <svg class="icon-svg" style="color:var(--primary); width:18px; height:18px;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> <span data-i18n="portalRegName">Yangi Ariza Qabul Qilish</span>
+                </h2>
+
+                <!-- Quick selection chips including user's live Cargouz AWB -->
+                <div style="margin-bottom: 1rem;">
+                    <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Awery ERP / CargoUZ Jonli AWB lar:</span>
+                    <div id="quickAwbs" style="margin-top: 0.4rem;">
+                        <span class="quick-awb-chip" style="border-color: #38bdf8; color: #38bdf8; font-weight: bold;" onclick="selectQuickAwb('250-51253053')">
+                            <svg class="icon-svg" style="width:12px; height:12px; vertical-align:-1px; margin-right:3px;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 250-51253053 (CargoUZ LIVE)
+                        </span>
+                        <span class="quick-awb-chip" onclick="selectQuickAwb('250-84920183')">250-84920183 (Oddiy)</span>
+                        <span class="quick-awb-chip" onclick="selectQuickAwb('250-99210482')">250-99210482 (Dori/Tez buziluvchi)</span>
+                        <span class="quick-awb-chip" onclick="selectQuickAwb('250-66491028')" style="border-color: var(--danger); color: #f87171;">250-66491028 (Ruxsatsiz!)</span>
+                    </div>
+                </div>
+
+                <form id="regForm" onsubmit="handleRegister(event)">
+                    <!-- AWB Input with Lookup -->
+                    <div class="form-group">
+                        <label class="form-label" for="awbInput" data-i18n="awbNumber">Avianakladnoy (AWB) Raqami *</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="awbInput" class="form-control" placeholder="Masalan: 250-51253053" required style="font-family: var(--font-mono); font-size: 1.05rem;">
+                            <button type="button" class="btn btn-secondary" onclick="checkAweryAwb()" id="btnLookupAwery" data-i18n="lookupAwery">
+                                <svg class="icon-svg" style="width:14px; height:14px; vertical-align:-2px; margin-right:4px;" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> CargoUZ / Awery Qidirish
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Permit Status Box -->
+                    <div id="permitBox" class="permit-status-box"></div>
+
+                    <!-- Live CargoUZ Tracking Box (shown when live tracking is found) -->
+                    <div id="liveTrackingBox" class="tracking-history-box">
+                        <div style="font-weight: 700; color: #38bdf8; margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                            <span style="display:inline-flex; align-items:center; gap:6px;"><svg class="icon-svg" style="width:14px; height:14px;" viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> CargoUZ Awery Jonli Marshruti</span>
+                            <span id="liveRouteBadge" style="color: #fbbf24; font-family: var(--font-mono);"></span>
+                        </div>
+                        <div id="liveTrackingMessages"></div>
+                    </div>
+
+                    <!-- Consignee & Rep -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="consigneeInput" data-i18n="consignee">Yuk Egasi (Consignee) *</label>
+                            <input type="text" id="consigneeInput" class="form-control" placeholder="Masalan: Silk Road Cargo MCHJ" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="repInput" data-i18n="representative">Oluvchi Vakil (Haydovchi/Ekspeditor)</label>
+                            <input type="text" id="repInput" class="form-control" placeholder="Masalan: Abdullayev A.A.">
+                        </div>
+                    </div>
+
+                    <!-- Cargo Details -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="piecesInput" data-i18n="pieces">Joylar Soni *</label>
+                            <input type="number" id="piecesInput" class="form-control" placeholder="Masalan: 12" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="weightInput" data-i18n="weightKg">Umumiy Vazn (kg) *</label>
+                            <input type="number" step="0.1" id="weightInput" class="form-control" placeholder="Masalan: 450.5" required min="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="categorySelect" data-i18n="category">Kategoriya</label>
+                            <select id="categorySelect" class="form-control">
+                                <option value="GENERAL">Oddiy yuk (General)</option>
+                                <option value="PERISHABLE">Tez buziluvchi (Perishable)</option>
+                                <option value="OVERSIZED">Sverx-gabarit (Oversized)</option>
+                                <option value="DANGEROUS">Xavfli yuk (DGR)</option>
+                                <option value="VALUABLE">Qimmatbaho (VAL)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Location & Vehicle -->
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="storageInput" data-i18n="storageLocation">Ombordagi Joylashuvi (Yacheyka)</label>
+                            <input type="text" id="storageInput" class="form-control" placeholder="Masalan: Sklad 1, Rampa B, Yacheyka 14">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="plateInput" data-i18n="vehiclePlate">Avtomobil Davlat Raqami (UZB / Xalqaro)</label>
+                            <input type="text" id="plateInput" class="form-control" placeholder="01 777 AAA / TR / KZ / TIR / Xalqaro" style="font-family: var(--font-mono); text-transform: uppercase;">
+                            <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 3px; font-weight: 500;">
+                                UZB, MDH, Turkiya, Yevropa va barcha xalqaro davlat raqamlari
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phone & Priority -->
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; align-items: center;">
+                        <div class="form-group">
+                            <label class="form-label" for="phoneInput" data-i18n="phone">SMS-xabarnoma Uchun Telefon</label>
+                            <input type="tel" id="phoneInput" class="form-control" placeholder="Masalan: +998 90 123 45 67">
+                        </div>
+                        <div class="form-group" style="padding-top: 1.3rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem;">
+                                <input type="checkbox" id="priorityCheck" style="width: 18px; height: 18px; accent-color: var(--accent);">
+                                <span style="color: var(--accent); font-weight: 600;" data-i18n="priority"><svg class="icon-svg" style="width:14px; height:14px; vertical-align:-2px; margin-right:4px; color:var(--primary);" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Imtiyozli (Priority)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                        <button type="submit" id="btnSubmitTicket" class="btn btn-primary" style="flex: 1; padding: 1rem;" data-i18n="btnSubmitTicket">
+                            <svg class="icon-svg" style="width:16px; height:16px; vertical-align:-2px; margin-right:6px;" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Talon Berish va Navbatga Qo'yish
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right Column: Recent Queue List -->
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                    <h2 style="font-size: 1.35rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg class="icon-svg" style="color:var(--primary); width:18px; height:18px;" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> <span data-i18n="recentRegistrations">Oxirgi Ro'yxatga Olinganlar</span>
+                    </h2>
+                    <button class="btn btn-secondary" onclick="loadRecentTickets()" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" data-i18n="refresh">
+                        Yangilash
+                    </button>
+                </div>
+
+                <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">Talon</th>
+                                <th>AWB</th>
+                                <th data-i18n="consignee">Yuk Egasi</th>
+                                <th>Joy / Og'irlik</th>
+                                <th data-i18n="status">Status</th>
+                                <th data-i18n="action">Amal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTableBody">
+                            <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Yuklanmoqda...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Printable Ticket with QR Code -->
+    <div class="modal-overlay" id="ticketModal">
+        <div class="modal-content" style="max-width: 440px;">
+            <div class="ticket-print-box" id="printableTicket">
+                <div style="font-size: 0.9rem; font-weight: 700; color: #0284c7; text-transform: uppercase;">
+                    Toshkent Xalqaro Aeroporti (TAS)
+                </div>
+                <div style="font-size: 0.75rem; color: #666; margin-top: 2px;">
+                    Import Yuk Terminali · Elektron Navbat Taloni
+                </div>
+                
+                <div class="ticket-print-divider"></div>
+                
+                <div style="font-size: 0.75rem; color: #777;">NAVBAT RAQAMINGIZ</div>
+                <div class="ticket-print-number" id="modalTicketNumber">A-014</div>
+                
+                <img id="modalQrCode" class="ticket-print-qr" src="" alt="QR Kod">
+                
+                <div class="ticket-print-divider"></div>
+
+                <div class="ticket-print-info">
+                    <div><strong>AWB:</strong> <span id="modalAwb">250-84920183</span></div>
+                    <div><strong>Yuk egasi:</strong> <span id="modalConsignee">OOO Silk Road</span></div>
+                    <div><strong>Joy / Vazn:</strong> <span id="modalPiecesWeight">18 dona / 420.5 kg</span></div>
+                    <div><strong>Avtomobil:</strong> <span id="modalPlate">-</span></div>
+                    <div><strong>Vaqt:</strong> <span id="modalTime">27.10.2026 16:45</span></div>
+                </div>
+
+                <div class="ticket-print-divider"></div>
+                <div style="font-size: 0.7rem; color: #888;">
+                    Kutish zalidagi LED tabloni va SMS xabarnomani kuzating.<br>
+                    Chiqishda ushbu chekni KPP xodimiga taqdim eting.
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="window.print()" data-i18n="print">
+                    <svg class="icon-svg" style="width:14px; height:14px; vertical-align:-2px; margin-right:4px;" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Chop etish
+                </button>
+                <button class="btn btn-secondary" onclick="closeTicketModal()" data-i18n="close">
+                    Yopish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        function selectQuickAwb(awb) {
+            document.getElementById('awbInput').value = awb;
+            checkAweryAwb();
+        }
+
+        async function checkAweryAwb() {
+            const awb = document.getElementById('awbInput').value.trim();
+            if (!awb) {
+                showToast(currentLang === 'ru' ? "Введите номер AWB" : "Iltimos, AWB raqamini kiriting", "error");
+                return;
+            }
+
+            const box = document.getElementById('permitBox');
+            const trackBox = document.getElementById('liveTrackingBox');
+            box.style.display = 'block';
+            box.innerHTML = currentLang === 'ru' ? 'Запрос в CargoUZ / Awery API...' : 'Awery / CargoUZ API tekshirilmoqda...';
+
+            try {
+                // Query AWB from backend (which auto-fetches live tracking from tracking.cargouz.com)
+                const res = await fetch(`/api/awery/awb/${encodeURIComponent(awb)}`);
+                if (res.ok) {
+                    const data = await res.json();
+
+                    if (data.releasePermitGranted) {
+                        box.className = 'permit-status-box permit-granted';
+                        const textPermit = currentLang === 'ru' ?
+                            `<strong>[РАЗРЕШЕНО] Разрешение на выпуск подтверждено (Release Permit Granted)</strong><br>` +
+                            `Декларация: ${data.customsDeclarationNumber || 'CC-AWERY'} | Рейс: ${data.flightNumber || '-'} | Терминальный сбор: Оплачен` :
+                            `<strong>[TASDIQLANGAN] Bojxona ruxsati tasdiqlangan (Release Permit Granted)</strong><br>` +
+                            `Deklaratsiya: ${data.customsDeclarationNumber || 'CC-AWERY'} | Reys: ${data.flightNumber || '-'} | To'lov: To'langan`;
+                        box.innerHTML = textPermit;
+
+                        // Autofill
+                        document.getElementById('consigneeInput').value = data.consignee || '';
+                        document.getElementById('piecesInput').value = data.pieces || '';
+                        document.getElementById('weightInput').value = data.weightKg || '';
+                        document.getElementById('categorySelect').value = data.category || 'GENERAL';
+                        document.getElementById('storageInput').value = data.warehouseLocation || '';
+                        document.getElementById('btnSubmitTicket').disabled = false;
+                        document.getElementById('btnSubmitTicket').style.opacity = '1';
+
+                        // Check if live tracking messages are available
+                        loadLiveTrackingTimeline(awb);
+                    } else {
+                        box.className = 'permit-status-box permit-denied';
+                        const textDenied = currentLang === 'ru' ?
+                            `<strong>[ТАМОЖЕННЫЙ ЗАПРЕТ] Разрешение на выпуск НЕ получено (Release Permit NOT Granted)!</strong><br>` +
+                            `Статус: ${data.cargoDescription || 'На таможенном досмотре'}. По правилам ТЗ регистрация ЗАБЛОКИРОВАНА!` :
+                            `<strong>[BOJXONA TAQIQLADI] Bojxona ruxsati berilmagan (Release Permit NOT Granted)!</strong><br>` +
+                            `Holati: ${data.cargoDescription || 'Bojxona ko‘rigida'}. TZ qoidasiga binoan navbatga qo'yish BLOKLANDI!`;
+                        box.innerHTML = textDenied;
+                        document.getElementById('btnSubmitTicket').disabled = true;
+                        document.getElementById('btnSubmitTicket').style.opacity = '0.5';
+                        trackBox.style.display = 'none';
+                    }
+                } else {
+                    box.className = 'permit-status-box permit-denied';
+                    box.innerHTML = currentLang === 'ru' ?
+                        `<strong>[TOPILMADI] Номер AWB не найден в CargoUZ / Awery.</strong><br>Проверьте номер или добавьте его в Awery Simulator.` :
+                        `<strong>[TOPILMADI] Ushbu AWB CargoUZ / Awery bazasidan topilmadi.</strong><br>Iltimos, AWB raqamini tekshiring yoki Awery Simulyatoriga qo'shing.`;
+                    document.getElementById('btnSubmitTicket').disabled = true;
+                    document.getElementById('btnSubmitTicket').style.opacity = '0.5';
+                    trackBox.style.display = 'none';
+                }
+            } catch (err) {
+                box.className = 'permit-status-box permit-denied';
+                box.innerHTML = 'CargoUZ Awery API bilan ulanishda xatolik yuz berdi.';
+                trackBox.style.display = 'none';
+            }
+        }
+
+        async function loadLiveTrackingTimeline(awb) {
+            try {
+                const trackRes = await fetch(`/api/awery/live/${encodeURIComponent(awb)}`);
+                if (trackRes.ok) {
+                    const raw = await trackRes.json();
+                    if (raw.data_list && raw.data_list.length > 0) {
+                        const item = raw.data_list[0];
+                        const trackBox = document.getElementById('liveTrackingBox');
+                        trackBox.style.display = 'block';
+
+                        document.getElementById('liveRouteBadge').textContent = 
+                            `${item.origin_iata || 'DEL'} → ${item.dest_iata || 'TAS'}`;
+
+                        const msgs = item.messages || [];
+                        const msgContainer = document.getElementById('liveTrackingMessages');
+                        if (msgs.length > 0) {
+                            msgContainer.innerHTML = msgs.slice(-5).map(m => `
+                                <div class="tracking-step">
+                                    <span style="color: var(--accent); font-family: var(--font-mono);">${m.action_date_local || m.action_date}</span>
+                                    <strong style="color: #38bdf8; margin-left: 8px;">[${m.stage || m.status}]</strong>
+                                    <div style="color: var(--text-secondary); margin-top: 2px;">${m.message}</div>
+                                </div>
+                            `).join('');
+                        } else {
+                            msgContainer.innerHTML = '<div style="color: var(--text-muted);">Tarix mavjud emas.</div>';
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Live tracking fetch failed:', e);
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const payload = {
+                awbNumber: document.getElementById('awbInput').value.trim(),
+                consigneeName: document.getElementById('consigneeInput').value.trim(),
+                representativeName: document.getElementById('repInput').value.trim(),
+                pieces: parseInt(document.getElementById('piecesInput').value),
+                weightKg: parseFloat(document.getElementById('weightInput').value),
+                category: document.getElementById('categorySelect').value,
+                storageLocation: document.getElementById('storageInput').value.trim(),
+                vehiclePlate: document.getElementById('plateInput').value.trim().toUpperCase(),
+                contactPhone: document.getElementById('phoneInput').value.trim(),
+                isPriority: document.getElementById('priorityCheck').checked,
+                registeredBy: "Agent_Kassa_1"
+            };
+
+            try {
+                const res = await fetch('/api/queue/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+
+                if (result.success) {
+                    showToast(currentLang === 'ru' ? `Талон ${result.ticket.ticketNumber} успешно выдан!` : `Talon ${result.ticket.ticketNumber} muvaffaqiyatli berildi!`, 'success');
+                    openTicketModal(result.ticket, result.qrCodeBase64);
+                    document.getElementById('regForm').reset();
+                    document.getElementById('permitBox').style.display = 'none';
+                    document.getElementById('liveTrackingBox').style.display = 'none';
+                    loadRecentTickets();
+                } else {
+                    showToast(result.error || "Xatolik yuz berdi", "error");
+                }
+            } catch (err) {
+                showToast("Serverga so'rov yuborishda xatolik", "error");
+            }
+        }
+
+        function openTicketModal(ticket, qrCode) {
+            document.getElementById('modalTicketNumber').textContent = ticket.ticketNumber;
+            document.getElementById('modalQrCode').src = qrCode;
+            document.getElementById('modalAwb').textContent = ticket.awbNumber;
+            document.getElementById('modalConsignee').textContent = ticket.consigneeName;
+            document.getElementById('modalPiecesWeight').textContent = `${ticket.totalPieces} dona / ${ticket.totalWeightKg} kg`;
+            document.getElementById('modalPlate').textContent = ticket.vehiclePlate || (currentLang === 'ru' ? 'Пеший / Не указан' : 'Piyoda / Ko‘rsatilmagan');
+            document.getElementById('modalTime').textContent = new Date().toLocaleString(currentLang === 'ru' ? 'ru-RU' : 'uz-UZ');
+            document.getElementById('ticketModal').style.display = 'flex';
+        }
+
+        function closeTicketModal() {
+            document.getElementById('ticketModal').style.display = 'none';
+        }
+
+        async function loadRecentTickets() {
+            try {
+                const res = await fetch('/api/queue/recent');
+                if (res.ok) {
+                    const list = await res.json();
+                    const tbody = document.getElementById('recentTableBody');
+                    if (list.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Hozircha arizalar yo‘q</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = list.map(t => `
+                        <tr>
+                            <td>
+                                <strong class="ticket-num ${t.isPriority ? 'priority' : ''}" style="font-size: 1.05rem; display: inline-block;">
+                                    ${t.ticketNumber}
+                                </strong>
+                                ${t.isPriority ? '<div style="font-size: 0.65rem; color: #d97706; font-weight: 700; line-height: 1.2;">PRIORITY</div>' : ''}
+                            </td>
+                            <td style="font-family: var(--font-mono); font-weight: 700; color: #0f172a;">${t.awbNumber}</td>
+                            <td style="font-weight: 600; color: #1e293b;">${t.consigneeName}</td>
+                            <td style="font-weight: 500; color: #475569;">${t.totalPieces} dona / ${t.totalWeightKg} kg</td>
+                            <td>${getStatusBadge(t.status)}</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; font-weight: 600;" onclick="viewTicketQr(${t.id})">
+                                    QR Chek
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.warn(err);
+            }
+        }
+
+        async function viewTicketQr(ticketId) {
+            try {
+                const [tRes, qrRes] = await Promise.all([
+                    fetch(`/api/queue/ticket/${ticketId}`),
+                    fetch(`/api/queue/ticket/${ticketId}/qr`)
+                ]);
+                if (tRes.ok && qrRes.ok) {
+                    const ticket = await tRes.json();
+                    const qrData = await qrRes.json();
+                    openTicketModal(ticket, qrData.qrCode);
+                }
+            } catch (e) {
+                showToast("Talon ma'lumotlarini yuklashda xatolik", "error");
+            }
+        }
+
+        loadRecentTickets();
+    </script>
+</body>
+</html>

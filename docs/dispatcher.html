@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dispetcherlik va Tahlil Paneli | TAS Cargo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 2rem;
+            background: #ffffff;
+            padding: 0.5rem 0.5rem 0 0.5rem;
+            border-radius: 12px 12px 0 0;
+            box-shadow: var(--shadow-sm);
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .tab-btn:hover {
+            color: var(--primary);
+            background: #f8fafc;
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            font-weight: 700;
+            border-bottom-color: var(--primary);
+            background: #eff6ff;
+        }
+        .dock-summary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <a href="index.html" class="brand-wrapper">
+            <div class="brand-logo-badge">TAS</div>
+            <div>
+                <h1 class="brand-title">Dispetcherlik va Tahlil Paneli</h1>
+                <div class="brand-subtitle">Jonli monitoring · Audit jurnali · Excel smena hisoboti</div>
+            </div>
+        </a>
+        <div class="header-status">
+            <div class="live-clock" id="liveClock">16:40:00 (Toshkent)</div>
+            <a href="/api/reports/excel" class="btn btn-primary" style="padding: 0.5rem 1rem;">
+                <svg class="icon-svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Excel Hisobot Yuklab Olish
+            </a>
+            <a href="index.html" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Bosh menyu</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Tabs -->
+        <div class="tabs-header">
+            <button class="tab-btn active" onclick="switchTab('queueTab', this)"><svg class="icon-svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> Faol Navbat va Doklar</button>
+            <button class="tab-btn" onclick="switchTab('auditTab', this)"><svg class="icon-svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> To'liq Audit Jurnali</button>
+        </div>
+
+        <!-- TAB 1: Queue & Docks -->
+        <div id="queueTab">
+            <!-- 6 Docks Live Snapshot -->
+            <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Doklar Bandligi va Holati</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;" id="docksSummaryGrid">
+                <!-- Injected by JS -->
+            </div>
+
+            <!-- Active Queue Table -->
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                    <div>
+                        <h3 style="font-size: 1.3rem;">Barcha Arizalar Monitoringi</h3>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">Ro'yxatdan o'tishdan tortib KPP chiqishigacha bo'lgan barcha bosqichlar</p>
+                    </div>
+                    <button class="btn btn-secondary" onclick="loadDispatcherData()"><svg class="icon-svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Yangilash</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>Talon</th>
+                                <th>AWB</th>
+                                <th>Yuk egasi</th>
+                                <th>Avtomobil</th>
+                                <th>Joy / Vazn</th>
+                                <th>Kategoriya</th>
+                                <th>Dok</th>
+                                <th>Status</th>
+                                <th>Ro'yxat vaqti</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dispTableBody">
+                            <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">Yuklanmoqda...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Audit Logs -->
+        <div id="auditTab" style="display: none;">
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                    <div>
+                        <h3 style="font-size: 1.3rem;">Tizim Audit Jurnali (Xavfsizlik va Harakatlar Tarixi)</h3>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">TZ 10-bo'limi talabiga binoan har bir o'zgarish va xodim harakati qayd etilgan</p>
+                    </div>
+                    <button class="btn btn-secondary" onclick="loadAuditLogs()"><svg class="icon-svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Yangilash</button>
+                </div>
+
+                <div class="table-responsive" style="max-height: 650px; overflow-y: auto;">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>Vaqt</th>
+                                <th>Hodisa</th>
+                                <th>Talon #</th>
+                                <th>AWB</th>
+                                <th>O'zgarish</th>
+                                <th>Xodim (Operator)</th>
+                                <th>Tafsilotlar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditTableBody">
+                            <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Yuklanmoqda...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            if (el) el.classList.add('active');
+            document.getElementById('queueTab').style.display = tabId === 'queueTab' ? 'block' : 'none';
+            document.getElementById('auditTab').style.display = tabId === 'auditTab' ? 'block' : 'none';
+
+            if (tabId === 'auditTab') {
+                loadAuditLogs();
+            } else {
+                loadDispatcherData();
+            }
+        }
+
+        async function loadDispatcherData() {
+            try {
+                const [docksRes, queueRes] = await Promise.all([
+                    fetch('/api/docks'),
+                    fetch('/api/queue/recent')
+                ]);
+
+                if (docksRes.ok && queueRes.ok) {
+                    const docks = await docksRes.json();
+                    const tickets = await queueRes.json();
+
+                    // Render Docks Summary
+                    const docksGrid = document.getElementById('docksSummaryGrid');
+                    docksGrid.innerHTML = docks.map(d => {
+                        const isBusy = d.status === 'OCCUPIED';
+                        return `
+                            <div class="dock-summary-card" style="border-left: 4px solid ${isBusy ? '#f59e0b' : '#10b981'};">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <strong style="font-size: 1.1rem;">Dock #${d.dockNumber}</strong>
+                                    <span class="badge ${isBusy ? 'badge-called' : 'badge-prepared'}">${d.status}</span>
+                                </div>
+                                <div style="font-size: 0.85rem; color: var(--text-muted);">${d.name}</div>
+                                <div style="margin-top: 0.75rem; font-family: var(--font-mono); font-weight: 700;">
+                                    ${d.currentTicketNumber ? `<span style="color: #1d4ed8; font-size: 1.2rem; font-weight: 800;">${d.currentTicketNumber}</span> <span style="font-size: 0.8rem; color:#0f172a; font-weight: 700;">(${d.currentVehiclePlate || 'Piyoda'})</span>` : '<span style="color: var(--text-muted);">Bo‘sh</span>'}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    // Render All Tickets
+                    const tbody = document.getElementById('dispTableBody');
+                    if (tickets.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--text-muted);">Arizalar yo‘q</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = tickets.map(t => `
+                        <tr>
+                            <td>
+                                <strong class="ticket-num ${t.isPriority ? 'priority' : ''}" style="font-size: 1.05rem;">
+                                    ${t.ticketNumber}
+                                </strong>
+                                ${t.isPriority ? '<div style="font-size: 0.65rem; color: #d97706; font-weight: 700;">PRIORITY</div>' : ''}
+                            </td>
+                            <td style="font-family: var(--font-mono); font-weight: 700; color: #0f172a;">${t.awbNumber}</td>
+                            <td style="font-weight: 600; color: #1e293b;">${t.consigneeName}</td>
+                            <td style="font-family: var(--font-mono); color: #0f172a; font-weight: 800;">${t.vehiclePlate || 'Piyoda'}</td>
+                            <td>${t.issuedPieces}/${t.totalPieces} dona · ${t.totalWeightKg} kg</td>
+                            <td>${t.category}</td>
+                            <td>${t.assignedDockNumber ? 'Dock #' + t.assignedDockNumber : '—'}</td>
+                            <td>${getStatusBadge(t.status)}</td>
+                            <td>${new Date(t.registeredAt).toLocaleTimeString('uz-UZ')}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.warn(err);
+            }
+        }
+
+        async function loadAuditLogs() {
+            try {
+                const res = await fetch('/api/audit/recent');
+                if (res.ok) {
+                    const logs = await res.json();
+                    const tbody = document.getElementById('auditTableBody');
+                    if (logs.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Audit jurnali bo‘sh</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = logs.map(l => `
+                        <tr>
+                            <td style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">${new Date(l.timestamp).toLocaleTimeString('uz-UZ')}</td>
+                            <td><span class="badge badge-priority" style="font-size: 0.75rem;">${l.eventType}</span></td>
+                            <td class="ticket-num" style="font-weight: 800;">${l.ticketNumber || '-'}</td>
+                            <td style="font-family: var(--font-mono); font-weight: 600;">${l.awbNumber || '-'}</td>
+                            <td style="font-size: 0.85rem;"><span style="color:#64748b;">${l.oldStatus}</span> &rarr; <strong style="color:#0284c7;">${l.newStatus}</strong></td>
+                            <td style="font-weight: 600;">${l.operatorName || '-'}</td>
+                            <td style="font-size: 0.85rem; color: var(--text-secondary);">${l.details || '-'}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.warn(err);
+            }
+        }
+
+        loadDispatcherData();
+        setInterval(loadDispatcherData, 4000);
+    </script>
+</body>
+</html>

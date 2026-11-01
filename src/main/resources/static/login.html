@@ -613,6 +613,7 @@
 
     </div>
 
+    <script src="js/mock-api.js"></script>
     <script>
         // Clean Light Only: enforce light mode
         document.documentElement.removeAttribute('data-theme');
@@ -744,17 +745,22 @@
 
         // Mock users fallback in case server API is offline
         const mockUsers = {
-            'supperadmin@uzairports.com': { username: 'supperadmin@uzairports.com', fullName: 'Super Administrator', role: 'SUPER_ADMIN', roleName: 'Super Administrator', avatar: 'SUP', targetUrl: 'index.html' },
-            'admin@uzairports.com': { username: 'admin@uzairports.com', fullName: 'Bosh Dispetcher', role: 'ADMIN', roleName: 'Bosh Dispetcher (Admin)', avatar: 'ADM', targetUrl: 'dispatcher.html' },
-            'registration@uzairports.com': { username: 'registration@uzairports.com', fullName: 'Registratsiya Agenti', role: 'OPERATOR_REGISTRATION', roleName: 'Registratsiya Agenti', avatar: 'REG', targetUrl: 'registration.html' },
-            'warehouse@uzairports.com': { username: 'warehouse@uzairports.com', fullName: 'Ombor Nazoratchisi', role: 'OPERATOR_WAREHOUSE', roleName: 'Katta Omborchi', avatar: 'WHS', targetUrl: 'warehouse.html' },
-            'dock@uzairports.com': { username: 'dock@uzairports.com', fullName: 'Dok Operatori', role: 'OPERATOR_DOCK', roleName: 'Dok Operatori', avatar: 'DCK', targetUrl: 'dock.html' },
-            'kpp@uzairports.com': { username: 'kpp@uzairports.com', fullName: 'KPP Xavfsizlik Ofitseri', role: 'OPERATOR_KPP', roleName: 'KPP Nazorat Ofitseri', avatar: 'KPP', targetUrl: 'kpp.html' },
-            'admin': { username: 'admin@uzairports.com', fullName: 'Bosh Dispetcher', role: 'ADMIN', roleName: 'Bosh Dispetcher (Admin)', avatar: 'ADM', targetUrl: 'dispatcher.html' },
-            'agent': { username: 'registration@uzairports.com', fullName: 'Registratsiya Agenti', role: 'OPERATOR_REGISTRATION', roleName: 'Registratsiya Agenti', avatar: 'REG', targetUrl: 'registration.html' },
-            'sklad': { username: 'warehouse@uzairports.com', fullName: 'Ombor Nazoratchisi', role: 'OPERATOR_WAREHOUSE', roleName: 'Katta Omborchi', avatar: 'WHS', targetUrl: 'warehouse.html' },
-            'dock':  { username: 'dock@uzairports.com', fullName: 'Dok Operatori', role: 'OPERATOR_DOCK', roleName: 'Dok Operatori', avatar: 'DCK', targetUrl: 'dock.html' },
-            'kpp':   { username: 'kpp@uzairports.com', fullName: 'KPP Xavfsizlik Ofitseri', role: 'OPERATOR_KPP', roleName: 'KPP Nazorat Ofitseri', avatar: 'KPP', targetUrl: 'kpp.html' }
+            'supperadmin@uzairports.com': { id: 1, email: 'supperadmin@uzairports.com', username: 'supperadmin@uzairports.com', fullName: 'Bosh Tizim Administratori', role: 'SUPER_ADMIN', roleName: 'Super Administrator', avatar: 'SUP', targetUrl: 'index.html', allowedPages: ['index.html', 'dispatcher.html', 'registration.html', 'warehouse.html', 'dock.html', 'kpp.html', 'led-board.html', 'awery-sim.html', 'activity-log.html'] },
+            'superadmin@uzairports.com': { id: 1, email: 'supperadmin@uzairports.com', username: 'supperadmin@uzairports.com', fullName: 'Bosh Tizim Administratori', role: 'SUPER_ADMIN', roleName: 'Super Administrator', avatar: 'SUP', targetUrl: 'index.html', allowedPages: ['index.html', 'dispatcher.html', 'registration.html', 'warehouse.html', 'dock.html', 'kpp.html', 'led-board.html', 'awery-sim.html', 'activity-log.html'] },
+            'admin@uzairports.com': { id: 2, email: 'admin@uzairports.com', username: 'admin@uzairports.com', fullName: 'Sardor Aliyev (Bosh Dispetcher)', role: 'ADMIN', roleName: 'Bosh Dispetcher (Admin)', avatar: 'ADM', targetUrl: 'dispatcher.html', allowedPages: ['dispatcher.html', 'dock.html', 'led-board.html', 'activity-log.html'] },
+            'registration@uzairports.com': { id: 3, email: 'registration@uzairports.com', username: 'registration@uzairports.com', fullName: 'Nodira Karimova (Registratsiya)', role: 'OPERATOR_REGISTRATION', roleName: 'Registratsiya Agenti', avatar: 'REG', targetUrl: 'registration.html', allowedPages: ['registration.html'] },
+            'warehouse@uzairports.com': { id: 4, email: 'warehouse@uzairports.com', username: 'warehouse@uzairports.com', fullName: 'Rustam Mahmudov (Katta Omborchi)', role: 'OPERATOR_WAREHOUSE', roleName: 'Ombor Xodimi (Sklad)', avatar: 'WHS', targetUrl: 'warehouse.html', allowedPages: ['warehouse.html'] },
+            'dock@uzairports.com': { id: 5, email: 'dock@uzairports.com', username: 'dock@uzairports.com', fullName: 'Jasur Rahimov (Dok Operatori)', role: 'OPERATOR_DOCK', roleName: 'Dok Operatori (Rampa)', avatar: 'DCK', targetUrl: 'dock.html', allowedPages: ['dock.html'] },
+            'kpp@uzairports.com': { id: 6, email: 'kpp@uzairports.com', username: 'kpp@uzairports.com', fullName: 'Farhod Ergashev (KPP Ofitseri)', role: 'OPERATOR_KPP', roleName: 'KPP Nazorat Xodimi', avatar: 'KPP', targetUrl: 'kpp.html', allowedPages: ['kpp.html'] },
+            'admin': { id: 2, email: 'admin@uzairports.com', username: 'admin@uzairports.com', fullName: 'Sardor Aliyev (Bosh Dispetcher)', role: 'ADMIN', roleName: 'Bosh Dispetcher (Admin)', avatar: 'ADM', targetUrl: 'dispatcher.html', allowedPages: ['dispatcher.html', 'dock.html', 'led-board.html', 'activity-log.html'] },
+            'agent': { id: 3, email: 'registration@uzairports.com', username: 'registration@uzairports.com', fullName: 'Nodira Karimova (Registratsiya)', role: 'OPERATOR_REGISTRATION', roleName: 'Registratsiya Agenti', avatar: 'REG', targetUrl: 'registration.html', allowedPages: ['registration.html'] },
+            'registration': { id: 3, email: 'registration@uzairports.com', username: 'registration@uzairports.com', fullName: 'Nodira Karimova (Registratsiya)', role: 'OPERATOR_REGISTRATION', roleName: 'Registratsiya Agenti', avatar: 'REG', targetUrl: 'registration.html', allowedPages: ['registration.html'] },
+            'sklad': { id: 4, email: 'warehouse@uzairports.com', username: 'warehouse@uzairports.com', fullName: 'Rustam Mahmudov (Katta Omborchi)', role: 'OPERATOR_WAREHOUSE', roleName: 'Ombor Xodimi (Sklad)', avatar: 'WHS', targetUrl: 'warehouse.html', allowedPages: ['warehouse.html'] },
+            'warehouse': { id: 4, email: 'warehouse@uzairports.com', username: 'warehouse@uzairports.com', fullName: 'Rustam Mahmudov (Katta Omborchi)', role: 'OPERATOR_WAREHOUSE', roleName: 'Ombor Xodimi (Sklad)', avatar: 'WHS', targetUrl: 'warehouse.html', allowedPages: ['warehouse.html'] },
+            'dock':  { id: 5, email: 'dock@uzairports.com', username: 'dock@uzairports.com', fullName: 'Jasur Rahimov (Dok Operatori)', role: 'OPERATOR_DOCK', roleName: 'Dok Operatori (Rampa)', avatar: 'DCK', targetUrl: 'dock.html', allowedPages: ['dock.html'] },
+            'kpp':   { id: 6, email: 'kpp@uzairports.com', username: 'kpp@uzairports.com', fullName: 'Farhod Ergashev (KPP Ofitseri)', role: 'OPERATOR_KPP', roleName: 'KPP Nazorat Xodimi', avatar: 'KPP', targetUrl: 'kpp.html', allowedPages: ['kpp.html'] },
+            'supperadmin': { id: 1, email: 'supperadmin@uzairports.com', username: 'supperadmin@uzairports.com', fullName: 'Bosh Tizim Administratori', role: 'SUPER_ADMIN', roleName: 'Super Administrator', avatar: 'SUP', targetUrl: 'index.html', allowedPages: ['index.html', 'dispatcher.html', 'registration.html', 'warehouse.html', 'dock.html', 'kpp.html', 'led-board.html', 'awery-sim.html', 'activity-log.html'] },
+            'superadmin': { id: 1, email: 'supperadmin@uzairports.com', username: 'supperadmin@uzairports.com', fullName: 'Bosh Tizim Administratori', role: 'SUPER_ADMIN', roleName: 'Super Administrator', avatar: 'SUP', targetUrl: 'index.html', allowedPages: ['index.html', 'dispatcher.html', 'registration.html', 'warehouse.html', 'dock.html', 'kpp.html', 'led-board.html', 'awery-sim.html', 'activity-log.html'] }
         };
 
         // 1-Click quick login handler
@@ -812,8 +818,12 @@
 
             // Local fallback validation
             const u = username.toLowerCase();
-            const valid = (u === 'admin' && password === 'admin123') ||
-                          (['agent', 'sklad', 'dock', 'kpp'].includes(u) && password === 'tas123');
+            const valid = (['supperadmin', 'superadmin', 'supperadmin@uzairports.com', 'superadmin@uzairports.com'].includes(u) && (password === 'admin123' || password === 'tas123')) ||
+                          (['admin', 'admin@uzairports.com'].includes(u) && (password === 'admin123' || password === 'tas123')) ||
+                          (['agent', 'registration', 'registration@uzairports.com',
+                            'sklad', 'warehouse', 'warehouse@uzairports.com',
+                            'dock', 'dock@uzairports.com',
+                            'kpp', 'kpp@uzairports.com'].includes(u) && (password === 'tas123' || password === 'admin123'));
 
             if (valid && mockUsers[u]) {
                 const sessionUser = mockUsers[u];
