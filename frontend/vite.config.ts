@@ -17,16 +17,16 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:8085',
+        target: 'http://localhost:5555',
         changeOrigin: true,
       },
       '/ws-queue': {
-        target: 'http://localhost:8085',
+        target: 'http://localhost:5555',
         ws: true,
         changeOrigin: true,
       },
       '/ws-queue-raw': {
-        target: 'http://localhost:8085',
+        target: 'http://localhost:5555',
         ws: true,
         changeOrigin: true,
       },

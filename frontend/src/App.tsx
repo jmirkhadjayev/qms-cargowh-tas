@@ -178,7 +178,7 @@ function CargoDashboard() {
                 <CreateTicketDialog onSuccess={registerTicket} />
 
                 <a
-                  href="http://localhost:8085/dock.html"
+                  href="http://localhost:5555/dock.html"
                   target="_blank"
                   rel="noreferrer"
                   className={buttonVariants({
@@ -213,7 +213,7 @@ function CargoDashboard() {
                 return (
                   <a
                     key={module.title}
-                    href={`http://localhost:8085/${module.url}`}
+                    href={`http://localhost:5555/${module.url}`}
                     target="_blank"
                     rel="noreferrer"
                     className="group p-3.5 bg-white border border-slate-200 rounded-xl hover:border-primary hover:shadow-md transition-all flex flex-col justify-between"

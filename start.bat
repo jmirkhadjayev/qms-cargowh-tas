@@ -32,11 +32,11 @@ echo [1/2] Java talqini tekshirilmoqda...
 "%JAVA_HOME%\bin\java.exe" -version
 echo.
 
-echo [2/2] Spring Boot tizimi ishga tushmoqda (Port: 8085)...
-echo Boshqaruv markazi: http://localhost:8085
+echo [2/2] Spring Boot tizimi ishga tushmoqda (Port: 5555)...
+echo Boshqaruv markazi: http://localhost:5555
 echo.
 
-start "" http://localhost:8085
+start "" http://localhost:5555
 
 call "%M2_HOME%\bin\mvn.cmd" spring-boot:run
 

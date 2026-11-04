@@ -28,7 +28,7 @@ frontend/
 │   ├── main.tsx            # React kirish nuqtasi
 │   └── index.css           # Tailwind direktivalari va dizayn tokenlari
 ├── tailwind.config.js       # Korporativ ranglar va shriftlar
-├── vite.config.ts           # Proxy orqali backend (port 8085) ga ulanish
+├── vite.config.ts           # Proxy orqali backend (port 5555) ga ulanish
 └── package.json
 ```
 
